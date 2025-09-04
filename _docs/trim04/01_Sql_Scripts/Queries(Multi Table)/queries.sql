@@ -112,10 +112,47 @@ SELECT
     ON ps.product_serial = od.product_serial
     INNER JOIN OUTPUT_ORDERS AS oo
     ON od.out_order_id = oo.out_order_id
-    WHERE oo.out_order_id = 1;
+    WHERE oo.out_order_id = 5;
 
 /* ¿Qué clientes reportaron incidentes de garantía y qué producto estaba asociado? (WARRANTY_INCIDENTS, OUTPUT_DETAILS, PRODUCT_SERIALS, PRODUCTS) */
+SELECT 
+	wi.warranty_customer,
+	wi.warranty_incidents_id,
+    wi.product_serial,
+    pd.product_detail_description
+    FROM WARRANTY_INCIDENTS AS wi    
+    INNER JOIN OUTPUT_DETAILS AS od
+    ON wi.product_serial=od.product_serial
+    INNER JOIN PRODUCT_SERIALS AS ps
+    ON od.product_serial=ps.product_serial
+    INNER JOIN PRODUCTS AS p
+    ON ps.product_id=p.product_id
+    INNER JOIN PRODUCT_DETAILS AS pd
+    ON p.product_details_id=pd.product_details_id;
+
 /* ¿Qué técnicos resolvieron garantías de productos de la marca X? (TECHNICAL, USERS, WARRANTY_INCIDENTS, OUTPUT_DETAILS, PRODUCT_SERIALS, PRODUCTS, PRODUCT_DETAILS, PRODUCT_BRANDS) */
+/* ¿Qué técnicos tienen asignados las incidencias de garantía y qué producto está asociado? (WARRANTY_INCIDENTS, OUTPUT_DETAILS, PRODUCT_SERIALS, PRODUCTS) */
+SELECT 
+	u.user_name,
+    u.user_first_surname,
+    u.user_second_surname,
+	wi.warranty_incidents_id,
+    wi.product_serial,
+     pd.product_detail_description
+    FROM WARRANTY_INCIDENTS AS wi
+    INNER JOIN TECHNICAL AS t
+    ON wi.warranty_incidents_id=t.warranty_incidents_id
+    INNER JOIN USERS AS u
+    ON t.user_id=u.user_id
+    INNER JOIN OUTPUT_DETAILS AS od
+    ON wi.product_serial=od.product_serial
+    INNER JOIN PRODUCT_SERIALS AS ps
+    ON od.product_serial=ps.product_serial
+    INNER JOIN PRODUCTS AS p
+    ON ps.product_id=p.product_id
+    INNER JOIN PRODUCT_DETAILS AS pd
+    ON p.product_details_id=pd.product_details_id;
+
 /* ¿Qué empleados de almacén recibieron órdenes de entrada de un proveedor en particular? (USERS, WAREHAUSEMAN, INPUT_ORDERS, SUPPLIERS) */
 SELECT
     u.user_name,
