@@ -23,7 +23,7 @@ import AddSubcategoryModal from "../../../subcategories/components/modals/AddSub
 export default function AddProductModal({ onCloseModal }) {
   const [innerModal, setInnerModal] = useState(null);
   const { subcategories, brands, models, inputOrders } = useCatalog();
-  const { loading, handleChange, handleSubmit } = useCreateProduct({
+  const { form, loading, handleChange, handleSubmit } = useCreateProduct({
     input_order_id: "",
     subcategory_id: "",
     product_details_id: "",
@@ -37,57 +37,52 @@ export default function AddProductModal({ onCloseModal }) {
       <form action="" className="flex flex-col gap-1">
         {/* Menú de ordenes de entrada */}
         <SelectMenu
+          value={form.input_order_id}
           spanText={"Orden de entrada"}
           onChange={handleChange}
           name={"input_order_id"}
           addIcon={actionsIcons.addIcon}
           addIconFunction={() => setInnerModal("addInputOrder")}
           addButtonInvisible={false}
-        >
-          <option value="">Seleccionar</option>
-          {inputOrders.map((inputOrder) => (
-            <option key={inputOrder.id} value={inputOrder.id}>
-              {inputOrder.bill}
-            </option>
-          ))}
-        </SelectMenu>
+          options={inputOrders.map((inputOrder) => ({
+            value: inputOrder.id,
+            label: inputOrder.bill,
+          }))}
+        />
+
         {/* Menú de subcategorias */}
         <SelectMenu
+          value={form.subcategory_id}
           name={"subcategory_id"}
           spanText={"Subcategoria"}
           onChange={handleChange}
           addIcon={actionsIcons.addIcon}
           addIconFunction={() => setInnerModal("addSubcategory")}
           addButtonInvisible={false}
-        >
-          <option value="">Seleccionar</option>
-          {subcategories.map((subcategory) => (
-            <option
-              key={subcategory.subcategory_id}
-              value={subcategory.subcategory_id}
-            >
-              {subcategory.subcategory_name}
-            </option>
-          ))}
-        </SelectMenu>
+          options={subcategories.map((subcategory) => ({
+            value: subcategory.subcategory_id,
+            label: subcategory.subcategory_name,
+          }))}
+        />
+
         {/* Menú de marcas */}
         <SelectMenu
+          value={form.product_brand}
           spanText={"Marca"}
           name={"product_brand"}
           onChange={handleChange}
           addIcon={actionsIcons.addIcon}
           addIconFunction={() => setInnerModal("addBrand")}
           addButtonInvisible={false}
-        >
-          <option value="">Seleccionar</option>
-          {brands.map((brand) => (
-            <option key={brand.id} value={brand.id}>
-              {brand.name}
-            </option>
-          ))}
-        </SelectMenu>
+          options={brands.map((brand) => ({
+            value: brand.id,
+            label: brand.name,
+          }))}
+        />
+
         {/* Menú de modelos */}
         <SelectMenu
+          value={form.product_details_id}
           spanText={"Modelo"}
           name={"product_details_id"}
           onChange={handleChange}
@@ -95,14 +90,12 @@ export default function AddProductModal({ onCloseModal }) {
           addIcon={actionsIcons.addIcon}
           addIconFunction={() => setInnerModal("addModel")}
           addButtonInvisible={false}
-        >
-          <option value="">Seleccionar</option>
-          {models.map((model) => (
-            <option key={model.id} value={model.id}>
-              {model.model}
-            </option>
-          ))}
-        </SelectMenu>
+          options={models.map((model) => ({
+            value: model.id,
+            label: model.model,
+          }))}
+        />
+
         <FormField
           name={"product_serial"}
           labelText={"Serial"}
@@ -110,17 +103,14 @@ export default function AddProductModal({ onCloseModal }) {
           id={"product_serial"}
           onChange={handleChange}
         />
-        <SelectMenu
-          spanText={"Tiempo De Garantía"}
+
+        <FormField
+          type="date"
           name={"product_garanty_input"}
+          labelText={"Tiempo de Garantía"}
           onChange={handleChange}
-        >
-          <option value="2029-09-27"> Seleccionar </option>
-          <option value="a"> 6 Meses </option>
-          <option value=""> 12 Meses </option>
-          <option value=""> 18 Meses </option>
-          <option value=""> 24 Meses </option>
-        </SelectMenu>
+        />
+        
         <div className="flex items-center justify-center p-3">
           <span className="dark:text-white">o</span>
         </div>
@@ -154,10 +144,7 @@ export default function AddProductModal({ onCloseModal }) {
       {innerModal === "success" && (
         <SuccessModal
           isOpen={true}
-          onClose={() => (
-            setInnerModal(null),
-            onCloseModal()
-          )}
+          onClose={() => (setInnerModal(null), onCloseModal())}
           confirmTitle={"Producto Creado Correctamente"}
           confirmText={"El producto ha sido creado correctamente."}
           confirmButtonText={"Volver a la página"}
