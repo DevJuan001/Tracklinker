@@ -53,7 +53,7 @@ export default function SelectMenu({
 
       {open && (
         <div
-          className="absolute top-full left-0 w-full rounded-lg border bg-white shadow-lg z-250 
+          className="absolute top-full left-0 w-full rounded-lg border bg-white shadow-lg z-[400]
         dark:bg-[#1a1a1a] dark:text-white dark:border-none"
         >
           {options.map((option) => (
