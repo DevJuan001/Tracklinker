@@ -19,8 +19,10 @@ export function useCreateProductBrand(formData) {
 
     try {
       const response = await createProductBrandService(form);
-      if (response.sucess) {
+      if (response.success === true) {
         setInnerModal("success");
+      } else {
+        setInnerModal("error")
       }
     } catch (error) {
       setError(error);

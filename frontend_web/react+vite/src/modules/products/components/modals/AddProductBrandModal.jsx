@@ -6,9 +6,13 @@ import Loader from "../../../../globals/components/ui/Loader";
 import FormField from "../../../../globals/components/ui/FormField";
 import ConfirmCancelButtons from "../../../../globals/components/modals/ConfirmCancelButtons";
 // Modals
+import ErrorModal from "../../../../globals/components/modals/ErrorModal";
+import SuccessModal from "../../../../globals/components/modals/SuccessModal";
 import AddInnerModal from "../../../../globals/components/modals/AddInnerModal";
+import { useCatalog } from "../../hooks/useCatalog";
 
 export default function AddProductBrandModal({ isOpen, onClose }) {
+  const { fetchBrands } = useCatalog();
   const [innerModal, setInnerModal] = useState(null);
   const { loading, handleChange, handleSubmit } = useCreateProductBrand({
     product_brand_name: "",
@@ -26,8 +30,12 @@ export default function AddProductBrandModal({ isOpen, onClose }) {
         </form>
         <ConfirmCancelButtons
           confirmText={loading ? <Loader /> : "Crear"}
-          confirmOnClick={handleSubmit}
-          cancelHandler={onClose}
+          confirmButtonOnClick={(e) => handleSubmit(e, setInnerModal)}
+          cancelButtonOnClick={() => {
+            setInnerModal(null);
+            fetchBrands();
+            onClose();
+          }}
         />
       </section>
 
@@ -35,8 +43,12 @@ export default function AddProductBrandModal({ isOpen, onClose }) {
       {innerModal === "success" && (
         <SuccessModal
           isOpen={true}
-          onClose={() => setInnerModal(null)}
+          onClose={() => {
+            fetchBrands();
+            setInnerModal(null);
+          }}
           confirmTitle={"Marca creada correctamente"}
+          confirmText={"La marca ha sido creada con exito"}
           confirmButtonText={"Volver"}
         />
       )}
