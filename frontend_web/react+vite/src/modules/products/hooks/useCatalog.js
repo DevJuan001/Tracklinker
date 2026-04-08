@@ -93,6 +93,11 @@ export function useCatalog() {
     inputOrders,
     loading,
     error,
-    fetchProducts
+    fetchProducts,
+    fetchBrands,
+    fetchCategories,
+    fetchInputOrders,
+    fetchModels,
+    fetchSubcategories,
   };
 }
