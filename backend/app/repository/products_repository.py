@@ -221,7 +221,7 @@ class ProductsRepository:
         cursor = connection.cursor()
         try:
             cursor.execute("INSERT INTO PRODUCT_BRANDS (product_brand_name) VALUES (%s)",
-                (data["product_brand"],))
+                (data["product_brand_name"],))
             connection.commit()
             return None, True, f"Marca creada correctamente"
         except Exception as e:
