@@ -28,7 +28,7 @@ export default function AddProductModal({ onCloseModal }) {
     subcategory_id: "",
     product_details_id: "",
     product_serial: "",
-    product_brand: "",
+    product_brand_name: "",
     product_garanty_input: "",
   });
 
@@ -67,9 +67,9 @@ export default function AddProductModal({ onCloseModal }) {
 
         {/* Menú de marcas */}
         <SelectMenu
-          value={form.product_brand}
+          value={form.product_brand_name}
           spanText={"Marca"}
-          name={"product_brand"}
+          name={"product_brand_name "}
           onChange={handleChange}
           addIcon={actionsIcons.addIcon}
           addIconFunction={() => setInnerModal("addBrand")}
@@ -110,7 +110,7 @@ export default function AddProductModal({ onCloseModal }) {
           labelText={"Tiempo de Garantía"}
           onChange={handleChange}
         />
-        
+
         <div className="flex items-center justify-center p-3">
           <span className="dark:text-white">o</span>
         </div>
