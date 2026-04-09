@@ -51,7 +51,7 @@ export default function ProductsTable({ products, openModal, refetch }) {
               <th className="font-normal pl-4 text-sm">
                 <div
                   className={`w-fit flex items-center pl-1.5 pr-3 py-0.5 gap-1.5 rounded-full border 
-                  dark:border-transparent
+                  dark:border-transparent text-nowrap
                   ${productStatusConfig[product.status]?.styles}`}
                 >
                   <img
