@@ -1,49 +1,90 @@
-import React, { useRef, useState } from "react"; 
+import { useState } from "react";
 import ConfirmCancelButtons from "../../../../globals/components/modals/ConfirmCancelButtons";
 import { useCreateWarranty } from "../../hooks/useCreateWarranties"; // ⚠ Asegúrate de que la ruta es correcta
 
 import SuccessModal from "../../../../globals/components/modals/SuccessModal";
 import ErrorModal from "../../../../globals/components/modals/ErrorModal";
 import Loader from "../../../../globals/components/ui/Loader";
+import FormField from "../../../../globals/components/ui/FormField";
 
-export default function AddWarrantyModal({ onCloseModal, onAddSuccess }) {
-  const formRef = useRef(null);
+export default function AddWarrantyModal({
+  product,
+  onCloseModal,
+  onAddSuccess,
+}) {
   const [innerModal, setInnerModal] = useState(null);
-
-  // Funciones para mostrar tarjetas
-  const handleSuccess = () => setInnerModal("success");
-  const handleError = (errorMessage) => setInnerModal({ type: "error", message: errorMessage });
-
-  const { handleCreateWarranty, loading } = useCreateWarranty(handleSuccess, handleError);
-
-  const handleSubmitViaButton = () => formRef.current?.requestSubmit();
+  const { form, loading, handleChange, handleSubmit } = useCreateWarranty({
+    product_serial: product.product_serial || "",
+    warranty_customer: "",
+    warranty_phone: "",
+    warranty_address: "",
+    warranty_city: "",
+    warranty_description: "",
+    warranty_link_attachments: "",
+    warranty_status: 1,
+  });
 
   return (
     <section className="flex flex-col items-center">
-      <form onSubmit={handleCreateWarranty} ref={formRef} className="flex flex-col gap-1">
+      <form className="flex flex-col gap-1">
+        <FormField
+          name={"product_serial"}
+          labelText={"Serial"}
+          value={form.product_serial}
+          onChange={handleChange}
+        />
 
-        <label className="text-sm mt-1">Serial</label>
-        <input type="text" name="product_serial" placeholder="10KQ34012414" className="border rounded-lg p-2 text-sm" />
+        <FormField
+          name={"warranty_customer"}
+          labelText={"Nombre del Cliente"}
+          value={form.warranty_customer}
+          onChange={handleChange}
+          placeholder="Miguel Arnulfo Pérez"
+        />
 
-        <label className="text-sm mt-1">Nombre del Cliente</label>
-        <input type="text" name="warranty_customer" placeholder="Miguel Arnulfo Pérez" className="border rounded-lg p-2 text-sm" />
+        <FormField
+          name={"warranty_phone"}
+          labelText={"Teléfono"}
+          value={form.warranty_phone}
+          onChange={handleChange}
+          placeholder="+57 300 123 XXXX"
+        />
 
-        <label className="text-sm mt-1">Teléfono</label>
-        <input type="text" name="warranty_phone" placeholder="+57 300 123 XXXX" className="border rounded-lg p-2 text-sm" />
+        <FormField
+          name={"warranty_address"}
+          labelText={"Dirección"}
+          value={form.warranty_address}
+          onChange={handleChange}
+          placeholder="kr 45 # 67-XX"
+        />
 
-        <label className="text-sm mt-1">Dirección</label>
-        <input type="text" name="warranty_address" placeholder="kr 45 # 67-XX" className="border rounded-lg p-2 text-sm" />
+        <FormField
+          name={"warranty_city"}
+          labelText={"Ciudad"}
+          value={form.warranty_city}
+          onChange={handleChange}
+          placeholder="Bogotá"
+        />
 
-        <label className="text-sm mt-1">Ciudad</label>
-        <input type="text" name="warranty_city" placeholder="Bogotá" className="border rounded-lg p-2 text-sm" />
+        <div>
+          <span>Descripción del problema</span>
+          <textarea
+            name="warranty_description"
+            value={form.warranty_description}
+            onChange={handleChange}
+            placeholder="Descripción breve del problema reportado por el cliente"
+            className="w-full rounded-xl outline-none border bg-[#e5e5e527] placeholder:text-[#8a8a8a] placeholder:text-sm
+            dark:bg-[#ffffff10] dark:border-[#ffffff15] dark:text-white p-3"
+          />
+        </div>
 
-        <input type="hidden" name="warranty_status" value="0" />
-
-        <span>Requerimiento</span>
-        <input type="text" name="warranty_description" className="h-20 w-72 p-2 text-sm border rounded-lg" />
-
-        <span>Archivos adjuntos</span>
-        <input type="text" name="warranty_link_attachments" multiple className="h-18 w-80 border rounded-lg p-2 text-sm" />
+        <FormField
+          name={"warranty_link_attachments"}
+          labelText={"Link de adjuntos"}
+          value={form.warranty_link_attachments}
+          onChange={handleChange}
+          placeholder="https://drive.google.com/ejemplo"
+        />
 
         <button type="submit" disabled={loading} className="hidden">
           {loading ? "Enviando..." : "Enviar"}
@@ -51,7 +92,7 @@ export default function AddWarrantyModal({ onCloseModal, onAddSuccess }) {
       </form>
 
       <ConfirmCancelButtons
-        confirmButtonOnClick={handleSubmitViaButton}
+        confirmButtonOnClick={(e) => handleSubmit(e, setInnerModal)}
         cancelButtonOnClick={onCloseModal}
         confirmText={loading ? <Loader /> : "Crear"}
       />
@@ -65,8 +106,8 @@ export default function AddWarrantyModal({ onCloseModal, onAddSuccess }) {
           confirmButtonText="Volver"
           onClose={() => {
             setInnerModal(null);
-            onAddSuccess?.();
-            onCloseModal?.();
+            onAddSuccess();
+            onCloseModal();
           }}
         />
       )}
@@ -75,7 +116,9 @@ export default function AddWarrantyModal({ onCloseModal, onAddSuccess }) {
         <ErrorModal
           isOpen
           errorTitle="Error al registrar la garantía"
-          errorText={innerModal.message || "Verifica los datos e inténtalo nuevamente."}
+          errorText={
+            innerModal.message || "Verifica los datos e inténtalo nuevamente."
+          }
           confirmButtonText="Volver"
           onClose={() => setInnerModal(null)}
         />
