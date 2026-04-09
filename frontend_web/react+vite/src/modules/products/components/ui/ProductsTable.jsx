@@ -1,38 +1,39 @@
 import ActionButtons from "../../../../globals/components/ui/ActionButtons";
 import { productStatusConfig } from "../../constants/productStatusConfig";
+import { actionsIcons } from "../../../../assets/icons/mainIcons";
+import { useState } from "react";
 
 export default function ProductsTable({ products, openModal, refetch }) {
+  const [open, setOpen] = useState(false);
+
   return (
     <section
       className="max-h-[95%] max-w-full border border-gray-200 rounded-xl shadow-md overflow-y-auto overflow-x-auto overflow-hidden
-            dark:border-[#303033]"
+      dark:border-[#303033]"
     >
       <table
         className="min-w-full min-h-full appearance-none border-collapse
-              dark:bg-black"
+      dark:bg-black"
       >
         {/* Cabecera de la tabla */}
         <thead
-          className="sticky top-0 bg-white
-                   dark:text-white dark:bg-black"
+          className="sticky top-0
+        dark:text-white dark:bg-black"
         >
           <tr
-            className="h-[40px] border-b border-gray-200 text-sm
-                      dark:border-[#303033]"
+            className="h-[40px] border-b bg-white border-gray-200 text-sm
+            dark:border-[#303033]"
           >
-            <th className="font-medium text-start pl-4"> Estado </th>
-            <th className="font-medium text-start pl-4"> Fecha de Ingreso </th>
-            <th className="font-medium text-start pl-4"> Orden De Entrada </th>
-            <th className="font-medium text-start pl-4"> Subcategoria </th>
-            <th className="font-medium text-start pl-4"> Serial </th>
-            <th className="font-medium text-start pl-4"> Modelo </th>
-            <th className="font-medium text-start pl-2"> Descripción </th>
-            <th className="font-medium text-start pl-4"> Marca </th>
-            <th className="font-medium text-start pl-4">
-              {" "}
-              Tiempo de Garantia{" "}
-            </th>
-            <th className="font-medium text-start pr-4"> Acciones </th>
+            <th className="font-medium text-start pl-4">Estado</th>
+            <th className="font-medium text-start pl-4">Fecha de Ingreso</th>
+            <th className="font-medium text-start pl-4">Orden De Entrada</th>
+            <th className="font-medium text-start pl-4">Subcategoria</th>
+            <th className="font-medium text-start pl-4">Serial</th>
+            <th className="font-medium text-start pl-4">Modelo</th>
+            <th className="font-medium text-start pl-2">Descripción</th>
+            <th className="font-medium text-start pl-4">Marca</th>
+            <th className="font-medium text-start pl-4">Tiempo de Garantia</th>
+            <th className="font-medium text-start pr-4">Acciones</th>
           </tr>
         </thead>
 
@@ -42,9 +43,9 @@ export default function ProductsTable({ products, openModal, refetch }) {
             {/* Productos */}
             <tr
               key={product.product_serial}
-              className="text-base overflow-x-auto overflow-y-auto transition duration-500 text-[#45474d] dark:text-white
-                          hover:bg-[#e3e2e4] hover:shadow-md
-                          dark:hover:bg-[#101012]"
+              className="relative text-base overflow-x-auto overflow-y-auto transition duration-500 text-[#45474d] dark:text-white
+              hover:bg-[#e3e2e4] hover:shadow-md
+              dark:hover:bg-[#2d2d30]"
             >
               {/* Estado */}
               <th className="font-normal pl-4 text-sm">
@@ -53,7 +54,11 @@ export default function ProductsTable({ products, openModal, refetch }) {
                   dark:border-transparent
                   ${productStatusConfig[product.status]?.styles}`}
                 >
-                  <img src={productStatusConfig[product.status]?.icon} alt="" className="w-4" />
+                  <img
+                    src={productStatusConfig[product.status]?.icon}
+                    alt=""
+                    className="w-4"
+                  />
                   <span>{productStatusConfig[product.status]?.text}</span>
                 </div>
               </th>
@@ -99,11 +104,35 @@ export default function ProductsTable({ products, openModal, refetch }) {
               </th>
 
               {/* Botones */}
-              <th className="flex items-center justify-center h-14">
+              <th className="flex items-center justify-center h-14 pr-4">
                 <ActionButtons
                   editButtonOnClick={() => openModal(product, "edit", refetch)}
                   deleteButtonVisible={false}
                 />
+                <button onClick={() => setOpen(!open)} className="pl-4">
+                  <img
+                    src={actionsIcons.arrowBack}
+                    alt=""
+                    className="transition-all duration-500 dark:invert hover:scale-125"
+                  />
+                </button>
+
+                {open && (
+                  <div
+                    className="absolute top-full right-0 w-48 max-h-96 overflow-y-auto rounded-lg border bg-white shadow-lg z-[400]
+                  dark:bg-[#1a1a1a] dark:text-white dark:border-none"
+                  >
+                    {Object.entries(productStatusConfig).map(([id, config]) => (
+                      <div
+                        key={id}
+                        onClick={() => setOpen(false)}
+                        className="px-3 py-2 cursor-pointer text-sm hover:bg-gray-200 dark:hover:bg-[#333]"
+                      >
+                        {config.text}
+                      </div>
+                    ))}
+                  </div>
+                )}
               </th>
             </tr>
           </tbody>
