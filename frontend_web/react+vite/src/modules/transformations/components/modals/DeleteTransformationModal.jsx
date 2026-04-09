@@ -64,8 +64,8 @@ export default function DeleteTransformationModal({
       {innerModal === "success" && (
         <SuccessModal
           isOpen
-          confirmTitle="¡Transformación eliminada con éxito!"
-          confirmText={`La transformación #${selectedTransformation.output_details_id} ha sido eliminada correctamente.`}
+          confirmTitle="¡Transformación deshabilitada con éxito!"
+          confirmText={`La transformación #${selectedTransformation.output_details_id} ha sido deshabilitada correctamente.`}
           confirmButtonText="Volver"
           onClose={() => {
             setInnerModal(null);
