@@ -4,6 +4,62 @@ from app.core.database import get_connection
 class DashboardRepository:
 
     @staticmethod
+    def find_all_and_new_products_ammount():
+        connection = get_connection()
+        cursor = connection.cursor()
+
+        query = """
+        SELECT 
+            (SELECT COUNT(*) FROM PRODUCTS) AS total,
+            (SELECT COUNT(*) 
+            FROM PRODUCTS AS p
+            INNER JOIN PRODUCT_SERIALS AS ps
+            ON p.product_id = ps.product_id
+            INNER JOIN INPUT_ORDERS AS io
+            ON ps.input_order_id = io.input_order_id
+            WHERE MONTH(io.input_order_date) = MONTH(CURDATE())
+            AND YEAR(io.input_order_date) = YEAR(CURDATE())
+            ) AS new_products;"""
+
+        try:
+            cursor.execute(query)
+            result = cursor.fetchall()
+
+            data = [
+                {
+                    "products": item[0],
+                    "new_products": item[1]
+                }
+                for item in result
+            ]
+
+            return None, data
+        except Exception:
+            return f"Error al ejecutar la consulta", None
+        finally:
+            connection.close()
+            cursor.close()
+
+    @staticmethod
+    def find_products_out_of_stock():
+        connection = get_connection()
+        cursor = connection.cursor(dictionary=True)
+
+        query = """
+        SELECT * FROM PRODUCTS
+        WHERE stock = 0
+        ORDER BY product_id DESC"""
+        try:
+            cursor.execute(query)
+            results = cursor.fetchall()
+            return None, results
+        except Exception:
+            return f"❌ Error al ejecutar la consulta:", None
+        finally:
+            cursor.close()
+            connection.close()
+
+    @staticmethod
     def find_all_suppliers_inputs():
         connection = get_connection()
         cursor = connection.cursor(dictionary=True)
