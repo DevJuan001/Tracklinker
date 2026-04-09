@@ -1,43 +1,25 @@
-// src/modules/transformations/components/modals/DeleteTransformationModal.jsx
-import React, { useState } from "react";
-import { useDeleteTransformation } from "../../hooks/useDeleteTransformation";
+import { useState } from "react";
+import { useDisableTransformation } from "../../hooks/useDisableTransformation";
 import SuccessModal from "../../../../globals/components/modals/SuccessModal";
 import ErrorModal from "../../../../globals/components/modals/ErrorModal";
+import Loader from "../../../../globals/components/ui/Loader";
 
-export default function DeleteTransformationModal({
+export default function DisableTransformationModal({
   selectedTransformation,
   onClose,
-  onDeleteSuccess,
+  refetch,
 }) {
   const [innerModal, setInnerModal] = useState(null);
-  const [errorMessage, setErrorMessage] = useState("");
-
-  const { handleDelete, loading } = useDeleteTransformation(
-    () => {
-      setInnerModal("success");
-    },
-    (error) => {
-      setErrorMessage(error);
-      setInnerModal("error");
-    },
+  const { handleSubmit, loading } = useDisableTransformation(
+    selectedTransformation.output_details_id,
   );
-
-  const handleDeleteClick = () => {
-    const id = selectedTransformation?.output_details_id;
-    if (!id) {
-      setErrorMessage("No se pudo obtener el ID de la transformación");
-      setInnerModal("error");
-      return;
-    }
-    handleDelete(id);
-  };
 
   return (
     <div className="flex flex-col items-center p-5">
       <p className="text-lg mb-6 text-center">
-        ¿Estás seguro de que deseas Eliminar la transformación N°{" "}
+        ¿Estás seguro de que deseas deshabilitar la orden de salida N°{" "}
         <span className="font-bold">
-          {selectedTransformation?.output_details_id}
+          {selectedTransformation.output_details_id}
         </span>
         ?
       </p>
@@ -45,10 +27,10 @@ export default function DeleteTransformationModal({
       <div className="flex gap-4 pt-5">
         <button
           className="bg-red-600 text-white px-5 py-2 rounded-xl shadow-xl text-sm transition duration-300 hover:bg-red-700"
-          onClick={handleDeleteClick}
+          onClick={(e) => handleSubmit(e, setInnerModal)}
           disabled={loading}
         >
-          {loading ? "Eliminando..." : "Eliminar"}
+          {loading ? <Loader /> : "Deshabilitar"}
         </button>
 
         <button
@@ -64,13 +46,13 @@ export default function DeleteTransformationModal({
       {innerModal === "success" && (
         <SuccessModal
           isOpen
-          confirmTitle="¡Transformación eliminada con éxito!"
-          confirmText={`La transformación #${selectedTransformation.output_details_id} ha sido eliminada correctamente.`}
+          confirmTitle="¡Orden de salida deshabilitada con éxito!"
+          confirmText={`La orden de salida #${selectedTransformation.output_details_id} ha sido deshabilitada correctamente.`}
           confirmButtonText="Volver"
           onClose={() => {
             setInnerModal(null);
-            onDeleteSuccess?.();
-            onClose?.();
+            refetch();
+            onClose();
           }}
         />
       )}
@@ -79,8 +61,8 @@ export default function DeleteTransformationModal({
       {innerModal === "error" && (
         <ErrorModal
           isOpen
-          errorTitle="Error al eliminar la transformación"
-          errorText={errorMessage}
+          errorTitle="Error al deshabilitar la orden de salida"
+          errorText={"No se pudo deshabilitar la orden de salida"}
           confirmButtonText="Volver"
           onClose={() => setInnerModal(null)}
         />

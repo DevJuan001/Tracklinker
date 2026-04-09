@@ -1,24 +1,21 @@
 import { apiRoutes } from "../../../config/apiRoutes";
 import { getToken } from "../../../utils/auth";
 
-export async function createTransformation(transformationData) {
+export async function enableTransformation(id) {
   const res = await fetch(
-    `${apiRoutes.apiUrl}${apiRoutes.transformations}/create`,
+    `${apiRoutes.apiUrl}${apiRoutes.transformations}/enable/${id}`,
     {
-      method: "POST",
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
         Authorization: getToken(),
       },
-      body: JSON.stringify(transformationData),
     },
   );
-
-  const data = await res.json();
 
   if (!res.ok) {
     throw new Error("Error en la petición");
   }
 
-  return data.data;
+  return await res.json();
 }
