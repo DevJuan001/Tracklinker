@@ -19,13 +19,15 @@ import addressIcon from "./main/users/address-icon.svg";
 import phoneIcon from "./main/users/phone-icon.svg";
 import rolIcon from "./main/users/rol-icon.svg";
 import cityIcon from "./main/users/city-icon.svg";
-import activeCircle from "./main/users/active-circle.svg"
-import inactiveCircle from "./main/users/inactive-circle.svg"
+import activeCircle from "./main/users/active-circle.svg";
+import inactiveCircle from "./main/users/inactive-circle.svg";
 
 /* Products Icons */
 import addProductIcon from "./main/products/add-product-icon.svg";
 import barcodeReaderIcon from "./main/products/barcode-reader-icon.svg";
 import barcodeIcon from "./main/products/barcode-scanner-icon.svg";
+import clockIcon from "./main/products/clock-icon.svg";
+import paymentCard from "./main/products/payment-card-icon.svg";
 
 /* Warranties Icons */
 import addWarrantyIcon from "./main/warranties/add-warranty-icon.svg";
@@ -77,6 +79,8 @@ export const productsIcons = {
   addProductIcon,
   barcodeReaderIcon,
   barcodeIcon,
+  clockIcon,
+  paymentCard,
 };
 
 export const actionsIcons = {
