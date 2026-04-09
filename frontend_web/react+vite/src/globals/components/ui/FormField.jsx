@@ -10,7 +10,7 @@ export default function FormField({
   children
 }) {
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex w-full flex-col items-center">
       <label htmlFor={id} className="self-start text-sm dark:text-white">
         {labelText}
       </label>
