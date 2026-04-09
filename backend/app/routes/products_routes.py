@@ -1,7 +1,7 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Body
 from app.controllers.products_controller import ProductsController
 from app.middlewares.roles_middleware import require_roles
-from app.models.product_model import Product
+from app.models.product_model import Product, UpdateProduct
 from app.models.product_details_model import ProductDetails
 from app.models.product_brand_model import ProductBrand
 from app.models.input_order_model import InputOrder
@@ -55,3 +55,8 @@ def create_product_brand(product_brand: ProductBrand):
 @router.post("/create-input-order")
 def create_product_entry(input_order: InputOrder):
     return ProductsController.create_input_order(input_order)
+
+#Endpoint par actualizar la informacion de un producto
+@router.put("/update")
+def update_product(product_data: UpdateProduct = Body(...)):
+    return ProductsController.update_product(product_data)
