@@ -7,6 +7,7 @@ export async function updateWarranty(id, data) {
     `${apiRoutes.apiUrl}${apiRoutes.warranties}/update/${id}`,
     {
       method: "PUT",
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
         Authorization: getToken(),
