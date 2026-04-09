@@ -26,14 +26,11 @@ export default function AddProductModelModal({ isOpen, onClose }) {
             name="product_brand_id"
             spanText={"Marca"}
             onChange={handleChange}
-          >
-            <option value="">Seleccionar</option>
-            {brands.map((brand) => (
-              <option key={brand.id} value={brand.id}>
-                {brand.name}
-              </option>
-            ))}
-          </SelectMenu>
+            options={brands.map((brand) => ({
+              value: brand.id,
+              label: brand.name,
+            }))}
+          />
           <FormField
             name="product_detail_model"
             labelText={"Modelo"}
