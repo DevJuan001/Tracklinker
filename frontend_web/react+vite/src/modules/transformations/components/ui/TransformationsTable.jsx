@@ -78,8 +78,16 @@ export default function TransformationsTable({
                     }}
                     deleteButtonOnClick={(e) => {
                       e.stopPropagation();
-                      openModal(transformation, "delete", refetch);
+                      openModal(
+                        transformation,
+                        userStatus[transformation.out_order_status]?.modalType,
+                        refetch,
+                      );
                     }}
+                    visibilityIcon={
+                      userStatus[transformation.out_order_status]
+                        ?.visibilityIcon
+                    }
                   >
                     <button
                       className="hover:scale-125 transition"
