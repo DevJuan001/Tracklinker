@@ -45,17 +45,24 @@ export default function AddProductBrandModal({ isOpen, onClose }) {
           isOpen={true}
           onClose={() => {
             fetchBrands();
+            onClose();
             setInnerModal(null);
           }}
           confirmTitle={"Marca creada correctamente"}
-          confirmText={"La marca ha sido creada con exito"}
+          confirmText={
+            "La marca ha sido creada con exito, ya puedes volver y usarla"
+          }
           confirmButtonText={"Volver"}
         />
       )}
       {innerModal === "error" && (
         <ErrorModal
           isOpen={true}
-          onClose={() => setInnerModal(null)}
+          onClose={() => {
+            fetchBrands();
+            onClose();
+            setInnerModal(null);
+          }}
           confirmButtonText={"Volver a intentarlo"}
           errorTitle={"!No se pudo crear la marca!"}
           errorText={"Revisa que el campo tenga datos y vuelve a intentarlo"}
