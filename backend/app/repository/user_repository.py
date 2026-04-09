@@ -127,7 +127,7 @@ class UserRepository:
         FROM USERS AS u 
         INNER JOIN ROLES AS r 
         ON r.rol_id = u.rol_id 
-        WHERE user_email = %s
+        WHERE u.user_email = %s AND u.user_status = 1
         """
 
         try:
