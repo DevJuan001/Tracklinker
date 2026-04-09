@@ -6,3 +6,7 @@ class ProductDetails(BaseModel):
     product_brand_id: int
     product_detail_model: str
     product_detail_description: str
+
+class UpdateProductDetails(BaseModel):
+    product_brand_id: int
+    product_details_id: int
