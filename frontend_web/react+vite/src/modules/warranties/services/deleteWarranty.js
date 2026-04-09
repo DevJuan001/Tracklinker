@@ -6,6 +6,7 @@ export async function deleteWarranty(warrantyId) {
     `${apiRoutes.apiUrl}${apiRoutes.warranties}/delete/${warrantyId}`,
     {
       method: "DELETE",
+      credentials: "include",
       headers: {
         Authorization: getToken(),
       },

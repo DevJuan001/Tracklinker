@@ -4,6 +4,7 @@ import { useCreateWarranty } from "../../hooks/useCreateWarranties"; // ⚠ Aseg
 
 import SuccessModal from "../../../../globals/components/modals/SuccessModal";
 import ErrorModal from "../../../../globals/components/modals/ErrorModal";
+import Loader from "../../../../globals/components/ui/Loader";
 
 export default function AddWarrantyModal({ onCloseModal, onAddSuccess }) {
   const formRef = useRef(null);
@@ -52,7 +53,7 @@ export default function AddWarrantyModal({ onCloseModal, onAddSuccess }) {
       <ConfirmCancelButtons
         confirmButtonOnClick={handleSubmitViaButton}
         cancelButtonOnClick={onCloseModal}
-        confirmLoading={loading}
+        confirmText={loading ? <Loader /> : "Crear"}
       />
 
       {/* MODALES DE ÉXITO / ERROR */}
