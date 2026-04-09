@@ -168,7 +168,7 @@ export default function Aside({ avatarOnClick, helpOnClick }) {
                   alt={avatarItem.alt}
                   className="w-8 h-8"
                 />
-                <section className="text-center">
+                <section className="hidden text-center xl:block">
                   <span className="text-[#4a4a4d] font-medium dark:text-[#7E8088]">
                     {user.name} {user.first_surname}
                   </span>
