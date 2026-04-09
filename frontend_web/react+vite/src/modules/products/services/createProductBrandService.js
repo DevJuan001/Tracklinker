@@ -6,6 +6,7 @@ export async function createProductBrandService(formData) {
     `${apiRoutes.apiUrl}${apiRoutes.products}/create-brand`,
     {
       method: "POST",
+      credentials: "include",
       headers: {
         Authorization: getToken(),
         "Content-Type": "application/json",

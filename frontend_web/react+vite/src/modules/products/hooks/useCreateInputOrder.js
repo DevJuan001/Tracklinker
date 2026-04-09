@@ -16,7 +16,7 @@ export function useCreateInputOrder(formData) {
     setLoading(true);
     try {
       const response = await createInputOrderService(form);
-      if (response.sucess) {
+      if (response.success) {
         setInnerModal("success");
       }
     } catch (error) {

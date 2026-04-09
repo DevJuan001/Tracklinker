@@ -18,7 +18,7 @@ export function useCreateProductModel(formData) {
     setLoading(true)
     try {
       const response = await createProductModelService(form);
-      if (response.sucess) {
+      if (response.success) {
         setInnerModal("success");
       }
     } catch (error) {

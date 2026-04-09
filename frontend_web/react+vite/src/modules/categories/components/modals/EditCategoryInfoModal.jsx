@@ -14,8 +14,8 @@ export default function EditCategoryInfoModal({ category, onClose}) {
   const { form, loading, handleChange, handleSubmit } = useEditCategory(
     category.category_id,
     {
-      category_name: category.category_name || "",
-      category_description: category.category_description || "",
+      name: category.category_name || "",
+      description: category.category_description || "",
     }
   );
   return (
@@ -23,16 +23,16 @@ export default function EditCategoryInfoModal({ category, onClose}) {
       <form action="" className="flex flex-col gap-2">
         <FormField
           onChange={handleChange}
-          value={form.category_name}
-          name={"category_name"}
+          value={form.name}
+          name={"name"}
           labelText={"Nombre de la Categoría"}
           id={"category_name"}
         />
         <FormField
           onChange={handleChange}
-          value={form.category_description}
-          name={"category_description"}
-          labelText={"Nombre de la Categoría"}
+          value={form.description}
+          name={"description"}
+          labelText={"Descripción de la Categoría"}
           id={"category_description"}
         />
       </form>

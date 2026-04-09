@@ -62,7 +62,7 @@ export default function AddSubcategoryModal({ onClose }) {
           isOpen={true}
           confirmTitle={"Subcategoria creada con éxito!"}
           confirmText={
-            "Se ha creado correctamente la subcategoria, toca el botón de volver a la pagina de subcategorias para verla"
+            "Se ha creado correctamente la subcategoria, toca el botón de volver para verla o usarla"
           }
           confirmButtonText={"Volver a la pagina"}
           onClose={() => {

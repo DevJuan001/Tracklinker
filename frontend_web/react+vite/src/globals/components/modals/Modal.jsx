@@ -27,7 +27,8 @@ export default function Modal({
   return (
     /* Container de la modal */
     <section
-      className={`fixed inset-0 bg-[#0000002c] z-${z_index}}
+      style={{ zIndex: z_index }}
+      className={`fixed inset-0 bg-[#0000002c]
             ${
               type === "filter"
                 ? "flex justify-end items-start pr-[260px] pt-4 bg-[#00000013]"

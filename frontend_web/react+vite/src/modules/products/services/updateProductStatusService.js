@@ -1,9 +1,9 @@
 import { apiRoutes } from "../../../config/apiRoutes";
 import { getToken } from "../../../utils/auth";
 
-export async function editProductService(product_data) {
+export async function updateProductStatusService(product_data) {
   const response = await fetch(
-    `${apiRoutes.apiUrl}${apiRoutes.products}/update`,
+    `${apiRoutes.apiUrl}${apiRoutes.products}/update-status`,
     {
       method: "PUT",
       credentials: "include",
