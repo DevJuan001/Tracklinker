@@ -30,7 +30,8 @@ SELECT
     pd.product_details_id,
     pd.product_detail_description,
     pb.product_brand_name,
-    ps.product_garanty_input
+    ps.product_garanty_input,
+    pd.product_status
     FROM SUPPLIERS AS s
     INNER JOIN INPUT_ORDERS AS io
     ON s.supplier_id = io.supplier_id
