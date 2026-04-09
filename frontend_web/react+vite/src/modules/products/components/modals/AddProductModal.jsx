@@ -22,7 +22,16 @@ import AddSubcategoryModal from "../../../subcategories/components/modals/AddSub
 
 export default function AddProductModal({ onCloseModal }) {
   const [innerModal, setInnerModal] = useState(null);
-  const { subcategories, brands, models, inputOrders } = useCatalog();
+  const {
+    subcategories,
+    brands,
+    models,
+    inputOrders,
+    fetchSubcategories,
+    fetchBrands,
+    fetchModels,
+    fetchInputOrders,
+  } = useCatalog();
   const { form, loading, handleChange, handleSubmit } = useCreateProduct({
     input_order_id: "",
     subcategory_id: "",
@@ -163,7 +172,13 @@ export default function AddProductModal({ onCloseModal }) {
         />
       )}
       {innerModal === "addInputOrder" && (
-        <AddInputOrderModal isOpen={true} onClose={() => setInnerModal(null)} />
+        <AddInputOrderModal
+          isOpen={true}
+          onClose={() => {
+            setInnerModal(null);
+            fetchInputOrders();
+          }}
+        />
       )}
       {innerModal === "addSubcategory" && (
         <AddInnerModal
@@ -171,19 +186,30 @@ export default function AddProductModal({ onCloseModal }) {
           onClose={() => setInnerModal(null)}
           title={"Agregar subcategoria"}
         >
-          <AddSubcategoryModal onClose={() => setInnerModal(null)} />
+          <AddSubcategoryModal
+            onClose={() => {
+              setInnerModal(null);
+              fetchSubcategories();
+            }}
+          />
         </AddInnerModal>
       )}
       {innerModal === "addBrand" && (
         <AddProductBrandModal
           isOpen={true}
-          onClose={() => setInnerModal(null)}
+          onClose={() => {
+            setInnerModal(null);
+            fetchBrands();
+          }}
         />
       )}
       {innerModal === "addModel" && (
         <AddProductModelModal
           isOpen={true}
-          onClose={() => setInnerModal(null)}
+          onClose={() => {
+            setInnerModal(null);
+            fetchModels;
+          }}
         />
       )}
     </section>
