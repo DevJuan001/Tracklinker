@@ -47,6 +47,17 @@ class ProductsController:
         return {
             "data": models
         }
+    
+    @staticmethod
+    def get_all_product_status():
+        error, status = ProductsRepository.find_all_product_status()
+
+        if error:
+            raise HTTPException(status_code=404, detail=error)
+
+        return {
+            "data": status
+        }
 
     @staticmethod
     def create_product(product_data: Product):
