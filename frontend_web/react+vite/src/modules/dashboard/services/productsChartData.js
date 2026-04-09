@@ -3,7 +3,7 @@ import { getToken } from "../../../utils/auth";
 
 export async function productsChartData() {
   const res = await fetch(
-    `${apiRoutes.apiUrl}${apiRoutes.products}/all-and-new`,
+    `${apiRoutes.apiUrl}${apiRoutes.dashboard}/all-and-new`,
     {
       method: "GET",
       headers: {

@@ -1,8 +1,8 @@
-import { settings } from "../../../config/settings";
+import { apiRoutes } from "../../../config/apiRoutes";
 import { getToken } from "../../../utils/auth";
 
-export async function tinyLineChartData(params) {
-  const res = await fetch(`${settings.apiUrl}/dashboard/`, {
+export async function tinyLineChartData() {
+  const res = await fetch(`${apiRoutes.apiUrl}${apiRoutes.dashboard}/`, {
     headers: {
       Authorization: getToken(),
     },
