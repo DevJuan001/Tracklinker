@@ -117,3 +117,13 @@ class ProductsController:
             "message": message
         }
 
+    @staticmethod
+    def update_product_status(product_data: dict):
+        error, success, message = ProductsRepository.update_product_status(product_data)
+        
+        if error:
+            raise HTTPException(status_code=400, detail=error)
+        return {
+            "success": success,
+            "message": message
+        }

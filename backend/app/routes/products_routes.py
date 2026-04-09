@@ -56,7 +56,12 @@ def create_product_brand(product_brand: ProductBrand):
 def create_product_entry(input_order: InputOrder):
     return ProductsController.create_input_order(input_order)
 
-#Endpoint par actualizar la informacion de un producto
+#Endpoint para actualizar la informacion de un producto
 @router.put("/update")
 def update_product(product_data: UpdateProduct = Body(...)):
     return ProductsController.update_product(product_data)
+
+#Endpoint para actualizar el estado de un producto
+@router.put("/update-status")
+def update_product_status(product_data: dict = Body(...)):
+    return ProductsController.update_product_status(product_data)
