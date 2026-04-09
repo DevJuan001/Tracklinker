@@ -6,12 +6,14 @@ import { getProductModels } from "../services/getProductModels";
 import { getInputOrdersService } from "../services/getInputOrdersService";
 import { getCategoriesService } from "../../categories/services/getCategoriesService";
 import { getSubcategories } from "../../subcategories/services/getSubcategoriesService";
+import { getProductStatus } from "../services/getProductStatus";
 
 export function useCatalog() {
   // Definir los estados y sus valores por defecto
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [subcategories, setSubcategories] = useState([]);
+  const [productStatus, setProductStatus] = useState([]);
   const [brands, setBrands] = useState([]);
   const [models, setModels] = useState([]);
   const [inputOrders, setInputOrders] = useState([]);
@@ -75,6 +77,15 @@ export function useCatalog() {
     }
   }
 
+  async function fetchProductStatus() {
+    try {
+      const productStatus = await getProductStatus();
+      setProductStatus(productStatus);
+    } catch (error) {
+      setError(error.message);
+    }
+  }
+
   useEffect(() => {
     fetchProducts();
     fetchCategories();
@@ -82,6 +93,7 @@ export function useCatalog() {
     fetchBrands();
     fetchModels();
     fetchInputOrders();
+    fetchProductStatus();
   }, []);
 
   return {
@@ -91,6 +103,7 @@ export function useCatalog() {
     brands,
     models,
     inputOrders,
+    productStatus,
     loading,
     error,
     fetchProducts,
@@ -99,5 +112,6 @@ export function useCatalog() {
     fetchInputOrders,
     fetchModels,
     fetchSubcategories,
+    fetchProductStatus,
   };
 }
