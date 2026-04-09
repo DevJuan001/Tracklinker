@@ -53,14 +53,14 @@ export default function SelectMenu({
 
       {open && (
         <div
-          className="absolute top-full left-0 w-full max-h-60 overflow-y-auto rounded-lg border bg-white shadow-lg z-[400]
+          className="absolute top-full left-0 w-full max-h-96 overflow-y-auto rounded-lg border bg-white shadow-lg z-[400]
         dark:bg-[#1a1a1a] dark:text-white dark:border-none"
         >
           {options.map((option) => (
             <div
               key={option.value}
               onClick={() => handleSelect(option)}
-              className="px-3 py-2 cursor-pointer hover:bg-gray-200 dark:hover:bg-[#333]"
+              className="px-3 py-2 cursor-pointer text-sm hover:bg-gray-200 dark:hover:bg-[#333]"
             >
               {option.label}
             </div>
