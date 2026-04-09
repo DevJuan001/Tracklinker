@@ -69,9 +69,7 @@ export default function ProductsPage() {
             closeModal();
           }}
         >
-          {modalType === "user" && (
-            <ProfileModal />
-          )}
+          {modalType === "user" && <ProfileModal />}
           {modalType === "filter" && (
             <ProductsFilterModal onCloseModal={() => closeModal()} />
           )}
@@ -86,8 +84,9 @@ export default function ProductsPage() {
           {/* Modal para editar el producto */}
           {modalType === "edit" && (
             <EditProductModal
-              onCloseModal={() => closeModal()}
+              refetch={fetchProducts}
               selectedProduct={modalData}
+              onCloseModal={() => closeModal()}
             />
           )}
         </Modal>
