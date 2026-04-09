@@ -22,7 +22,6 @@ SELECT
     io.input_order_date,
     io.input_order_bill,
     c.category_name,
-    sc.subcategory_id,
     sc.subcategory_name,
     p.product_id,
     s.supplier_name,
