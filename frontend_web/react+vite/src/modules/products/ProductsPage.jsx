@@ -12,8 +12,11 @@ import Modal from "../../globals/components/modals/Modal";
 import HelpModal from "../../globals/components/modals/HelpModal";
 import AddProductModal from "./components/modals/AddProductModal";
 import EditProductModal from "./components/modals/EditProductModal";
-import ProfileModal from "../../globals/components/modals/profileModal/ProfileModal";
+import EnableProductModal from "./components/modals/EnableProductModal";
 import ProductsFilterModal from "./components/modals/ProductsFilterModal";
+import DisableProductModal from "./components/modals/DisableProductModal";
+import AddWarrantyModal from "../warranties/components/modals/AddWarrantyModal";
+import ProfileModal from "../../globals/components/modals/profileModal/ProfileModal";
 
 export default function ProductsPage() {
   const { modalType, modalData, isOpen, openModal, closeModal } = useModal();
@@ -61,7 +64,13 @@ export default function ProductsPage() {
                     ? "Agregar Producto"
                     : modalType === "edit"
                       ? "Editar Producto"
-                      : "Eliminar Producto"
+                      : modalType === "enable"
+                        ? "Habilitar Producto"
+                        : modalType === "disable"
+                          ? "Deshabilitar Producto"
+                          : modalType === "addWarranty"
+                            ? "Agregar Garantía"
+                            : ""
           }
           type={modalType}
           isOpen={isOpen}
@@ -86,6 +95,28 @@ export default function ProductsPage() {
             <EditProductModal
               refetch={fetchProducts}
               selectedProduct={modalData}
+              onCloseModal={() => closeModal()}
+            />
+          )}
+          {modalType === "disable" && (
+            <DisableProductModal
+              refetch={fetchProducts}
+              product={modalData}
+              onClose={() => closeModal()}
+            />
+          )}
+          {modalType === "enable" && (
+            <EnableProductModal
+              refetch={fetchProducts}
+              product={modalData}
+              onClose={() => closeModal()}
+            />
+          )}
+          {modalType === "addWarranty" && (
+            <AddWarrantyModal
+              refetch={fetchProducts}
+              product={modalData}
+              onAddSuccess={() => closeModal()}
               onCloseModal={() => closeModal()}
             />
           )}
