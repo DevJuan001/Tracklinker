@@ -1,7 +1,7 @@
-import ActionButtons from "../../../../globals/components/ui/ActionButtons";
-import { productStatusConfig } from "../../constants/productStatusConfig";
-import { actionsIcons } from "../../../../assets/icons/mainIcons";
 import { useState } from "react";
+import { productsIcons } from "../../../../assets/icons/mainIcons";
+import { productStatusConfig } from "../../constants/productStatusConfig";
+import ActionButtons from "../../../../globals/components/ui/ActionButtons";
 
 export default function ProductsTable({ products, openModal, refetch }) {
   const [openId, setOpenId] = useState(null);
@@ -22,7 +22,7 @@ export default function ProductsTable({ products, openModal, refetch }) {
         >
           <tr
             className="h-[40px] border-b bg-white border-gray-200 text-sm
-            dark:border-[#303033]"
+            dark:border-[#303033] dark:bg-[#1a1a1a]"
           >
             <th className="font-medium text-start pl-4">Estado</th>
             <th className="font-medium text-start pl-4">Fecha de Ingreso</th>
@@ -106,7 +106,10 @@ export default function ProductsTable({ products, openModal, refetch }) {
               {/* Botones */}
               <th className="flex items-center justify-center h-14 pr-4">
                 <ActionButtons
-                  editButtonOnClick={() => openModal(product, "edit", refetch)}
+                  editButtonOnClick={() => {
+                    setOpenId(null);
+                    openModal(product, "edit", refetch);
+                  }}
                   deleteButtonVisible={false}
                 />
                 <button
@@ -120,9 +123,9 @@ export default function ProductsTable({ products, openModal, refetch }) {
                   className="pl-4"
                 >
                   <img
-                    src={actionsIcons.arrowBack}
+                    src={productsIcons.changeStatusIcon}
                     alt=""
-                    className="transition-all duration-500 dark:invert hover:scale-125"
+                    className="w-6 h-6 transition-all duration-500 dark:invert hover:scale-125"
                   />
                 </button>
 
@@ -131,15 +134,23 @@ export default function ProductsTable({ products, openModal, refetch }) {
                     className="absolute top-full right-0 w-48 max-h-96 overflow-y-auto rounded-lg border bg-white shadow-lg z-[400]
                   dark:bg-[#1a1a1a] dark:text-white dark:border-none"
                   >
-                    {Object.entries(productStatusConfig).map(([id, config]) => (
-                      <div
-                        key={id}
-                        onClick={() => setOpenId(null)}
-                        className="px-3 py-2 cursor-pointer text-sm font-normal transition-all duration-200 hover:bg-gray-200 dark:hover:bg-[#333]"
-                      >
-                        {config.text}
-                      </div>
-                    ))}
+                    <div className="flex items-center font-bold py-1.5 px-2 border-b text-sm">
+                      <span>Cambiar estado</span>
+                    </div>
+                    {Object.entries(productStatusConfig)
+                      .filter(([id]) => Number(id) !== product.status)
+                      .map(([id, config]) => (
+                        <div
+                          key={id}
+                          onClick={() => {
+                            openModal(product, config.modalType, refetch);
+                            setOpenId(null);
+                          }}
+                          className={`${config.optionStyles} px-3 py-2 cursor-pointer text-sm font-normal transition-all duration-200 hover:bg-gray-200 dark:hover:bg-[#333]`}
+                        >
+                          <span>{config.optionText}</span>
+                        </div>
+                      ))}
                   </div>
                 )}
               </th>
