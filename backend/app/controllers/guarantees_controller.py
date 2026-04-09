@@ -30,7 +30,7 @@ class GuaranteeController:
         if error:
             raise HTTPException (status_code=400, detail=error)
         return{
-            "seccess":success,
+            "success":success,
             "message": message
         }
 
