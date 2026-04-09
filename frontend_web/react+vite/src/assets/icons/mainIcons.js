@@ -28,6 +28,7 @@ import barcodeReaderIcon from "./main/products/barcode-reader-icon.svg";
 import barcodeIcon from "./main/products/barcode-scanner-icon.svg";
 import clockIcon from "./main/products/clock-icon.svg";
 import paymentCard from "./main/products/payment-card-icon.svg";
+import changeStatusIcon from "./main/products/change-status.svg";
 
 /* Warranties Icons */
 import addWarrantyIcon from "./main/warranties/add-warranty-icon.svg";
@@ -81,6 +82,7 @@ export const productsIcons = {
   barcodeIcon,
   clockIcon,
   paymentCard,
+  changeStatusIcon
 };
 
 export const actionsIcons = {
