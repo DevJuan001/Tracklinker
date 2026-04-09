@@ -1,7 +1,7 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Body
 from app.controllers.products_controller import ProductsController
 from app.middlewares.roles_middleware import require_roles
-from app.models.product_model import Product
+from app.models.product_model import Product, UpdateProduct
 from app.models.product_details_model import ProductDetails
 from app.models.product_brand_model import ProductBrand
 from app.models.input_order_model import InputOrder
@@ -15,11 +15,6 @@ router = APIRouter(
 @router.get("/")
 def get_all_products():
     return ProductsController.get_all_products()
-
-# Endpoint para obtener todos los productos y el numero de productos nuevos
-@router.get("/all-and-new")
-def get_old_and_new_products_ammount():
-    return ProductsController.get_all_and_new_products_ammount()
 
 # Endpoint para obtener todas las marcas de productos
 @router.get("/brands")
@@ -55,3 +50,8 @@ def create_product_brand(product_brand: ProductBrand):
 @router.post("/create-input-order")
 def create_product_entry(input_order: InputOrder):
     return ProductsController.create_input_order(input_order)
+
+#Endpoint par actualizar la informacion de un producto
+@router.put("/update")
+def update_product(product_data: UpdateProduct = Body(...)):
+    return ProductsController.update_product(product_data)

@@ -6,3 +6,9 @@ class ProductSerial(BaseModel):
     product_id: int
     input_order_id: int
     product_garanty_input: datetime
+
+class UpdateProductSerial(BaseModel):
+    product_serial: str
+    product_id: int
+    input_order_id: int
+    product_garanty_input: datetime
