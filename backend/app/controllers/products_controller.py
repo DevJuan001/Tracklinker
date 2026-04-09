@@ -1,4 +1,5 @@
 from app.repository.products_repository import ProductsRepository
+from app.models.product_model import UpdateProduct, Product
 from fastapi import HTTPException
 
 
@@ -59,7 +60,7 @@ class ProductsController:
         return {
             "data": products
         }
-    
+
     @staticmethod
     def get_all_input_orders():
         error, input_orders = ProductsRepository.find_all_input_orders()
@@ -81,7 +82,7 @@ class ProductsController:
         return {
             "data": brands
         }
-    
+
     @staticmethod
     def get_all_product_models():
         error, models = ProductsRepository.find_all_product_models()
@@ -94,9 +95,9 @@ class ProductsController:
         }
 
     @staticmethod
-    def create_product(product_garanty_input):
+    def create_product(product_data: Product):
         error, success, message = ProductsRepository.create_product(
-            product_garanty_input)
+            product_data)
 
         if error:
             raise HTTPException(status_code=400, detail=error)
@@ -116,7 +117,7 @@ class ProductsController:
             "sucess": success,
             "message": message
         }
-    
+
     @staticmethod
     def create_product_brand(product_brand):
         error, success, message = ProductsRepository.create_product_brand(
@@ -128,10 +129,11 @@ class ProductsController:
             "sucess": success,
             "message": message
         }
-    
+
     @staticmethod
     def create_input_order(input_order):
-        error, success, message = ProductsRepository.create_input_order(input_order)
+        error, success, message = ProductsRepository.create_input_order(
+            input_order)
 
         if error:
             raise HTTPException(status_code=400, detail=error)
@@ -139,3 +141,15 @@ class ProductsController:
             "sucess": success,
             "message": message
         }
+
+    @staticmethod
+    def update_product(product_data: UpdateProduct):
+        error, success, message = ProductsRepository.update_product(product_data)
+        
+        if error:
+            raise HTTPException(status_code=400, detail=error)
+        return {
+            "success": success,
+            "message": message
+        }
+
