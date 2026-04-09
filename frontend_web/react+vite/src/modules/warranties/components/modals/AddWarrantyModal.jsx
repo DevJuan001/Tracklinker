@@ -1,11 +1,13 @@
+// Hooks
 import { useState } from "react";
-import ConfirmCancelButtons from "../../../../globals/components/modals/ConfirmCancelButtons";
 import { useCreateWarranty } from "../../hooks/useCreateWarranties"; // ⚠ Asegúrate de que la ruta es correcta
-
-import SuccessModal from "../../../../globals/components/modals/SuccessModal";
-import ErrorModal from "../../../../globals/components/modals/ErrorModal";
+// Componentes
 import Loader from "../../../../globals/components/ui/Loader";
 import FormField from "../../../../globals/components/ui/FormField";
+import ConfirmCancelButtons from "../../../../globals/components/modals/ConfirmCancelButtons";
+// Modales
+import ErrorModal from "../../../../globals/components/modals/ErrorModal";
+import SuccessModal from "../../../../globals/components/modals/SuccessModal";
 
 export default function AddWarrantyModal({
   product,
@@ -14,7 +16,7 @@ export default function AddWarrantyModal({
 }) {
   const [innerModal, setInnerModal] = useState(null);
   const { form, loading, handleChange, handleSubmit } = useCreateWarranty({
-    product_serial: product.product_serial || "",
+    product_serial: product?.product_serial || "",
     warranty_customer: "",
     warranty_phone: "",
     warranty_address: "",
@@ -28,6 +30,7 @@ export default function AddWarrantyModal({
     <section className="flex flex-col items-center">
       <form className="flex flex-col gap-1">
         <FormField
+          placeholder={"QTYC99999"}
           name={"product_serial"}
           labelText={"Serial"}
           value={form.product_serial}
