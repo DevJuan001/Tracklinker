@@ -6,6 +6,7 @@ export async function getCategories() {
   // Consumimos el endpoint y lo almacenamos en res, le pasamos el metodo y el jwt que necesita para traer los datos
   const res = await fetch(`${apiRoutes.apiUrl}${apiRoutes.categories}/`, {
     method: "GET",
+    credentials: "include",
     headers: {
       Authorization: getToken(),
     },
