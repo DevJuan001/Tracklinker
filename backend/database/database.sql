@@ -60,7 +60,6 @@ CREATE TABLE PRODUCT_DETAILS (
   product_detail_model VARCHAR(255) NOT NULL COMMENT 'Modelo que tiene o maneja el producto, Se utiliza para diferenciarlo de otros productos o indicar los productos similares (VARCHAR(45), Not null)',
   product_detail_description TEXT NOT NULL COMMENT 'Descripción sobre el producto, Contiene un texto que detalla meticulosamente cada cualidad del producto (VARCHAR(100), Not null)',
   product_detail_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Fecha en la que se agrego el producto',
-  product_status INT NOT NULL DEFAULT 1 COMMENT 'Estado actual del producto 0 = inactivo, 1 = activo, 2 = Vendido, 3 = En garantía',
   PRIMARY KEY (product_details_id),
   INDEX fk_product_details_product_brand_idx (product_brand_id ASC),
   CONSTRAINT fk_product_details_product_brand
@@ -179,6 +178,7 @@ CREATE TABLE PRODUCTS (
   product_id INT NOT NULL AUTO_INCREMENT COMMENT 'Identificador de cada producto, El cúal sirve para relacionar los productos con su respectivo serial (INT, Not Null, Auto Increment)',
   subcategory_id INT NOT NULL COMMENT 'Identificador de cada Subcategoria, Este campo sirve para relacionar los productos con las subcategorias y poder clasificarlos según el grupo que los agrupe (INT, Not null)',
   product_details_id INT NOT NULL COMMENT 'Identificador de detalles del producto\n.\nIdentificador único que referencia un conjunto específico de detalles asociados a un producto, como sus especificaciones técnicas, presentación, lote, ubicación, estado o características adicionales. Este campo es obligatorio para asegurar la trazabilidad y correcta asociación con los productos registrados.',
+  product_status INT NOT NULL DEFAULT 1 COMMENT 'Estado actual del producto 0 = inactivo, 1 = activo, 2 = Vendido, 3 = En garantía',
   PRIMARY KEY (product_id),
   UNIQUE INDEX idPRODUCTS_UNIQUE (product_id ASC),
   INDEX fk_products_subcategory_idx (subcategory_id ASC),

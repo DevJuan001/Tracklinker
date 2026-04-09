@@ -31,15 +31,11 @@ export default function AddSubcategoryModal({ onClose }) {
           name={"category_id"}
           spanText={"Categoria"}
           onChange={handleChange}
-        >
-          <option> Seleccionar </option>
-          {categories.map((category) => (
-            <option value={category.category_id} key={category.category_id}>
-              {category.category_name}
-            </option>
-          ))}
-          <option value="add-subcategory"> Agregar categoria</option>
-        </SelectMenu>
+          options={categories.map((category) => ({
+            value: category.category_id,
+            label: category.category_name,
+          }))}
+        ></SelectMenu>
 
         <FormField
           labelText={"Nombre de la Subcategoria"}

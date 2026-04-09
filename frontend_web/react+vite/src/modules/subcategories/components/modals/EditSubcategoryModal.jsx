@@ -19,7 +19,7 @@ export default function EditSubcategoryInfoModal({ subcategory, onClose }) {
     {
       category_id: subcategory.category_id || "",
       subcategory_name: subcategory.subcategory_name || "",
-    }
+    },
   );
   return (
     <section className="flex flex-col items-center">
@@ -31,15 +31,11 @@ export default function EditSubcategoryInfoModal({ subcategory, onClose }) {
           name={"category_id"}
           spanText={"Categoria"}
           onChange={handleChange}
-        >
-          <option> Seleccionar </option>
-          {categories.map((category) => (
-            <option value={category.category_id} key={category.category_id}>
-              {category.category_name}
-            </option>
-          ))}
-          <option value="add-subcategory"> Agregar categoria</option>
-        </SelectMenu>
+          options={categories.map((category) => ({
+            value: category.category_id,
+            label: category.category_name,
+          }))}
+        />
         <FormField
           value={form.subcategory_name}
           onChange={handleChange}

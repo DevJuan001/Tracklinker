@@ -7,6 +7,11 @@ router = APIRouter(
     tags=["Dashboard"]
 )
 
+# Endpoint para obtener todos los productos y el numero de productos nuevos
+@router.get("/all-and-new")
+def get_old_and_new_products_ammount():
+    return DashboardController.get_all_and_new_products_ammount()
+
 # Endopoint para obtener las entradas mensuales de cada proveedor
 @router.get("/monthly-inputs")
 def get_monthly_suppliers_inputs():

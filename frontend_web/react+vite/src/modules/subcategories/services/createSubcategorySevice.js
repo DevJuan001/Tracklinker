@@ -4,6 +4,7 @@ import { getToken } from "../../../utils/auth";
 export async function createSubcategory(subcategory_data) {
   const res = await fetch(`${apiRoutes.apiUrl}${apiRoutes.subcategories}/create`, {
     method: "POST",
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
       Authorization: getToken(),

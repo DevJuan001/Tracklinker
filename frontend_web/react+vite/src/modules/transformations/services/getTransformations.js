@@ -2,20 +2,16 @@ import { apiRoutes } from "../../../config/apiRoutes";
 import { getToken } from "../../../utils/auth";
 
 export async function getTransformations() {
-  const url = `${apiRoutes.apiUrl}${apiRoutes.transformations}`;
-
-  const res = await fetch(url, {
+  const res = await fetch(`${apiRoutes.apiUrl}${apiRoutes.transformations}`, {
     method: "GET",
     headers: { Authorization: getToken() },
   });
 
-  // Evitamos crash si no es JSON
-  let data = null;
-  try { data = await res.json(); } catch {}
+  const data = await res.json();
 
   if (!res.ok) {
-    throw new Error(data?.message || `Error en la petición: ${res.status} ${res.statusText}`);
+    throw new Error("Error en la petición");
   }
 
-  return data?.data || data;
+  return data.data;
 }

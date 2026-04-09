@@ -31,6 +31,11 @@ def get_all_models():
 def get_all_input_orders():
     return ProductsController.get_all_input_orders()
 
+# Endpoint para obtener las estados de los productos
+@router.get("/status")
+def get_all_product_status():
+    return ProductsController.get_all_product_status()
+
 # Endpoint para crear o agregar productos
 @router.post("/create")
 def create_product(product_data: Product):

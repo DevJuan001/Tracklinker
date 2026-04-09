@@ -6,6 +6,7 @@ export async function editSubcategoryService(subcategory_id, subcategory_data) {
     `${apiRoutes.apiUrl}${apiRoutes.subcategories}/update/${subcategory_id}`,
     {
       method: "PUT",
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
         Authorization: getToken(),
