@@ -4,7 +4,9 @@ import { usersIcons } from "../../../assets/icons/mainIcons";
 export const productStatusConfig = {
   0: {
     text: "Deshabilitado",
-    modalType: "enable",
+    modalType: "disable",
+    optionText: "Deshabilitar",
+    optionStyles: "hover:bg-red-50 text-red-600 dark:text-red-400",
     visibilityIcon: false,
     icon: usersIcons.inactiveCircle,
     styles:
@@ -12,7 +14,9 @@ export const productStatusConfig = {
   },
   1: {
     text: "Activo",
-    modalType: "disable",
+    modalType: "enable",
+    optionText: "Habilitar",
+    optionStyles: "hover:bg-green-50 text-green-600 dark:text-green-400",
     visibilityIcon: true,
     icon: usersIcons.activeCircle,
     styles:
@@ -20,7 +24,8 @@ export const productStatusConfig = {
   },
   2: {
     text: "Vendido",
-    modalType: "disable",
+    optionText: "Vender",
+    optionStyles: "hover:bg-blue-50 text-blue-600 dark:text-blue-400",
     visibilityIcon: true,
     icon: productsIcons.paymentCard,
     styles:
@@ -28,9 +33,11 @@ export const productStatusConfig = {
   },
   3: {
     text: "En garantía",
-    modalType: "disable",
+    optionText: "Agregar garantía",
+    optionStyles: "hover:bg-amber-50 text-amber-600 dark:text-amber-400",
+    modalType: "addWarranty",
     visibilityIcon: true,
-    icon: productsIcons.clockIcon,  
+    icon: productsIcons.clockIcon,
     styles:
       "w-28 bg-amber-100 text-amber-600 dark:bg-[#2d1f00] dark:text-[#fbbf24]",
   },
