@@ -64,7 +64,7 @@ export default function AddInputOrderModal({ isOpen, onClose }) {
           confirmTitle={"Orden creada correctamente"}
           confirmButtonText={"Volver"}
           confirmText={
-            "Ya se creo con exito tu orden de entrada vuelve para seguir con tu proceso."
+            "Se ha creado con exito la orden de entrada, ya puedes volver a la creación del producto"
           }
         />
       )}
