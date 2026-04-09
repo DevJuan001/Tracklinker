@@ -1,16 +1,28 @@
 import { useState } from "react";
-import { deleteProductService } from "../services/deleteProductService";
+import { editProductService } from "../services/editProductService";
 
-export function useEditProduct(product_id) {
+export function useEditProduct(product_data) {
+  const [form, setForm] = useState(product_data);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  async function handleSubmit(setInnerModal) {
+  function handleChange(e) {
+    setForm((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  }
+
+  async function handleSubmit(e, setInnerModal) {
+    e.preventDefault();
     setLoading(true);
+
     try {
-      const response = await deleteProductService(product_id);
+      const response = await editProductService(form);
       if (response.success) {
         setInnerModal("success");
+      } else {
+        setInnerModal("error");
       }
       setLoading(false);
     } catch (err) {
@@ -20,5 +32,5 @@ export function useEditProduct(product_id) {
     }
   }
 
-  return { loading, error, handleSubmit };
+  return { form, loading, error, handleChange, handleSubmit };
 }
