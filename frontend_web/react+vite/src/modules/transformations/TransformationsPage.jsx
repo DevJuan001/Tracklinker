@@ -9,6 +9,7 @@ import TopSection from "../../globals/components/ui/TopSection";
 import TransformationsTable from "./components/ui/TransformationsTable";
 // Modales
 import Modal from "../../globals/components/modals/Modal";
+import HelpModal from "../../globals/components/modals/HelpModal";
 import FilterModal from "../../globals/components/modals/FilterModal";
 import ProfileModal from "../../globals/components/modals/profileModal/ProfileModal";
 import AddTransformationModal from "./components/modals/AddTransformationModal";
@@ -23,7 +24,12 @@ export default function TransformationsPage() {
     useModal();
 
   return (
-    <Layout avatarOnClick={() => openModal(null, "user")}>
+    <Layout
+      avatarOnClick={() => openModal(null, "user")}
+      helpOnClick={() => {
+        openModal(null, "help");
+      }}
+    >
       <TopSection
         sectionName="Ordenes de salida"
         addButtonIcon={actionsIcons.addIcon}
@@ -54,12 +60,12 @@ export default function TransformationsPage() {
                       ? "Eliminar Transformación"
                       : modalType === "info"
                         ? "Más Información"
-                        : ""
+                        : "Ayuda"
           }
         >
           {modalType === "user" && <ProfileModal />}
           {modalType === "filter" && <FilterModal onClose={closeModal} />}
-
+          {modalType === "help" && <HelpModal onClose={() => closeModal()} />}
           {modalType === "add" && (
             <AddTransformationModal
               onClose={closeModal}
