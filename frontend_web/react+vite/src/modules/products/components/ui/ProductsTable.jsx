@@ -4,7 +4,7 @@ import { actionsIcons } from "../../../../assets/icons/mainIcons";
 import { useState } from "react";
 
 export default function ProductsTable({ products, openModal, refetch }) {
-  const [open, setOpen] = useState(false);
+  const [openId, setOpenId] = useState(null);
 
   return (
     <section
@@ -17,7 +17,7 @@ export default function ProductsTable({ products, openModal, refetch }) {
       >
         {/* Cabecera de la tabla */}
         <thead
-          className="sticky top-0
+          className="sticky top-0 z-[1]
         dark:text-white dark:bg-black"
         >
           <tr
@@ -109,7 +109,16 @@ export default function ProductsTable({ products, openModal, refetch }) {
                   editButtonOnClick={() => openModal(product, "edit", refetch)}
                   deleteButtonVisible={false}
                 />
-                <button onClick={() => setOpen(!open)} className="pl-4">
+                <button
+                  onClick={() =>
+                    setOpenId(
+                      openId === product.product_serial
+                        ? null
+                        : product.product_serial,
+                    )
+                  }
+                  className="pl-4"
+                >
                   <img
                     src={actionsIcons.arrowBack}
                     alt=""
@@ -117,7 +126,7 @@ export default function ProductsTable({ products, openModal, refetch }) {
                   />
                 </button>
 
-                {open && (
+                {openId === product.product_serial && (
                   <div
                     className="absolute top-full right-0 w-48 max-h-96 overflow-y-auto rounded-lg border bg-white shadow-lg z-[400]
                   dark:bg-[#1a1a1a] dark:text-white dark:border-none"
@@ -125,8 +134,8 @@ export default function ProductsTable({ products, openModal, refetch }) {
                     {Object.entries(productStatusConfig).map(([id, config]) => (
                       <div
                         key={id}
-                        onClick={() => setOpen(false)}
-                        className="px-3 py-2 cursor-pointer text-sm hover:bg-gray-200 dark:hover:bg-[#333]"
+                        onClick={() => setOpenId(null)}
+                        className="px-3 py-2 cursor-pointer text-sm font-normal transition-all duration-200 hover:bg-gray-200 dark:hover:bg-[#333]"
                       >
                         {config.text}
                       </div>
