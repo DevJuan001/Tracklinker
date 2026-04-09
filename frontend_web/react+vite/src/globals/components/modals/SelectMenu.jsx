@@ -14,7 +14,11 @@ export default function SelectMenu({
   const [open, setOpen] = useState(false);
 
   const handleSelect = (option) => {
-    onChange({ target: { name, value: option.value } });
+    const parsed =
+      option.value !== "" && !isNaN(option.value)
+        ? Number(option.value)
+        : option.value;
+    onChange({ target: { name, value: parsed } });
     setOpen(false);
   };
 
@@ -29,7 +33,8 @@ export default function SelectMenu({
             dark:bg-[#ffffff1a] dark:border-[#ffffff15] dark:text-white"
         >
           <div className="w-full h-11 flex items-center pl-5">
-            {options.find((opt) => opt.value === value)?.label || "Seleccionar"}
+            {options.find((opt) => Number(opt.value) === Number(value))
+              ?.label ?? "Seleccionar"}
           </div>
           <img
             src={modalIcons.arrowUp}
@@ -53,6 +58,7 @@ export default function SelectMenu({
 
       {open && (
         <div
+          onClick={() => setOpen(false)}
           className="absolute top-full left-0 w-full max-h-96 overflow-y-auto rounded-lg border bg-white shadow-lg z-[400]
         dark:bg-[#1a1a1a] dark:text-white dark:border-none"
         >
