@@ -49,7 +49,7 @@ SELECT
     ON p.product_details_id = pd.product_details_id
     INNER JOIN PRODUCT_BRANDS AS pb
     ON pd.product_brand_id = pb.product_brand_id
-    ORDER BY p.product_id;
+    ORDER BY p.product_id DESC;
 
 -- Vista para obtener todas subcategorias con su categoria
 CREATE VIEW get_all_subcategories AS
