@@ -469,11 +469,16 @@ class ProductsRepository:
 
         try:
             cursor.execute(
-                "SELECT product_id FROM PRODUCTS WHERE product_id = %s",
+                "SELECT product_status FROM PRODUCTS WHERE product_id = %s",
                 (product_data["product_id"],)
             )
 
             product = cursor.fetchone()
+
+            if product[0] == 0 and product_data["product_status"] == 2 or product_data["product_status"] == 3:
+                cursor.close()
+                connection.close()
+                return f"No puedes vender o crear una garantía con un producto deshabilitado", False, None
 
             if not product:
                 cursor.close()
