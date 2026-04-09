@@ -1,4 +1,5 @@
 import ActionButtons from "../../../../globals/components/ui/ActionButtons";
+import { productStatusConfig } from "../../constants/productStatusConfig";
 
 export default function ProductsTable({ products, openModal, refetch }) {
   return (
@@ -19,6 +20,7 @@ export default function ProductsTable({ products, openModal, refetch }) {
             className="h-[40px] border-b border-gray-200 text-sm
                       dark:border-[#303033]"
           >
+            <th className="font-medium text-start pl-4"> Estado </th>
             <th className="font-medium text-start pl-4"> Fecha de Ingreso </th>
             <th className="font-medium text-start pl-4"> Orden De Entrada </th>
             <th className="font-medium text-start pl-4"> Subcategoria </th>
@@ -26,7 +28,10 @@ export default function ProductsTable({ products, openModal, refetch }) {
             <th className="font-medium text-start pl-4"> Modelo </th>
             <th className="font-medium text-start pl-2"> Descripción </th>
             <th className="font-medium text-start pl-4"> Marca </th>
-            <th className="font-medium text-start pl-4"> Tiempo de Garantia </th>
+            <th className="font-medium text-start pl-4">
+              {" "}
+              Tiempo de Garantia{" "}
+            </th>
             <th className="font-medium text-start pr-4"> Acciones </th>
           </tr>
         </thead>
@@ -41,6 +46,18 @@ export default function ProductsTable({ products, openModal, refetch }) {
                           hover:bg-[#e3e2e4] hover:shadow-md
                           dark:hover:bg-[#101012]"
             >
+              {/* Estado */}
+              <th className="font-normal pl-4 text-sm">
+                <div
+                  className={`w-fit flex items-center pl-1.5 pr-3 py-0.5 gap-1.5 rounded-full border 
+                  dark:border-transparent
+                  ${productStatusConfig[product.status]?.styles}`}
+                >
+                  <img src={productStatusConfig[product.status]?.icon} alt="" className="w-4" />
+                  <span>{productStatusConfig[product.status]?.text}</span>
+                </div>
+              </th>
+
               {/* Fecha de ingreso */}
               <th className="font-normal text-start pl-4 text-sm">
                 {product.input_date}
