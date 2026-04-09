@@ -14,7 +14,8 @@ import FilterModal from "../../globals/components/modals/FilterModal";
 import ProfileModal from "../../globals/components/modals/profileModal/ProfileModal";
 import AddTransformationModal from "./components/modals/AddTransformationModal";
 import EditTransformationModal from "./components/modals/EditTransformationModal";
-import DeleteTransformationModal from "./components/modals/DeleteTransformationModal";
+import EnableTransformationModal from "./components/modals/EnableTransformationModal";
+import DisableTransformationModal from "./components/modals/DisableTransformationModal";
 import MoreInfoTransformationModal from "./components/modals/MoreInfoTransformationModal";
 
 export default function TransformationsPage() {
@@ -53,14 +54,16 @@ export default function TransformationsPage() {
               : modalType === "filter"
                 ? "Filtrar"
                 : modalType === "add"
-                  ? "Crear Transformación"
+                  ? "Crear Orden"
                   : modalType === "edit"
-                    ? "Editar Transformación"
-                    : modalType === "delete"
-                      ? "Eliminar Transformación"
-                      : modalType === "info"
-                        ? "Más Información"
-                        : "Ayuda"
+                    ? "Editar Orden"
+                    : modalType === "disable"
+                      ? "Deshabilitar Orden"
+                      : modalType === "enable"
+                        ? "Deshabilitar Orden"
+                        : modalType === "info"
+                          ? "Más Información"
+                          : "Ayuda"
           }
         >
           {modalType === "user" && <ProfileModal />}
@@ -77,15 +80,23 @@ export default function TransformationsPage() {
             <EditTransformationModal
               selectedTransformation={modalData}
               onClose={closeModal}
-              onEditSuccess={fetchTransformations}
+              refetch={fetchTransformations}
             />
           )}
 
-          {modalType === "delete" && modalData && (
-            <DeleteTransformationModal
+          {modalType === "disable" && modalData && (
+            <DisableTransformationModal
               selectedTransformation={modalData}
               onClose={closeModal}
-              onDeleteSuccess={fetchTransformations}
+              refetch={fetchTransformations}
+            />
+          )}
+
+          {modalType === "enable" && modalData && (
+            <EnableTransformationModal
+              selectedTransformation={modalData}
+              onClose={closeModal}
+              refetch={fetchTransformations}
             />
           )}
 
