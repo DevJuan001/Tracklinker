@@ -4,6 +4,7 @@ import { getToken } from "../../../utils/auth";
 export async function deleteSubcategoryService(subcategory_id) {
     const res = await fetch(`${apiRoutes.apiUrl}${apiRoutes.subcategories}/delete/${subcategory_id}`, {
         method: "DELETE",
+        credentials: "include",
         headers: {
             Authorization: getToken()
         }
