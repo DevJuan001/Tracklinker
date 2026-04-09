@@ -16,11 +16,6 @@ router = APIRouter(
 def get_all_products():
     return ProductsController.get_all_products()
 
-# Endpoint para obtener todos los productos y el numero de productos nuevos
-@router.get("/all-and-new")
-def get_old_and_new_products_ammount():
-    return ProductsController.get_all_and_new_products_ammount()
-
 # Endpoint para obtener todas las marcas de productos
 @router.get("/brands")
 def get_all_brands():
