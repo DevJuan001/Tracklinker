@@ -128,73 +128,73 @@ INSERT INTO PRODUCT_BRANDS VALUES
 
 
 INSERT INTO PRODUCT_DETAILS VALUES
-(null, 1, 'Zebra ZD420', 'Impresora térmica para puntos de venta', '2026-01-05', 1),
-(null, 4, 'HP 110', 'Impresora térmica compacta para etiquetas', '2026-01-05', 1),
-(null, 3, 'Epson TM-T20', 'Impresora térmica rápida y eficiente', '2026-01-05', 1),
-(null, 3, 'Epson L3150', 'Multifuncional con sistema de tinta continua', '2026-03-05', 1),
-(null, 2, 'Canon G2010', 'Impresora continua con escáner', '2026-03-05', 1),
-(null, 4, 'HP Ink Tank 415', 'Impresora con tinta recargable inalámbrica', '2026-03-05', 1),
-(null, 4, 'LaserJet Pro M15w', 'Impresora láser compacta y rápida', '2026-03-05', 1),
-(null, 5, 'Brother HL-L2350DW', 'Impresora láser monocromo', '2026-03-05', 1),
-(null, 8, 'Samsung Xpress M2020W', 'Impresora láser inalámbrica', '2026-03-05', 1),
-(null, 8, 'QLED 55Q60A', 'Smart TV Samsung de 55" con resolución 4K', '2026-03-05', 1),
-(null, 9, 'Bravia XR-55A80K', 'Sony Smart TV OLED 55" 4K', '2026-04-05', 1),
-(null, 7, 'LED TV 43LM6370', 'LG TV LED 43" Full HD', '2026-04-05', 1),
-(null, 7, 'OLED TV 65C1', 'TV OLED LG 65" 4K UHD', '2026-04-05', 1),
-(null, 16, 'WD My Passport 1TB', 'Disco duro externo portátil con USB 3.0', '2026-04-05', 1),
-(null, 20, 'Logitech MX Keys', 'Teclado inalámbrico retroiluminado', '2026-04-05', 1),
-(null, 21, 'Razer DeathAdder V2', 'Mouse gamer ergonómico', '2026-04-05', 1),
-(null, 22, 'HyperX Cloud II', 'Auriculares gamer con sonido envolvente', '2026-04-05', 1),
-(null, 23, 'TP-Link Archer AX50', 'Router WiFi 6 de alta velocidad', '2026-04-05', 1),
-(null, 24, 'Cisco SG350-28', 'Switch gestionable de 28 puertos', '2026-04-05', 1),
-(null, 24, 'Cable Cat6 UTP', 'Cable de red de 2 metros', '2026-04-05', 1),
-(null, 10, 'Lenovo ThinkPad X1 Carbon', 'Portátil ultraligero con procesador Intel i7 y 16GB RAM', '2026-04-05', 1),
-(null, 11, 'Asus ROG Strix G15', 'Laptop gamer con RTX 3060 y 16GB RAM', '2026-04-05', 1),
-(null, 25, 'MacBook Pro 14"', 'Laptop Apple con chip M1 Pro y pantalla Retina', '2026-04-05', 1),
-(null, 7,  'LG NanoCell 55NANO80', 'Smart TV LG 55” con tecnología NanoCell 4K', '2026-04-05', 1),
-(null, 17, 'Kioxia Exceria 500GB', 'Disco SSD NVMe de alta velocidad', '2026-04-05', 1),
-(null, 18, 'Kingston Fury Beast 16GB DDR4', 'Memoria RAM para alto rendimiento', '2026-04-05', 1),
-(null, 19, 'Crucial Ballistix 32GB DDR5', 'Memoria RAM DDR5 para gaming y servidores', '2026-04-05', 1),
-(null, 20, 'Logitech G Pro X', 'Teclado mecánico gamer con switches intercambiables', '2026-04-05', 1),
-(null, 21, 'Razer Viper Ultimate', 'Mouse inalámbrico gamer ultraligero con 20K DPI', '2026-04-05', 1),
-(null, 22, 'HyperX Alpha Wireless', 'Auriculares inalámbricos gamer con batería de 300h', '2026-04-05', 1),
-(null, 23, 'TP-Link Deco X60', 'Sistema WiFi Mesh con cobertura para hogares grandes', '2026-04-05', 1),
-(null, 24, 'Cisco Catalyst 9300', 'Switch empresarial de alto rendimiento', '2026-04-05', 1);
+(null, 1, 'Zebra ZD420', 'Impresora térmica para puntos de venta', '2026-01-05'),
+(null, 4, 'HP 110', 'Impresora térmica compacta para etiquetas', '2026-01-05'),
+(null, 3, 'Epson TM-T20', 'Impresora térmica rápida y eficiente', '2026-01-05'),
+(null, 3, 'Epson L3150', 'Multifuncional con sistema de tinta continua', '2026-03-05'),
+(null, 2, 'Canon G2010', 'Impresora continua con escáner', '2026-03-05'),
+(null, 4, 'HP Ink Tank 415', 'Impresora con tinta recargable inalámbrica', '2026-03-05'),
+(null, 4, 'LaserJet Pro M15w', 'Impresora láser compacta y rápida', '2026-03-05'),
+(null, 5, 'Brother HL-L2350DW', 'Impresora láser monocromo', '2026-03-05'),
+(null, 8, 'Samsung Xpress M2020W', 'Impresora láser inalámbrica', '2026-03-05'),
+(null, 8, 'QLED 55Q60A', 'Smart TV Samsung de 55" con resolución 4K', '2026-03-05'),
+(null, 9, 'Bravia XR-55A80K', 'Sony Smart TV OLED 55" 4K', '2026-04-05'),
+(null, 7, 'LED TV 43LM6370', 'LG TV LED 43" Full HD', '2026-04-05'),
+(null, 7, 'OLED TV 65C1', 'TV OLED LG 65" 4K UHD', '2026-04-05'),
+(null, 16, 'WD My Passport 1TB', 'Disco duro externo portátil con USB 3.0', '2026-04-05'),
+(null, 20, 'Logitech MX Keys', 'Teclado inalámbrico retroiluminado', '2026-04-05'),
+(null, 21, 'Razer DeathAdder V2', 'Mouse gamer ergonómico', '2026-04-05'),
+(null, 22, 'HyperX Cloud II', 'Auriculares gamer con sonido envolvente', '2026-04-05'),
+(null, 23, 'TP-Link Archer AX50', 'Router WiFi 6 de alta velocidad', '2026-04-05'),
+(null, 24, 'Cisco SG350-28', 'Switch gestionable de 28 puertos', '2026-04-05'),
+(null, 24, 'Cable Cat6 UTP', 'Cable de red de 2 metros', '2026-04-05'),
+(null, 10, 'Lenovo ThinkPad X1 Carbon', 'Portátil ultraligero con procesador Intel i7 y 16GB RAM', '2026-04-05'),
+(null, 11, 'Asus ROG Strix G15', 'Laptop gamer con RTX 3060 y 16GB RAM', '2026-04-05'),
+(null, 25, 'MacBook Pro 14"', 'Laptop Apple con chip M1 Pro y pantalla Retina', '2026-04-05'),
+(null, 7,  'LG NanoCell 55NANO80', 'Smart TV LG 55” con tecnología NanoCell 4K', '2026-04-05'),
+(null, 17, 'Kioxia Exceria 500GB', 'Disco SSD NVMe de alta velocidad', '2026-04-05'),
+(null, 18, 'Kingston Fury Beast 16GB DDR4', 'Memoria RAM para alto rendimiento', '2026-04-05'),
+(null, 19, 'Crucial Ballistix 32GB DDR5', 'Memoria RAM DDR5 para gaming y servidores', '2026-04-05'),
+(null, 20, 'Logitech G Pro X', 'Teclado mecánico gamer con switches intercambiables', '2026-04-05'),
+(null, 21, 'Razer Viper Ultimate', 'Mouse inalámbrico gamer ultraligero con 20K DPI', '2026-04-05'),
+(null, 22, 'HyperX Alpha Wireless', 'Auriculares inalámbricos gamer con batería de 300h', '2026-04-05'),
+(null, 23, 'TP-Link Deco X60', 'Sistema WiFi Mesh con cobertura para hogares grandes', '2026-04-05'),
+(null, 24, 'Cisco Catalyst 9300', 'Switch empresarial de alto rendimiento', '2026-04-05');
 
 
 INSERT INTO PRODUCTS VALUES 
-(null, 15, 1),    -- HP 110 .
-(null, 15, 2),    -- Zebra ZD420 
-(null, 15, 3),    -- Epson TM-T20 
-(null, 12, 4),    -- Epson L3150 
-(null, 12, 5),    -- Canon G2010 
-(null, 12, 6),    -- HP Ink Tank 415 
-(null, 13, 7),    -- LaserJet Pro 
-(null, 13, 8),    -- Brother HL 
-(null, 13, 9),    -- Samsung Xpress 
-(null, 7, 10),    -- QLED Samsung
-(null, 6, 11),    -- Bravia Sony 
-(null, 5, 12),    -- LG LED 
-(null, 6, 13),    -- LG OLED 
-(null, 37, 14),   -- WD My Passport 
-(null, 31, 15),   -- Logitech MX Keys 
-(null, 32, 16),   -- Razer DeathAdder 
-(null, 33, 17),   -- HyperX Cloud II 
-(null, 34, 18),   -- TP-Link Router 
-(null, 35, 19),   -- Cisco Switch 
-(null, 36, 20),  -- Cables Cat6 
-(null, 1, 21),    -- Lenovo ThinkPad 
-(null, 1, 22),    -- Asus ROG Strix 
-(null, 1, 23),    -- MacBook Pro 
-(null, 4, 24),    -- LG NanoCell TV
-(null, 38, 25),   -- Kioxia SSD
-(null, 40, 26),   -- Kingston RAM
-(null, 41, 27),   -- Crucial DDR5
-(null, 32, 28),   -- Logitech G Pro X
-(null, 32, 29),   -- Razer Viper Ultimate
-(null, 33, 30),   -- HyperX Alpha Wireless
-(null, 34, 31),   -- TP-Link Deco Mesh
-(null, 35, 32);   -- Cisco Catalyst
+(null, 15, 1, 1),    -- HP 110 .
+(null, 15, 2, 0),    -- Zebra ZD420 
+(null, 15, 3, 2),    -- Epson TM-T20 
+(null, 12, 4, 3),    -- Epson L3150 
+(null, 12, 5, 1),    -- Canon G2010 
+(null, 12, 6, 1),    -- HP Ink Tank 415 
+(null, 13, 7, 1),    -- LaserJet Pro 
+(null, 13, 8, 1),    -- Brother HL 
+(null, 13, 9, 1),    -- Samsung Xpress 
+(null, 7, 10, 1),    -- QLED Samsung
+(null, 6, 11, 1),    -- Bravia Sony 
+(null, 5, 12, 1),    -- LG LED 
+(null, 6, 13, 1),    -- LG OLED 
+(null, 37, 14, 1),   -- WD My Passport 
+(null, 31, 15, 1),   -- Logitech MX Keys 
+(null, 32, 16, 1),   -- Razer DeathAdder 
+(null, 33, 17, 1),   -- HyperX Cloud II 
+(null, 34, 18, 1),   -- TP-Link Router 
+(null, 35, 19, 1),   -- Cisco Switch 
+(null, 36, 20, 1),  -- Cables Cat6 
+(null, 1, 21, 1),    -- Lenovo ThinkPad 
+(null, 1, 22, 1),    -- Asus ROG Strix 
+(null, 1, 23, 1),    -- MacBook Pro 
+(null, 4, 24, 1),    -- LG NanoCell TV
+(null, 38, 25, 1),   -- Kioxia SSD
+(null, 40, 26, 1),   -- Kingston RAM
+(null, 41, 27, 1),   -- Crucial DDR5
+(null, 32, 28, 1),   -- Logitech G Pro X
+(null, 32, 29, 1),   -- Razer Viper Ultimate
+(null, 33, 30, 1),   -- HyperX Alpha Wireless
+(null, 34, 31, 1),   -- TP-Link Deco Mesh
+(null, 35, 32, 1);   -- Cisco Catalyst
 
 
 INSERT INTO SUPPLIERS VALUES
