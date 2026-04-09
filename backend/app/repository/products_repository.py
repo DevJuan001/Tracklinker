@@ -1,8 +1,8 @@
 from app.core.database import get_connection
-from app.models.product_model import Product, UpdateProduct
+from app.models.product_model import Product
 from app.utils.date_formatter import date_formatter
-from app.models.product_details_model import ProductDetails, UpdateProductDetails
-from app.models.product_serial_model import ProductSerial, UpdateProductSerial
+from app.models.product_details_model import ProductDetails
+from app.models.product_serial_model import ProductSerial
 from app.models.input_order_model import InputOrder
 from app.models.product_brand_model import ProductBrand
 from app.utils.periods import period_map, daily_periods
@@ -34,14 +34,13 @@ class ProductsRepository:
                     "product_details_id": item[9],
                     "description": item[10],
                     "brand": item[11],
-                    "warranty_time": item[12],
-                    "status": item[13]
+                    "warranty_time": item[12]
                 }
                 for item in result
             ]
             return None, data
-        except Exception:
-            return f"Error al ejecutar la consulta", None
+        except Exception as e:
+            return f"Error al ejecutar la consulta {e}", None
         finally:
             cursor.close()
             connection.close()
@@ -64,8 +63,8 @@ class ProductsRepository:
                 for item in result
             ]
             return None, data
-        except Exception:
-            return f"Error al ejecutar la consulta", None
+        except Exception as e:
+            return f"Error al ejecutar la consulta {e}", None
         finally:
             cursor.close()
             connection.close()
@@ -101,8 +100,8 @@ class ProductsRepository:
             ]
 
             return None, data
-        except Exception:
-            return f"Error al ejecutar la consulta", None
+        except Exception as e:
+            return f"Error al ejecutar la consulta {e}", None
         finally:
             connection.close()
             cursor.close()
@@ -120,8 +119,8 @@ class ProductsRepository:
             cursor.execute(query)
             results = cursor.fetchall()
             return None, results
-        except Exception:
-            return f"❌ Error al ejecutar la consulta:", None
+        except Exception as e:
+            return f"❌ Error al ejecutar la consulta: {e}", None
         finally:
             cursor.close()
             connection.close()
@@ -144,8 +143,8 @@ class ProductsRepository:
                 for item in result
             ]
             return None, data
-        except Exception:
-            return f"Error al ejecutar la consulta", None
+        except Exception as e:
+            return f"Error al ejecutar la consulta {e}", None
         finally:
             cursor.close()
             connection.close()
@@ -171,28 +170,15 @@ class ProductsRepository:
             ]
 
             return None, data
-        except Exception:
+        except Exception as e:
             return f"Error al intentar obtener los modelos", None
 
     @staticmethod
     def create_product_details(details_data: ProductDetails):
         data = details_data.model_dump()
         connection = get_connection()
-        cursor = connection.cursor(buffered=True)
-
+        cursor = connection.cursor()
         try:
-            cursor.execute(
-                "SELECT product_details_id FROM PRODUCT_DETAILS WHERE product_detail_model = %s",
-                (data["product_detail_model"],)
-            )
-
-            exist_model = cursor.fetchone()
-            
-            if exist_model:
-                cursor.close()
-                connection.close()
-                return f"Este modelo ya esta registrado", False, None
-
             cursor.execute(
                 """
                 INSERT INTO PRODUCT_DETAILS (
@@ -201,35 +187,12 @@ class ProductsRepository:
                     product_detail_description
                 ) VALUES (%s, %s, %s)
                 """,
-                (data["product_brand_id"], data["product_detail_model"], data["product_detail_description"])
+                (data["product_brand_id"], data["product_model"], data["product_model"])
             )
             connection.commit()
-
             return None, True, f"Detalles del producto creado correctamente"
-        except Exception:
-            connection.rollback()
-            return f"Error al crear el producto", False, None
-        finally:
-            cursor.close()
-            connection.close()
-
-    @staticmethod
-    def update_product_details(details_data: UpdateProductDetails, cursor):
-        data = details_data.model_dump()
-
-        try:
-            cursor.execute(
-                """
-                UPDATE PRODUCT_DETAILS SET
-                    product_brand_id = %s
-                WHERE product_details_id = %s
-                """,
-                (data["product_brand_id"], data["product_details_id"])
-            )
-
-            return None, True, "Detalles del producto actualizados correctamente"
-        except Exception:
-            return f"Error al actualizar los detalles", False, None
+        except Exception as e:
+            return f"Error al crear el producto {e}", False, None
         
     @staticmethod
     def create_product_serial(serial_data: ProductSerial):
@@ -237,16 +200,6 @@ class ProductsRepository:
         connection = get_connection()
         cursor = connection.cursor()
         try:
-
-            cursor.execute("""
-            SELECT product_id FROM PRODUCT_SERIALS WHERE product_serial = %s 
-            """, (data["product_serial"],))
-
-            if cursor.fetchone():
-                cursor.close()
-                connection.close()
-                return f"Este serial ya esta registrado", False, None
-
             cursor.execute("""
             INSERT INTO PRODUCT_SERIALS(
                 product_serial,
@@ -255,79 +208,24 @@ class ProductsRepository:
                 product_garanty_input
             ) VALUES (%s, %s, %s, %s)
             """,
-            (
-                data["product_serial"],
-                data["product_id"],
-                data["input_order_id"],
-                data["product_garanty_input"]
-            ))
-            
+            (data["product_serial"], data["product_id"], data["input_order_id"], data["product_garanty_input"]))
             connection.commit()
-
             return None, True, f"Serial del producto creado correctamente"
-        except Exception:
-            return f"Error al crear el serial del producto", False, None
-        
-    @staticmethod
-    def update_product_serial(serial_data: UpdateProductSerial, cursor):
-        data = serial_data.model_dump()
-
-        try:
-            cursor.execute("""
-            SELECT product_id FROM PRODUCT_SERIALS WHERE product_serial = %s 
-            """, (data["product_serial"],))
-
-            if cursor.fetchone():
-                cursor.close()
-                return f"Este serial ya esta registrado", False, None
-            
-
-            cursor.execute("""
-            UPDATE PRODUCT_SERIALS SET
-                product_serial = %s,
-                product_id = %s,
-                input_order_id = %s,
-                product_garanty_input = %s
-            WHERE product_id = %s
-            """,
-            (
-                data["product_serial"],
-                data["product_id"],
-                data["input_order_id"],
-                data["product_garanty_input"],
-                data["product_id"],
-            ))
-            
-            return None, True, f"Serial del producto actualizado correctamente"
-        except Exception:
-            return f"Error al actualizar el serial del producto", False, None
+        except Exception as e:
+            return f"Error al crear el serial del producto {e}", False, None
 
     @staticmethod
     def create_product_brand(brand_data: ProductBrand):
         data = brand_data.model_dump()
         connection = get_connection()
-        cursor = connection.cursor(buffered=True)
+        cursor = connection.cursor()
         try:
-            cursor.execute(
-                "SELECT product_brand_id FROM PRODUCT_BRANDS WHERE product_brand_name = %s",
-                (data["product_brand_name"],)
-            )
-
-            exist_model = cursor.fetchone()
-            
-            if exist_model:
-                cursor.close()
-                connection.close()
-                return f"Esta marca ya esta registrada", False, None
-            
-
             cursor.execute("INSERT INTO PRODUCT_BRANDS (product_brand_name) VALUES (%s)",
-                (data["product_brand_name"],))
+                (data["product_brand"],))
             connection.commit()
             return None, True, f"Marca creada correctamente"
-        except Exception:
-            return f"Error al crear la marca", False, None
-        
+        except Exception as e:
+            return f"Error al crear la marca {e}", False, None
     
     @staticmethod
     def create_input_order(input_order_data: InputOrder):
@@ -343,8 +241,8 @@ class ProductsRepository:
             """, (data["input_order_bill"], data["supplier_id"]))
             connection.commit()
             return None, True, f"Orden de entrada creada correctamente"
-        except Exception:
-            return f"Error al crear la orden de entrada", False, None
+        except Exception as e:
+            return f"Error al crear la orden de entrada {e}", False, None
     
     @staticmethod
     def create_product(product_data: Product):
@@ -377,63 +275,42 @@ class ProductsRepository:
                     connection.commit()
                 except Exception:
                     pass
-                return error, success, message
+                return f"Error al crear el producto {error}", False, None
 
             return None, True, f"Producto creado correctamente"
-        except Exception:
-            return f"Error al crear el producto", False, None
+        except Exception as e:
+            return f"Error al crear el producto {e}", False, None
         finally:
             cursor.close()
             connection.close()
 
-    @staticmethod
-    def update_product(product_data: UpdateProduct):
+    def update_product(product_id: int, product_data: dict):
         data = product_data.model_dump()
         connection = get_connection()
         cursor = connection.cursor()
 
+        cursor.execute(
+            "SELECT product_id FROM PRODUCTS WHERE product_id = %s",
+            (product_id,)
+        )
+        connection.commit()
+        product = cursor.fetchone()
+
+        if not product:
+            cursor.close()
+            connection.close()
+            return "Producto no encontrado", None, None
+
         try:
-            cursor.execute(
-                "SELECT product_id FROM PRODUCTS WHERE product_id = %s",
-                (data["product_id"],)
-            )
-
-            product = cursor.fetchone()
-
-            if not product:
-                cursor.close()
-                connection.close()
-                return "Producto no encontrado", False, None
-
             cursor.execute("""
-                UPDATE PRODUCTS SET
-                    subcategory_id = %s,
-                    product_details_id = %s
-                WHERE product_id = %s
-                """, (data["subcategory_id"], data["product_details_id"], data["product_id"])
+            UPDATE PRODUCTS SET
+                product_
+            WHERE proudct_id = %s
+            """, (product_id)
             )
-
-            error, success, message = ProductsRepository.update_product_details(UpdateProductDetails(
-                product_brand_id= data["product_brand_id"],
-                product_details_id= data["product_details_id"]
-            ), cursor)
-
-            if error is not None or not success:
-                return error, success, message
-            
-            error, success, message = ProductsRepository.update_product_serial(UpdateProductSerial(
-                product_serial= data["product_serial"],
-                product_id= data["product_id"],
-                input_order_id= data["input_order_id"],
-                product_garanty_input= data["product_garanty_input"]
-            ), cursor)
-            
-            if error is not None or not success:
-                return error, success, message
-            
             return None, True, f"Producto actualizado correctamente"
-        except Exception:
-            return f"Error al intentar actualizar el producto", False, None
+        except Exception as e:
+            return f"Error al intentar actualizar el producto {e}", False, None
         finally:
             cursor.close()
             connection.close()
@@ -476,8 +353,8 @@ class ProductsRepository:
                 for item in results
             ]
             return None, data
-        except Exception:
-            return f"Error al ejecutar la consulta:", None
+        except Exception as e:
+            return f"Error al ejecutar la consulta: {e}", None
         finally:
             cursor.close()
             connection.close()
@@ -511,8 +388,8 @@ class ProductsRepository:
             cursor.execute(query)
             results = cursor.fetchall()
             return None, results
-        except Exception:
-            return f"Error al ejecutar la consulta:", None
+        except Exception as e:
+            return f"Error al ejecutar la consulta: {e}", None
         finally:
             cursor.close()
             connection.close()
@@ -555,8 +432,8 @@ class ProductsRepository:
             cursor.execute(query)
             results = cursor.fetchall()
             return None, results
-        except Exception:
-            return f"Error al ejecutar la consulta:", None
+        except Exception as e:
+            return f"Error al ejecutar la consulta: {e}", None
         finally:
             cursor.close()
             connection.close()
@@ -594,8 +471,8 @@ class ProductsRepository:
                 for item in results
             ]
             return None, data
-        except Exception:
-            return f"Error al ejecutar la consulta:", None
+        except Exception as e:
+            return f"Error al ejecutar la consulta: {e}", None
         finally:
             cursor.close()
             connection.close()

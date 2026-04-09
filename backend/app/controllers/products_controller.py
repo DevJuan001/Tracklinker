@@ -1,5 +1,4 @@
 from app.repository.products_repository import ProductsRepository
-from app.models.product_model import UpdateProduct, Product
 from fastapi import HTTPException
 
 
@@ -15,6 +14,52 @@ class ProductsController:
             "data": products
         }
 
+    @staticmethod
+    def get_all_and_new_products_ammount():
+        error, data = ProductsRepository.find_all_and_new_products_ammount()
+
+        if error:
+            raise HTTPException(status_code=404, detail=error)
+
+        return {
+            "data": data
+        }
+
+    @staticmethod
+    def get_products_added_by_date_range(start_date: str, end_date: str):
+        error, products = ProductsRepository.find_products_added_by_date_range(
+            start_date, end_date)
+
+        if error:
+            raise HTTPException(status_code=404, detail=error)
+
+        return {
+            "data": products
+        }
+
+    @staticmethod
+    def get_products_deleted_by_date_range(start_date: str, end_date: str):
+        error, products = ProductsRepository.find_products_deleted_by_date_range(
+            start_date, end_date)
+
+        if error:
+            raise HTTPException(status_code=404, detail=error)
+
+        return {
+            "data": products
+        }
+
+    @staticmethod
+    def get_products_out_of_stock():
+        error, products = ProductsRepository.find_products_out_of_stock()
+
+        if error:
+            raise HTTPException(status_code=404, detail=error)
+
+        return {
+            "data": products
+        }
+    
     @staticmethod
     def get_all_input_orders():
         error, input_orders = ProductsRepository.find_all_input_orders()
@@ -36,7 +81,7 @@ class ProductsController:
         return {
             "data": brands
         }
-
+    
     @staticmethod
     def get_all_product_models():
         error, models = ProductsRepository.find_all_product_models()
@@ -49,9 +94,9 @@ class ProductsController:
         }
 
     @staticmethod
-    def create_product(product_data: Product):
+    def create_product(product_garanty_input):
         error, success, message = ProductsRepository.create_product(
-            product_data)
+            product_garanty_input)
 
         if error:
             raise HTTPException(status_code=400, detail=error)
@@ -62,7 +107,8 @@ class ProductsController:
 
     @staticmethod
     def create_product_model(product_model):
-        error, success, message = ProductsRepository.create_product_details(product_model)
+        error, success, message = ProductsRepository.create_product_model(
+            product_model)
 
         if error:
             raise HTTPException(status_code=400, detail=error)
@@ -70,7 +116,7 @@ class ProductsController:
             "sucess": success,
             "message": message
         }
-
+    
     @staticmethod
     def create_product_brand(product_brand):
         error, success, message = ProductsRepository.create_product_brand(
@@ -82,11 +128,10 @@ class ProductsController:
             "sucess": success,
             "message": message
         }
-
+    
     @staticmethod
     def create_input_order(input_order):
-        error, success, message = ProductsRepository.create_input_order(
-            input_order)
+        error, success, message = ProductsRepository.create_input_order(input_order)
 
         if error:
             raise HTTPException(status_code=400, detail=error)
@@ -94,15 +139,3 @@ class ProductsController:
             "sucess": success,
             "message": message
         }
-
-    @staticmethod
-    def update_product(product_data: UpdateProduct):
-        error, success, message = ProductsRepository.update_product(product_data)
-        
-        if error:
-            raise HTTPException(status_code=400, detail=error)
-        return {
-            "success": success,
-            "message": message
-        }
-
