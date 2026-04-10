@@ -1,3 +1,5 @@
+import { apiRoutes } from "../config/apiRoutes";
+
 let isRefreshing = false;
 
 export async function fetchWithAuth(url, options = {}) {
@@ -10,10 +12,13 @@ export async function fetchWithAuth(url, options = {}) {
   if (response.status === 401 && !isRefreshing) {
     isRefreshing = true;
 
-    const refreshResponse = await fetch("/api/auth/refresh", {
-      method: "POST",
-      credentials: "include",
-    });
+    const refreshResponse = await fetch(
+      `${apiRoutes.apiUrl}${apiRoutes.auth}/refresh`,
+      {
+        method: "POST",
+        credentials: "include",
+      },
+    );
 
     isRefreshing = false;
 
