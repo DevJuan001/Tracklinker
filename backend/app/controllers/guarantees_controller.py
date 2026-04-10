@@ -1,8 +1,6 @@
 from fastapi import HTTPException
 from app.repository.guarantees_repository import GuaranteeRepository
-from app.models.guarantiees_model import Guarantee
-
-from app.core.config import settings
+from app.models.guarantiees_model import Guarantee, GuaranteeUpdate
 
 class GuaranteeController:
        
@@ -35,8 +33,8 @@ class GuaranteeController:
         }
 
     @staticmethod
-    def update_garantee(warranty_incidents_id:int, warranty_date: dict):
-        error, success, message= GuaranteeRepository.update(warranty_incidents_id, warranty_date)
+    def update_garantee(warranty_incidents_id:int, warranty_data: GuaranteeUpdate):
+        error, success, message= GuaranteeRepository.update(warranty_incidents_id, warranty_data)
         if error:
             raise HTTPException(status_code=400, detail=error)
         return{
