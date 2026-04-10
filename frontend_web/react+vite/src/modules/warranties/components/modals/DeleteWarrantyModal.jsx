@@ -1,9 +1,12 @@
+// Hooks
 import { useState } from "react";
 import { useDeleteWarranty } from "../../hooks/useDeleteWarranty";
-import SuccessModal from "../../../../globals/components/modals/SuccessModal";
-import ErrorModal from "../../../../globals/components/modals/ErrorModal";
+// Componentes
 import Loader from "../../../../globals/components/ui/Loader";
 import ConfirmCancelButtons from "../../../../globals/components/modals/ConfirmCancelButtons";
+// Modales
+import SuccessModal from "../../../../globals/components/modals/SuccessModal";
+import ErrorModal from "../../../../globals/components/modals/ErrorModal";
 
 export default function DeleteWarrantyModal({
   selectedWarranty,
