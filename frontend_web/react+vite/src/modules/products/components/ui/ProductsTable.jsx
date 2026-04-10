@@ -38,9 +38,9 @@ export default function ProductsTable({ products, openModal, refetch }) {
         </thead>
 
         {/* Contenido de la tabla */}
-        {products.map((product) => (
-          <tbody className="font-normal dark:text-gray-300">
-            {/* Productos */}
+        <tbody className="font-normal dark:text-gray-300">
+          {products.map((product) => (
+            /* Productos */
             <tr
               key={product.product_serial}
               className="relative text-base overflow-x-auto overflow-y-auto transition duration-500 text-[#45474d] dark:text-white
@@ -155,8 +155,8 @@ export default function ProductsTable({ products, openModal, refetch }) {
                 )}
               </th>
             </tr>
-          </tbody>
-        ))}
+          ))}
+        </tbody>
       </table>
     </section>
   );
