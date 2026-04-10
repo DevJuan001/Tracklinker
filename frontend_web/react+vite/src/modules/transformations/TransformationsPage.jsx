@@ -44,10 +44,12 @@ export default function TransformationsPage() {
         openModal={openModal}
         refetch={fetchTransformations}
       />
+
       {modalType && (
         <Modal
           isOpen={isOpen}
           onClose={closeModal}
+          type={modalType}
           title={
             modalType === "user"
               ? "Configuración"
