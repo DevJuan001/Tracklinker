@@ -22,8 +22,8 @@ export default function WarrantiesTable({ warranties, openModal, refetch }) {
         </thead>
 
         {/* Cuerpo de la tabla */}
-        {warranties.map((warranty) => (
-          <tbody className="font-normal dark:text-white">
+        <tbody className="font-normal dark:text-white">
+          {warranties.map((warranty) => (
             <tr
               onClick={(e) => {
                 e.stopPropagation();
@@ -95,8 +95,8 @@ export default function WarrantiesTable({ warranties, openModal, refetch }) {
                 </ActionButtons>
               </th>
             </tr>
-          </tbody>
-        ))}
+          ))}
+        </tbody>
       </table>
     </section>
   );
