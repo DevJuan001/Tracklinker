@@ -1,114 +1,109 @@
-// src/modules/warranties/components/modals/EditWarrantyModal.jsx
-import React, { useState, useRef } from "react";
+// Hooks
+import { useState } from "react";
 import { useEditWarranty } from "../../hooks/useEditWarranty";
+// Componentes
+import Loader from "../../../../globals/components/ui/Loader";
+import FormField from "../../../../globals/components/ui/FormField";
+import SelectMenu from "../../../../globals/components/modals/SelectMenu";
 import ConfirmCancelButtons from "../../../../globals/components/modals/ConfirmCancelButtons";
+// Modales
 import SuccessModal from "../../../../globals/components/modals/SuccessModal";
 import ErrorModal from "../../../../globals/components/modals/ErrorModal";
 
-export default function EditWarrantyModal({ selectedWarranty, onClose, onEditSuccess }) {
-  const formRef = useRef(null);
-  const { handleEdit, loading } = useEditWarranty();
-  const [form, setForm] = useState({ ...selectedWarranty });
-  const [innerModal, setInnerModal] = useState(null); // "success" o "error"
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    const id = selectedWarranty?.warranty_incidents_id; // 🔑 corregido typo
-    if (!id) {
-      setInnerModal("error");
-      return;
-    }
-
-    const { success, error } = await handleEdit(id, form);
-    if (success) {
-      setInnerModal("success");
-    } else {
-      setInnerModal("error");
-    }
-  };
-
-  const handleSubmitViaButton = () => formRef.current?.requestSubmit();
+export default function EditWarrantyModal({
+  selectedWarranty,
+  onClose,
+  onEditSuccess,
+}) {
+  const [innerModal, setInnerModal] = useState(null);
+  const { form, handleChange, handleSubmit, loading } = useEditWarranty(
+    selectedWarranty.warranty_incidents_id,
+    {
+      product_serial: selectedWarranty.product_serial,
+      warranty_customer: selectedWarranty.warranty_customer,
+      warranty_phone: selectedWarranty.warranty_phone,
+      warranty_address: selectedWarranty.warranty_address,
+      warranty_city: selectedWarranty.warranty_city,
+      warranty_link_attachments: selectedWarranty.warranty_link_attachments,
+      warranty_description: selectedWarranty.warranty_description,
+      warranty_status: selectedWarranty.warranty_status,
+    },
+  );
 
   return (
     <section className="flex flex-col items-center">
-      <form ref={formRef} onSubmit={handleSubmit} className="flex flex-col gap-1 w-72">
-        <label className="text-sm mt-1">Serial</label>
-        <input
-          type="text"
-          name="product_serial"
-          value={form.product_serial || ""}
+      <form className="flex flex-col gap-1 w-72">
+        <FormField
+          name={"product_serial"}
+          labelText={"Serial"}
+          value={form.product_serial}
           onChange={handleChange}
-          className="border rounded-lg p-2 text-sm"
+          placeholder="QTYC99999"
         />
 
-        <label className="text-sm mt-1">Nombre del Cliente</label>
-        <input
-          type="text"
-          name="warranty_customer"
-          value={form.warranty_customer || ""}
+        <FormField
+          name={"warranty_customer"}
+          labelText={"Nombre del Cliente"}
+          value={form.warranty_customer}
           onChange={handleChange}
-          className="border rounded-lg p-2 text-sm"
         />
 
-        <label className="text-sm mt-1">Teléfono</label>
-        <input
-          type="text"
-          name="warranty_phone"
-          value={form.warranty_phone || ""}
+        <FormField
+          name={"warranty_phone"}
+          labelText={"Teléfono"}
+          value={form.warranty_phone}
           onChange={handleChange}
-          className="border rounded-lg p-2 text-sm"
         />
 
-        <label className="text-sm mt-1">Dirección</label>
-        <input
-          type="text"
-          name="warranty_address"
-          value={form.warranty_address || ""}
+        <FormField
+          name={"warranty_address"}
+          labelText={"Dirección"}
+          value={form.warranty_address}
           onChange={handleChange}
-          className="border rounded-lg p-2 text-sm"
         />
 
-        <label className="text-sm mt-1">Ciudad</label>
-        <input
-          type="text"
-          name="warranty_city"
-          value={form.warranty_city || ""}
+        <FormField
+          name={"warranty_city"}
+          labelText={"Ciudad"}
+          value={form.warranty_city}
           onChange={handleChange}
-          className="border rounded-lg p-2 text-sm"
         />
 
         <label className="text-sm mt-1">Requerimiento</label>
         <textarea
           name="warranty_description"
-          value={form.warranty_description || ""}
+          value={form.warranty_description}
           onChange={handleChange}
-          className="h-20 w-full p-2 text-sm border rounded-lg"
+          className="w-full px-6 py-3 text-sm rounded-xl border bg-[#e5e5e527] dark:bg-[#ffffff10] dark:border-[#ffffff15] dark:text-white"
         />
 
-        {/* NUEVO SELECT PARA ESTADO */}
-        <label className="text-sm mt-1">Estado</label>
-        <select
-          name="warranty_status"
-          value={form.warranty_status || "0"}
+        <FormField
+          name={"warranty_link_attachments"}
+          labelText={"Enlace de Adjuntos"}
+          value={form.warranty_link_attachments}
           onChange={handleChange}
-          className="border rounded-lg p-2 text-sm"
-        >
-          <option value="0">Incompleto</option>
-          <option value="1">En proceso</option>
-          <option value="2">Completado</option>
-        </select>
+        />
+
+        <SelectMenu
+          spanText={"Estado"}
+          name={"warranty_status"}
+          value={form.warranty_status}
+          onChange={handleChange}
+          options={[
+            {
+              value: 0,
+              label: "Pendiente",
+            },
+            { value: 1, label: "En proceso" },
+            { value: 2, label: "Completada" },
+          ]}
+        />
       </form>
 
       <ConfirmCancelButtons
-        confirmButtonOnClick={handleSubmitViaButton}
+        confirmButtonOnClick={(e) => handleSubmit(e, setInnerModal)}
         cancelButtonOnClick={onClose}
-        confirmLoading={loading}
+        confirmText={loading ? <Loader /> : "Editar"}
       />
 
       {innerModal === "success" && (

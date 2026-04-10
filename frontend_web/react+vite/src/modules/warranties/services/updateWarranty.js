@@ -1,16 +1,13 @@
-// src/modules/warranties/services/updateWarranty.js
 import { apiRoutes } from "../../../config/apiRoutes";
-import { getToken } from "../../../utils/auth";
+import { fetchWithAuth } from "../../../utils/fetchWithAuth";
 
 export async function updateWarranty(id, data) {
-  const res = await fetch(
+  const res = await fetchWithAuth(
     `${apiRoutes.apiUrl}${apiRoutes.warranties}/update/${id}`,
     {
       method: "PUT",
-      credentials: "include",
       headers: {
         "Content-Type": "application/json",
-        Authorization: getToken(),
       },
       body: JSON.stringify(data),
     },
