@@ -20,6 +20,7 @@ export default function SubcategoriesList({
         {subcategories.map((subcategory) => (
           // Subcategorías
           <SubcategoriesItem
+            key={subcategory.subcategory_id}
             subcategory={subcategory}
             moreInfoOnClick={(e) => {
               e.stopPropagation();
