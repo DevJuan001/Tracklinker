@@ -2,7 +2,9 @@ from app.core.database import get_connection
 from app.models.guarantiees_model import Guarantee
 from app.utils.date_formatter import date_formatter
 from app.utils.periods import period_map, daily_periods
+from app.repository.products_repository import ProductsRepository
 from datetime import datetime
+from fastapi import HTTPException
 
 
 class GuaranteeRepository:
@@ -68,7 +70,7 @@ class GuaranteeRepository:
             result = cursor.fetchall()
             return None, result
         except Exception as e:
-            return f"❌ Error al ejecutar la consulta: {e}", None
+            return f"Error al ejecutar la consulta: {e}", None
         finally:
             cursor.close()
             connection.close()
@@ -81,49 +83,87 @@ class GuaranteeRepository:
         connection = get_connection()
         cursor = connection.cursor()
 
-        # Fecha actual para indicar la hora a la que se creo la incidencia
-        data["warranty_date"] = datetime.now()
-
-        # Arrays vacios para almacenar los datos de la incidencia
-        fields = list(data.keys())
-        placeholders = ["%s"] * len(fields)
-        values = list(data.values())
-
         # Petición a la base de datos
-        query = f"INSERT INTO warranty_incidents ({','.join(fields)}) VALUES({','.join(placeholders)})"
+        query = """
+        INSERT INTO WARRANTY_INCIDENTS (
+            product_serial,
+            warranty_customer,
+            warranty_phone,
+            warranty_address,
+            warranty_description,
+            warranty_link_attachments,
+            warranty_city
+        ) VALUES (%s, %s, %s, %s, %s, %s, %s)
+        """
 
         try:
-            cursor.execute(query, values)
+            cursor.execute("""
+            SELECT 
+                product_id
+            FROM PRODUCT_SERIALS WHERE product_serial = %s
+            """, (data["product_serial"],))
+
+            product_id = cursor.fetchone()
+
+            error, success, message = ProductsRepository.update_product_status(
+                {"product_id": product_id[0], "product_status": 3})
+
+            if error:
+                raise HTTPException(status_code=500, detail=error)
+
+            cursor.execute(query, (
+                data["product_serial"],
+                data["warranty_customer"],
+                data["warranty_phone"],
+                data["warranty_address"],
+                data["warranty_description"],
+                data["warranty_link_attachments"],
+                data["warranty_city"],
+            ))
             connection.commit()
+
             return None, True, "Incidencia creado correctamente"
         except Exception as e:
-            return f"❌ Error al ejecutar la consulta: {e}", None, None
+            connection.rollback()
+            return f"Error al ejecutar la consulta: {e}", None, None
         finally:
             cursor.close()
             connection.close()
 
     @staticmethod
     def update(warranty_incidents_id: int, warranty_data: dict):
+        data = warranty_data.model_dump()
 
         connection = get_connection()
         cursor = connection.cursor(dictionary=True)
 
-        # Construir la consulta de actualización dinámicamente
-        fields = []
-        values = []
-        for key, value in warranty_data.items():
-            fields.append(f"{key} = %s")
-            values.append(value)
-        values.append(warranty_incidents_id)
-
-        query = f"UPDATE WARRANTY_INCIDENTS SET {', '.join(fields)} WHERE warranty_incidents_id = %s"
+        query = """
+        UPDATE WARRANTY_INCIDENTS SET
+            warranty_customer = %s,
+            warranty_phone = %s,
+            warranty_address = %s,
+            warranty_description = %s,
+            warranty_link_attachments = %s,
+            warranty_city = %s,
+            warranty_status = %s
+        WHERE warranty_incidents_id = %s"""
 
         try:
-            cursor.execute(query, values)
+            cursor.execute(query, (
+                data["warranty_customer"],
+                data["warranty_phone"],
+                data["warranty_address"],
+                data["warranty_description"],
+                data["warranty_link_attachments"],
+                data["warranty_city"],
+                data["warranty_status"],
+                warranty_incidents_id
+            ))
+
             connection.commit()
             return None, True, "Incidencia actualizada correctamente"
         except Exception as e:
-            return f"❌ Error al ejecutar la consulta: {e}", None, None
+            return f"Error al ejecutar la consulta: {e}", False, None
         finally:
             cursor.close()
             connection.close()
@@ -140,7 +180,7 @@ class GuaranteeRepository:
             connection.commit()
             return None, True, "Incidencia eliminada correctamente"
         except Exception as e:
-            return f"❌ Error al ejecutar la consulta: {e}", None, None
+            return f"Error al ejecutar la consulta: {e}", None, None
         finally:
             cursor.close()
             connection.close()
@@ -160,13 +200,14 @@ class GuaranteeRepository:
             results = cursor.fetchall()
             return None, results
         except Exception as e:
-            return f"❌ Error al ejecutar la consulta: {e}", None
+            return f"Error al ejecutar la consulta: {e}", None
         finally:
             cursor.close()
             connection.close()
 
 
 #   ------------ REPORTES DE GARANTÍAS ------------
+
 
     @staticmethod
     def find_recent_warranties():
@@ -311,4 +352,3 @@ class GuaranteeRepository:
         finally:
             cursor.close()
             connection.close()
-
