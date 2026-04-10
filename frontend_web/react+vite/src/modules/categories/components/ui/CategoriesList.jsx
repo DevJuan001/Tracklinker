@@ -22,6 +22,7 @@ export default function CategoriesList({
       <ul className="flex flex-col gap-1">
         {categories.map((category) => (
           <CategoryItem
+            key={category.category_id}
             category={category}
             moreInfoOnClick={(e) => {
               e.stopPropagation();
