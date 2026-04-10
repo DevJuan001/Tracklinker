@@ -2,7 +2,9 @@ from app.core.database import get_connection
 from app.models.guarantiees_model import Guarantee
 from app.utils.date_formatter import date_formatter
 from app.utils.periods import period_map, daily_periods
+from app.repository.products_repository import ProductsRepository
 from datetime import datetime
+from fastapi import HTTPException
 
 
 class GuaranteeRepository:
@@ -68,7 +70,7 @@ class GuaranteeRepository:
             result = cursor.fetchall()
             return None, result
         except Exception as e:
-            return f"❌ Error al ejecutar la consulta: {e}", None
+            return f"Error al ejecutar la consulta: {e}", None
         finally:
             cursor.close()
             connection.close()
@@ -93,11 +95,25 @@ class GuaranteeRepository:
         query = f"INSERT INTO warranty_incidents ({','.join(fields)}) VALUES({','.join(placeholders)})"
 
         try:
+            cursor.execute("""
+            SELECT 
+                product_id
+            FROM PRODUCT_SERIALS WHERE product_serial = %s
+            """, (data["product_serial"],))
+
+            product_id = cursor.fetchone()
+
+            error, success, message = ProductsRepository.update_product_status({ "product_id": product_id[0], "product_status": 3 })
+
+            if error:
+                raise HTTPException(status_code=500, detail=error)
+
             cursor.execute(query, values)
             connection.commit()
+
             return None, True, "Incidencia creado correctamente"
         except Exception as e:
-            return f"❌ Error al ejecutar la consulta: {e}", None, None
+            return f"Error al ejecutar la consulta: {e}", None, None
         finally:
             cursor.close()
             connection.close()
@@ -120,10 +136,11 @@ class GuaranteeRepository:
 
         try:
             cursor.execute(query, values)
+
             connection.commit()
             return None, True, "Incidencia actualizada correctamente"
         except Exception as e:
-            return f"❌ Error al ejecutar la consulta: {e}", None, None
+            return f"Error al ejecutar la consulta: {e}", False, None
         finally:
             cursor.close()
             connection.close()
@@ -140,7 +157,7 @@ class GuaranteeRepository:
             connection.commit()
             return None, True, "Incidencia eliminada correctamente"
         except Exception as e:
-            return f"❌ Error al ejecutar la consulta: {e}", None, None
+            return f"Error al ejecutar la consulta: {e}", None, None
         finally:
             cursor.close()
             connection.close()
@@ -160,7 +177,7 @@ class GuaranteeRepository:
             results = cursor.fetchall()
             return None, results
         except Exception as e:
-            return f"❌ Error al ejecutar la consulta: {e}", None
+            return f"Error al ejecutar la consulta: {e}", None
         finally:
             cursor.close()
             connection.close()
