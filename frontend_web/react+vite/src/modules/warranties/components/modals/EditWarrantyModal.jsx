@@ -1,11 +1,14 @@
+// Hooks
 import { useState } from "react";
 import { useEditWarranty } from "../../hooks/useEditWarranty";
-import ConfirmCancelButtons from "../../../../globals/components/modals/ConfirmCancelButtons";
-import SuccessModal from "../../../../globals/components/modals/SuccessModal";
-import ErrorModal from "../../../../globals/components/modals/ErrorModal";
+// Componentes
+import Loader from "../../../../globals/components/ui/Loader";
 import FormField from "../../../../globals/components/ui/FormField";
 import SelectMenu from "../../../../globals/components/modals/SelectMenu";
-import Loader from "../../../../globals/components/ui/Loader";
+import ConfirmCancelButtons from "../../../../globals/components/modals/ConfirmCancelButtons";
+// Modales
+import SuccessModal from "../../../../globals/components/modals/SuccessModal";
+import ErrorModal from "../../../../globals/components/modals/ErrorModal";
 
 export default function EditWarrantyModal({
   selectedWarranty,
