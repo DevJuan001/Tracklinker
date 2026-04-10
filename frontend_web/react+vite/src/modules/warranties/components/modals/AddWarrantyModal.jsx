@@ -23,7 +23,6 @@ export default function AddWarrantyModal({
     warranty_city: "",
     warranty_description: "",
     warranty_link_attachments: "",
-    warranty_status: 1,
   });
 
   return (
@@ -115,7 +114,7 @@ export default function AddWarrantyModal({
         />
       )}
 
-      {innerModal?.type === "error" && (
+      {innerModal === "error" && (
         <ErrorModal
           isOpen
           errorTitle="Error al registrar la garantía"
