@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Response, Cookie, Body
+from fastapi import APIRouter, Depends, Response, Cookie, Body, Request
 from app.controllers.auth_controller import AuthController
 from app.models.auth_model import LoginModel, RecoverPassword
 from app.models.user_model import UpdateCurrentUser, UpdatePassword
@@ -13,6 +13,11 @@ router = APIRouter(
 @router.post("/login")
 def login(credentials: LoginModel, response: Response):
     return AuthController.login(credentials.email, credentials.password, response)
+
+# Endpoint para actualizar el token de acceso
+@router.post("/refresh")
+def refresh_token(request: Request, response: Response):
+    return AuthController.refresh_token(request, response)
 
 # Endpoint para verificar el rol del usuario
 @router.post("/verify-roles")
