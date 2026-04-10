@@ -17,8 +17,10 @@ class Settings(BaseSettings):
     DB_USER: str
     DB_PASSWORD: str
     DB_NAME: str
-    SECRET_KEY: str
+    ACCESS_TOKEN_SECRET_KEY: str
+    REFRESH_TOKEN_SECRET_KEY: str
     ALGORITHM: str
+    REFRESH_TOKEN_EXPIRE: int
     ACCESS_TOKEN_EXPIRE: int
     MAIL_USERNAME: EmailStr
     MAIL_PASSWORD: str
