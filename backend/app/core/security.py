@@ -4,12 +4,21 @@ import secrets
 import string
 import bcrypt
 from jose import jwt
-from fastapi import HTTPException
+from fastapi import HTTPException, Response
 from fastapi.security import OAuth2PasswordBearer
 from app.core.config import settings
 
 # Ruta en la cúal los usuarios obtienen el login
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
+
+def create_refresh_token(data: dict) -> str:
+    expire = datetime.now(timezone.utc) + timedelta(settings.REFRESH_TOKEN_EXPIRE)
+
+    return jwt.encode(
+        {**data, "exp": expire},
+        settings.REFRESH_TOKEN_SECRET_KEY,
+        algorithm=settings.ALGORITHM
+    )
 
 # Función para crear el jwt con fecha de expiración
 def create_access_token(
@@ -33,11 +42,36 @@ def create_access_token(
     # Aqui guardamos todo dentro del string del jwt
     encoded_jwt = jwt.encode(
             to_encode,
-            settings.SECRET_KEY,
+            settings.ACCESS_TOKEN_SECRET_KEY,
             algorithm=settings.ALGORITHM
         )
     
     return encoded_jwt
+
+def set_auth_cookies(response: Response, access_token: str, refresh_token: str):
+    IS_PRODUCTION = settings.ENVIRONMENT == "production"
+
+    cookie_base = {
+        "httponly": True,
+        "secure": IS_PRODUCTION,
+        "samesite": "strict",
+    }
+
+    response.set_cookie(
+        key="access_token",
+        value=access_token,
+        max_age=settings.ACCESS_TOKEN_EXPIRE * 60,
+        path="/",
+        **cookie_base,
+    )
+
+    response.set_cookie(
+        key="refresh_token",
+        value=refresh_token,
+        max_age=settings.REFRESH_TOKEN_EXPIRE * 86400,
+        path="/" if not IS_PRODUCTION else "/api/auth/refresh",
+        **cookie_base,
+    )
 
 # Función para verificar la contraseña del usuario
 def verify_password(user, password: str):

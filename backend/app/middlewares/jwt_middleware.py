@@ -1,6 +1,5 @@
 from jose import jwt, JWTError
 from fastapi import Cookie, HTTPException
-from app.core.security import oauth2_scheme
 from app.core.config import settings
 
 # Función para verificar el token en todas las solicitudes protegidas
@@ -14,10 +13,9 @@ async def verify_jwt(access_token: str = Cookie(None)):
         raise credentials_exception
 
     try:
-        token = access_token.replace("Bearer ", "")
         payload = jwt.decode(
-            token,
-            settings.SECRET_KEY,
+            access_token,
+            settings.ACCESS_TOKEN_SECRET_KEY,
             algorithms=[settings.ALGORITHM]
         )
 
