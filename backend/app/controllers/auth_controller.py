@@ -1,8 +1,8 @@
-from fastapi import HTTPException, Response, Cookie
+from fastapi import HTTPException, Response, Cookie, Request
 from datetime import timedelta
 from app.models.user_model import UpdateCurrentUser, UpdatePassword
 from app.core.security import verify_password
-from app.core.security import create_access_token
+from app.core.security import set_auth_cookies, create_access_token, create_refresh_token
 from app.repository.user_repository import UserRepository
 from app.core.config import settings
 from jose import jwt, JWTError
@@ -20,8 +20,7 @@ class AuthController:
     Metodos:
         login(email: str, password: str):
             Verifica las credenciales del usuario y retorna un JWT para que pueda realizar
-            o acceder a diferentes rutas.
-            
+            o acceder a diferentes rutas.   
 
     Nota:
         Este controlador debe estar relacionado o integrarse con el repository el cual se comunica
@@ -43,27 +42,61 @@ class AuthController:
         expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE)
 
         # Creación del token
-        token = create_access_token({
+        access_token = create_access_token({
             "sub": str(user["user_id"]),
             "role": user["rol_name"]
         },
             expires_delta=expires)
 
-        response.set_cookie(
-            key="access_token",
-            value=f"Bearer {token}",
-            httponly=True,
-            secure=False,
-            samesite="lax",
-            max_age=settings.ACCESS_TOKEN_EXPIRE * 60)
+        refresh_token = create_refresh_token(
+            {"sub": str(user["user_id"])}
+        )
+
+        set_auth_cookies(response, access_token, refresh_token)
 
         return {
             "success": True,
             "message": "Inicio de sesion exitoso"
         }
+    
+    @staticmethod
+    def refresh_token(request: Request, response: Response):
+        refresh_token = request.cookies.get("refresh_token")
+
+        if not refresh_token:
+            raise HTTPException(status_code=401, detail="Refresh token no encontrado")
+        
+        try:
+            payload = jwt.decode(
+                refresh_token,
+                settings.REFRESH_TOKEN_SECRET_KEY,
+                algorithms=[settings.ALGORITHM]
+            )
+            user_id = payload.get("sub")
+
+            if not user_id:
+                raise HTTPException(status_code=401, detail="Refresh token inválido")
+
+        except JWTError:
+            raise HTTPException(status_code=401, detail="Refresh token expirado o inválido")
+        
+        new_access_token = create_access_token({
+            "sub": str(user_id),
+            "role": payload.get("role")
+        }, expires_delta=timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE))
+
+        new_refresh_token = create_refresh_token({"sub": user_id})
+
+        set_auth_cookies(response, new_access_token, new_refresh_token)
+
+        return {
+            "success": True,
+            "message": "Tokens actualizados correctamente"
+        }
+
 
     @staticmethod
-    def verify_role(body: dict, payload: dict):        
+    def verify_role(body: dict, payload: dict):
         user_role = payload.get("role")
         roles = body.get("roles", [])
 
@@ -77,12 +110,9 @@ class AuthController:
 
     @staticmethod
     def logout(response: Response):
-        response.delete_cookie(
-            key="access_token",
-            httponly=True,
-            secure=False,
-            samesite="lax"
-        )
+        response.delete_cookie(key="access_token", path="/api")
+        response.delete_cookie(key="refresh_token", path="/api/auth/refresh")
+
         return {
             "success": True,
             "message": "Sesion cerrada"
@@ -95,8 +125,11 @@ class AuthController:
 
         try:
             token = access_token.replace("Bearer ", "")
-            payload = jwt.decode(token, settings.SECRET_KEY,
-                                 algorithms=[settings.ALGORITHM])
+            payload = jwt.decode(
+                token,
+                settings.ACCESS_TOKEN_SECRET_KEY,
+                algorithms=[settings.ALGORITHM]
+            )
             error, data = UserRepository.find_by_id(payload["sub"])
 
             if error:
