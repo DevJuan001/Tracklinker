@@ -1,19 +1,22 @@
 import { apiRoutes } from "../../../config/apiRoutes";
+import { fetchWithAuth } from "../../../utils/fetchWithAuth";
 
 // Función para loguearse
 export async function login(email, password, signal) {
-  const res = await fetch(`${apiRoutes.apiUrl}/auth/login`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
+  const res = await fetchWithAuth(
+    `${apiRoutes.apiUrl}${apiRoutes.auth}/login`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: email,
+        password: password,
+      }),
+      signal: signal,
     },
-    body: JSON.stringify({
-      email: email,
-      password: password,
-    }),
-    credentials: "include",
-    signal: signal,
-  });
+  );
 
   if (!res.ok) {
     throw new Error("Credenciales Invalidas");
@@ -24,16 +27,17 @@ export async function login(email, password, signal) {
 
 // Función para cerrar sesión
 export async function logout(navigate) {
-  const res = await fetch(`${apiRoutes.apiUrl}/auth/logout`, {
-    method: "POST",
-    credentials: "include",
-  });
+  const res = await fetchWithAuth(
+    `${apiRoutes.apiUrl}${apiRoutes.auth}/logout`,
+    {
+      method: "POST",
+    },
+  );
 
   if (!res.ok) {
     throw new Error("No se pudo eliminar la cookie");
   }
 
-  localStorage.clear();
   navigate("/login");
 
   return await res.json();
