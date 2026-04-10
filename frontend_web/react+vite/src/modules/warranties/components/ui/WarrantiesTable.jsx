@@ -36,7 +36,7 @@ export default function WarrantiesTable({ warranties, openModal, refetch }) {
             >
               <th className="font-normal text-start pl-3 text-sm">
                 <div
-                  className={`w-fit flex flex-wrap items-center pl-1.5 pr-3 py-0.5 gap-1.5 rounded-full border dark:border-transparent
+                  className={`flex items-center pl-1.5 pr-3 py-0.5 gap-1.5 rounded-full border dark:border-transparent
                     ${warrantyStatusConfig[warranty.warranty_status]?.styles}
                     `}
                 >
@@ -45,7 +45,7 @@ export default function WarrantiesTable({ warranties, openModal, refetch }) {
                     className="w-4 h-4 dark:brightness-[0.5]"
                   />
                   <span
-                    className={`${warrantyStatusConfig[warranty.warranty_status]?.textColor}`}
+                    className={` ${warrantyStatusConfig[warranty.warranty_status]?.textColor}`}
                   >
                     {warrantyStatusConfig[warranty.warranty_status]?.text}
                   </span>
