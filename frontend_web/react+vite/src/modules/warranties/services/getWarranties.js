@@ -14,9 +14,7 @@ export async function getWarranties() {
     throw new Error("Error en la petición");
   }
 
-  // Convertimos la respuesta a json y la la almacenamos en data
   const data = await res.json();
 
-  //Devolvemos  el objeyo daa dentro de la respuesta
   return data.data;
 }
