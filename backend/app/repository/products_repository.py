@@ -309,13 +309,13 @@ class ProductsRepository:
                 product_garanty_input = %s
             WHERE product_id = %s
             """,
-                           (
-                               data["product_serial"],
-                               data["product_id"],
-                               data["input_order_id"],
-                               data["product_garanty_input"],
-                               data["product_id"],
-                           ))
+            (
+                data["product_serial"],
+                data["product_id"],
+                data["input_order_id"],
+                data["product_garanty_input"],
+                data["product_id"],
+            ))
 
             return None, True, f"Serial del producto actualizado correctamente"
         except Exception:
@@ -475,15 +475,15 @@ class ProductsRepository:
 
             product = cursor.fetchone()
 
-            if product[0] == 0 and product_data["product_status"] == 2 or product_data["product_status"] == 3:
-                cursor.close()
-                connection.close()
-                return f"No puedes vender o crear una garantía con un producto deshabilitado", False, None
-
             if not product:
                 cursor.close()
                 connection.close()
                 return "Producto no encontrado", False, None
+            
+            if product[0] == 0 and (product_data["product_status"] == 2 or product_data["product_status"] == 3):
+                cursor.close()
+                connection.close()
+                return f"No puedes vender o crear una garantía con un producto deshabilitado", False, None
 
             cursor.execute("""
                 UPDATE PRODUCTS SET
