@@ -1,15 +1,11 @@
 import { apiRoutes } from "../../../config/apiRoutes";
-import { getToken } from "../../../utils/auth";
+import { fetchWithAuth } from "../../../utils/fetchWithAuth";
 
 export async function deleteWarranty(warrantyId) {
-  const res = await fetch(
+  const res = await fetchWithAuth(
     `${apiRoutes.apiUrl}${apiRoutes.warranties}/delete/${warrantyId}`,
     {
       method: "DELETE",
-      credentials: "include",
-      headers: {
-        Authorization: getToken(),
-      },
     },
   );
 
