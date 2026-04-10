@@ -49,7 +49,8 @@ class AuthController:
             expires_delta=expires)
 
         refresh_token = create_refresh_token(
-            {"sub": str(user["user_id"])}
+            {"sub": str(user["user_id"]),
+             "role": user["rol_name"]}
         )
 
         set_auth_cookies(response, access_token, refresh_token)
@@ -58,14 +59,15 @@ class AuthController:
             "success": True,
             "message": "Inicio de sesion exitoso"
         }
-    
+
     @staticmethod
     def refresh_token(request: Request, response: Response):
         refresh_token = request.cookies.get("refresh_token")
 
         if not refresh_token:
-            raise HTTPException(status_code=401, detail="Refresh token no encontrado")
-        
+            raise HTTPException(
+                status_code=401, detail="Refresh token no encontrado")
+
         try:
             payload = jwt.decode(
                 refresh_token,
@@ -75,17 +77,20 @@ class AuthController:
             user_id = payload.get("sub")
 
             if not user_id:
-                raise HTTPException(status_code=401, detail="Refresh token inválido")
+                raise HTTPException(
+                    status_code=401, detail="Refresh token inválido")
 
         except JWTError:
-            raise HTTPException(status_code=401, detail="Refresh token expirado o inválido")
-        
+            raise HTTPException(
+                status_code=401, detail="Refresh token expirado o inválido")
+
         new_access_token = create_access_token({
             "sub": str(user_id),
             "role": payload.get("role")
         }, expires_delta=timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE))
 
-        new_refresh_token = create_refresh_token({"sub": user_id})
+        new_refresh_token = create_refresh_token(
+            {"sub": user_id, "role": payload.get("role")})
 
         set_auth_cookies(response, new_access_token, new_refresh_token)
 
@@ -93,7 +98,6 @@ class AuthController:
             "success": True,
             "message": "Tokens actualizados correctamente"
         }
-
 
     @staticmethod
     def verify_role(body: dict, payload: dict):
