@@ -1,16 +1,17 @@
 import { apiRoutes } from "../../../config/apiRoutes";
-import { getToken } from "../../../utils/auth";
+import { fetchWithAuth } from "../../../utils/fetchWithAuth";
 
 export async function createWarranty(data) {
-  const res = await fetch(`${apiRoutes.apiUrl}${apiRoutes.warranties}/create`, {
-    method: "POST",
-    credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: getToken(),
+  const res = await fetchWithAuth(
+    `${apiRoutes.apiUrl}${apiRoutes.warranties}/create`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
     },
-    body: JSON.stringify(data),
-  });
+  );
 
   if (!res.ok) {
     throw new Error("Error en la petición");
