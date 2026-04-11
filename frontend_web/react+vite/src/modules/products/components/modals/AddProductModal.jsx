@@ -2,10 +2,8 @@
 import { useState } from "react";
 import { useCatalog } from "../../hooks/useCatalog";
 import { useCreateProduct } from "../../hooks/useCreateProduct";
-import {
-  actionsIcons,
-  productsIcons,
-} from "../../../../assets/icons/mainIcons";
+import { actionsIcons } from "../../../../assets/icons/actionsIcons";
+import { productsIcons } from "../../../../assets/icons/productsIcons";
 // Componentes
 import Loader from "../../../../globals/components/ui/Loader";
 import FormField from "../../../../globals/components/ui/FormField";
