@@ -11,6 +11,7 @@ export default function SectionsContainer() {
     >
       {items.map((item) => (
         <ActionCard
+          key={item.name}
           itemName={item.name}
           itemPath={item.path}
           itemIcon={item.icon}

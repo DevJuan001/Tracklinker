@@ -40,7 +40,7 @@ export default function UsersPage() {
         addButtonIcon={usersIcons.addUserIcon}
         addButtonText={"Agregar Usuario"}
         createOnClick={() => openModal(null, "add", fetchUsers)}
-        filterOnClick={() => openModal(null, "filter", fetchUsers)}
+        filterOnClick={() => openModal(null, "filter")}
       >
         <SearchBar value={search} onChange={setSearch} />
       </TopSection>
@@ -80,7 +80,10 @@ export default function UsersPage() {
         >
           {modalType === "user" && <ProfileModal />}
           {modalType === "filter" && (
-            <FilterUserModal onClose={() => closeModal()} />
+            <FilterUserModal
+              refetch={fetchUsers}
+              onClose={() => closeModal()}
+            />
           )}
           {modalType === "help" && <HelpModal onClose={() => closeModal()} />}
           {/* Modal para agregar un usuario */}

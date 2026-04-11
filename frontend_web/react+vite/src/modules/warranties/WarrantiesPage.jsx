@@ -57,7 +57,7 @@ export default function WarrantiesPage() {
                     : modalType === "edit"
                       ? "Editar Garantía"
                       : modalType === "delete"
-                        ? "Eliminar Proveedor"
+                        ? "Eliminar Garantía"
                         : "Ayuda"
           }
           type={modalType}

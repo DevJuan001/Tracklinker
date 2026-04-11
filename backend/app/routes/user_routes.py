@@ -1,6 +1,5 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends, Body
 from app.controllers.user_controller import UserController
-from fastapi import Depends
 from app.models.user_model import User, UpdateUser
 from app.middlewares.roles_middleware import require_roles
 
@@ -16,8 +15,12 @@ def get_all_roles():
 
 # Endpoint para obtener todos los usuarios
 @router.get("/")
-def get_all_users():
-    return UserController.get_all_users()
+def get_all_users(
+    role_order: int = None,
+    name_order: str = None,
+    start_date: str = None,
+    end_date: str = None,):
+    return UserController.get_all_users(role_order, name_order, start_date, end_date)
 
 # Endpoint para obtener un usuario mediante el id
 @router.get("/{user_id}")

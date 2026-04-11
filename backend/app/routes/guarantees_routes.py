@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from app.controllers.guarantees_controller import GuaranteeController
 from fastapi import Depends
-from app.models.guarantiees_model import Guarantee
+from app.models.guarantiees_model import Guarantee, GuaranteeUpdate
 from app.middlewares.roles_middleware import require_roles
 
 
@@ -25,12 +25,10 @@ def get_guarantiee_by_id(
        return GuaranteeController.get_guarantiee_by_id(warranty_incidents_id)
 
 # Endpont para crear o registrar incidencia de garantía
-
 @router.post("/create")
 def create_guarantiee(
-    warranty_data:Guarantee,
+    warranty_data: Guarantee,
     payload: dict = Depends (require_roles("Admin"))
-    
     ):
     return GuaranteeController.create_guarantiee(warranty_data)
 
@@ -38,7 +36,7 @@ def create_guarantiee(
 @router.put("/update/{warranty_incidents_id}")
 def update_garantee(
     warranty_incidents_id:int,
-    warranty_data:dict,
+    warranty_data:  GuaranteeUpdate,
     payload: dict= Depends(require_roles(["Admin"]))
 
 ):

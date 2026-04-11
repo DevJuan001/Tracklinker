@@ -33,8 +33,12 @@ export default function SelectMenu({
             dark:bg-[#ffffff1a] dark:border-[#ffffff15] dark:text-white"
         >
           <div className="w-full h-11 flex items-center pl-5">
-            {options.find((opt) => Number(opt.value) === Number(value))
-              ?.label ?? "Seleccionar"}
+            {options.find((opt) => {
+              if (opt.value !== "" && !isNaN(opt.value)) {
+                return Number(opt.value) === Number(value);
+              }
+              return String(opt.value) === String(value);
+            })?.label ?? "Seleccionar"}
           </div>
           <img
             src={modalIcons.arrowUp}

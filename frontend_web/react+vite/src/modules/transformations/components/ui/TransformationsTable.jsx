@@ -30,8 +30,8 @@ export default function TransformationsTable({
           </thead>
 
           {/* Cuerpo de la tabla */}
-          {transformations.map((transformation) => (
-            <tbody className="font-normal dark:text-white">
+          <tbody className="font-normal dark:text-white">
+            {transformations.map((transformation) => (
               <tr
                 onClick={(e) => {
                   e.stopPropagation();
@@ -101,8 +101,8 @@ export default function TransformationsTable({
                   </ActionButtons>
                 </th>
               </tr>
-            </tbody>
-          ))}
+            ))}
+          </tbody>
         </table>
       </section>
     </section>

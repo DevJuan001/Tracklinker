@@ -1,13 +1,22 @@
 import { apiRoutes } from "../../../config/apiRoutes";
+import { fetchWithAuth } from "../../../utils/fetchWithAuth";
 
-// Esta función obtiene todos los usuarios y los almacena en data
-export async function getUsers(signal) {
-  // Consumimos el endpoint y lo almacenamos en res, le pasamos el metodo y el jwt que necesita para traer los datos
-  const res = await fetch(`${apiRoutes.apiUrl}${apiRoutes.users}/`, {
-    method: "GET",
-    credentials: "include",
-    signal,
-  });
+export async function getUsers(signal, filters = {}) {
+  const params = new URLSearchParams();
+  
+  if (filters.name_order) params.append("name_order", filters.name_order);
+  if (filters.start_date) params.append("start_date", filters.start_date);
+  if (filters.end_date) params.append("end_date", filters.end_date);
+  if (filters.role_order) params.append("role_order", filters.role_order);
+
+  const res = await fetchWithAuth(
+    `${apiRoutes.apiUrl}${apiRoutes.users}/?${params.toString()}`,
+    {
+      method: "GET",
+      credentials: "include",
+      signal,
+    },
+  );
 
   // Validamos si la respuesta fue OK
   if (!res.ok) {

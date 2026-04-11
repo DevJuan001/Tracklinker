@@ -9,8 +9,7 @@ export default function CategoryItem({
   return (
     <li
       className="flex items-center justify-between p-5 bg-[#f3eef5] rounded-lg shadow-md transition duration-300 cursor-pointer
-                    dark:bg-[#0f0f11] dark:hover:bg-[#212125]"
-      key={category.category_id}
+      dark:bg-[#0f0f11] dark:hover:bg-[#212125]"
       onClick={moreInfoOnClick}
     >
       {/* Datos de la Categoría */}

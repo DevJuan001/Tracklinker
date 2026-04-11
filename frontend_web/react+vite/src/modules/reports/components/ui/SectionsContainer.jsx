@@ -25,6 +25,7 @@ export default function SectionsContainer({
     >
       {sections.map((section) => (
         <ReportSectionCard
+          key={section.name}
           sectionOnClick={() => {
             setReport(`${section.name}`);
             setTopSectionVisiblity(false);

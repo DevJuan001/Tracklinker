@@ -69,7 +69,7 @@ def set_auth_cookies(response: Response, access_token: str, refresh_token: str):
         key="refresh_token",
         value=refresh_token,
         max_age=settings.REFRESH_TOKEN_EXPIRE * 86400,
-        path="/" if not IS_PRODUCTION else "/api/auth/refresh",
+        path="/api/auth/refresh",
         **cookie_base,
     )
 
