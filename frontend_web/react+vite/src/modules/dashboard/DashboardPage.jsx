@@ -60,7 +60,10 @@ export default function DashBoardPage() {
         </Modal>
       )}
       {showDownloadToast && (
-        <DownloadToast onClose={() => setShowDownloadToast(false)} />
+        <DownloadToast
+          showDownloadToast={showDownloadToast}
+          onClose={() => setShowDownloadToast(false)}
+        />
       )}
     </Layout>
   );
