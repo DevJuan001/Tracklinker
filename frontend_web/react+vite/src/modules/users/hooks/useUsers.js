@@ -8,13 +8,13 @@ export function useUsers() {
   const controllerRef = useRef(null);
 
   // Esta functión llama al service getAllUsers y espera a obtener todos los datos y los almacena en "data"
-  async function fetchUsers() {
+  async function fetchUsers(form) {
     controllerRef.current?.abort();
     controllerRef.current = new AbortController();
 
     setLoading(true);
     try {
-      const data = await getUsers(controllerRef.current.signal);
+      const data = await getUsers(controllerRef.current.signal, form);
       setUsers(data);
       setLoading(false);
     } catch (error) {
@@ -30,5 +30,10 @@ export function useUsers() {
     return () => controllerRef.current?.abort();
   }, []);
 
-  return { users, loading, error, fetchUsers };
+  return {
+    users,
+    loading,
+    error,
+    fetchUsers,
+  };
 }
