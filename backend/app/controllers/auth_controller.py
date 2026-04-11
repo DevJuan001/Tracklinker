@@ -108,8 +108,7 @@ class AuthController:
         if user_role not in roles:
             raise HTTPException(status_code=403, detail="No autorizado")
         return {
-            "success": True,
-            "role": user_role
+            "success": True
         }
 
     @staticmethod
