@@ -1,11 +1,19 @@
-import FilterModal from "../../../../globals/components/modals/FilterModal";
-import SelectMenu from "../../../../globals/components/modals/SelectMenu";
-import { useFilterUsers } from "../../hooks/useFilterUsers";
 import { useRoles } from "../../hooks/useRoles";
+import { useFilterUsers } from "../../hooks/useFilterUsers";
+import SelectMenu from "../../../../globals/components/modals/SelectMenu";
+import FilterModal from "../../../../globals/components/modals/FilterModal";
 
 export default function FilterUserModal({ refetch, onClose }) {
   const { roles } = useRoles();
-  const { form, handleChange, handleApply } = useFilterUsers(refetch, onClose);
+  const { form, handleChange, handleApply } = useFilterUsers(
+    {
+      role_order: "",
+      name_order: "",
+      start_date: "",
+      end_date: "",
+    },
+    refetch,
+  );
 
   return (
     <FilterModal
