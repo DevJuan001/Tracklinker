@@ -1,5 +1,6 @@
 // Hooks
 import { useModal } from "../../globals/hooks/useModal";
+import { useState } from "react";
 // Iconos
 import { actionsIcons } from "../../assets/icons/mainIcons";
 // Componentes
@@ -8,13 +9,15 @@ import TopSection from "../../globals/components/ui/TopSection";
 import ChartsContainer from "./components/ui/ChartsContainer";
 // Modales
 import Modal from "../../globals/components/modals/Modal";
-import DownloadModal from "./components/modals/DownloadModal";
 import HelpModal from "../../globals/components/modals/HelpModal";
 import FilterModal from "../../globals/components/modals/FilterModal";
 import ProfileModal from "../../globals/components/modals/profileModal/ProfileModal";
+// Toast
+import DownloadToast from "./components/modals/DownloadToast";
 
 export default function DashBoardPage() {
   const { modalType, isOpen, openModal, closeModal } = useModal();
+  const [showDownloadToast, setShowDownloadToast] = useState(false);
 
   return (
     <Layout
@@ -27,8 +30,8 @@ export default function DashBoardPage() {
         sectionName={"Panel De Control"}
         addButtonIcon={actionsIcons.uploadIcon}
         addButtonText={"Descargar"}
-        createOnClick={() => openModal(null, "download")}
-        filterOnClick={() => openModal(null, "filter")}
+        createOnClick={() => setShowDownloadToast(true)}
+        filterButton={false}
       />
       {/* Container de los gráficos */}
       <ChartsContainer />
@@ -54,8 +57,13 @@ export default function DashBoardPage() {
             <FilterModal onClose={() => closeModal()} />
           )}
           {modalType === "help" && <HelpModal onClose={() => closeModal()} />}
-          {modalType === "download" && <DownloadModal />}
         </Modal>
+      )}
+      {showDownloadToast && (
+        <DownloadToast
+          showDownloadToast={showDownloadToast}
+          onClose={() => setShowDownloadToast(false)}
+        />
       )}
     </Layout>
   );
