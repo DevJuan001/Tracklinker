@@ -1,55 +1,103 @@
-import SelectMenu from "../../../globals/components/modals/SelectMenu";
+import { useState, useRef } from "react";
+import Calendar from "../ui/Calendar";
 import ConfirmCancelButtons from "./ConfirmCancelButtons";
 
 export default function FilterModal({
+  applyButtonOnClick,
+  orderByStartDateOnChange,
+  orderByStartDateValue,
+  orderByFinishDateOnChange,
+  orderByFinishDateValue,
   onClose,
   children,
   fieldName = "Creación",
 }) {
-  return (
-    <section className="flex flex-col gap-3 px-1">
-      <SelectMenu
-        id={"order-by-name-menu"}
-        name={"order-by-name-menu"}
-        spanText={"Ordenar Por Nombre"}
-        options={[
-          {value: "", label: "Seleccionar"},
-          {value: "asc", label: "a - Z"},
-          {value: "desc", label: "Z - a"},
-        ]}
-      />
-      <section className="w-full">{children}</section>
+  const [showCalendarStartDate, setShowCalendarStartDate] = useState(false);
+  const [showCalendarFinishDate, setShowCalendarFinishDate] = useState(false);
+  const startInputRef = useRef(null);
+  const finishInputRef = useRef(null);
 
-      <section className="flex flex-col gap-1">
-        <span className="text-sm dark:text-white">
-          Ordenar por Fecha de {fieldName}
-        </span>
+  return (
+    <section className="flex flex-col gap-3 px-1 font-dmsans">
+      <div className="flex flex-col">
         {/* Inputs para seleccionar las fechas */}
-        <section className="flex justify-between gap-1">
-          <div>
-            <span className="text-sm dark:text-white">Desde:</span>
+        <span className="text-sm dark:text-white">Fecha de {fieldName}</span>
+        <div className="flex justify-between gap-3">
+          <div className="relative">
+            <span className="text-xs dark:text-white">Desde:</span>
             <input
+              ref={startInputRef}
+              readOnly
               id="start-date-input"
-              type="date"
-              className="h-11 p-3 rounded-lg border text-sm outline-none
-                        dark:bg-[#2020226c] dark:border-[#101012] dark:text-white"
+              name="start_date"
+              value={
+                orderByStartDateValue ? orderByStartDateValue : "yyyy-mm-dd"
+              }
+              onClick={() => setShowCalendarStartDate(true)}
+              onChange={(formatted) => {
+                orderByStartDateOnChange({
+                  target: { name: "start_date", value: formatted },
+                });
+                setShowCalendarStartDate(false);
+              }}
+              className="w-full h-11 rounded-lg border border-[#a1a1a131] bg-[#e5e5e527] text-center
+              dark:border-[#ffffff15]  dark:bg-[#ffffff1a] text-sm dark:text-white cursor-pointer"
             />
+
+            {showCalendarStartDate && (
+              <Calendar
+                triggerRef={startInputRef}
+                value={orderByStartDateValue}
+                onClose={() => setShowCalendarStartDate(false)}
+                onChange={(formatted) => {
+                  orderByStartDateOnChange({
+                    target: { name: "start_date", value: formatted },
+                  });
+                  setShowCalendarStartDate(false);
+                }}
+              />
+            )}
           </div>
-          <div>
-            <span className="text-sm dark:text-white">Hasta:</span>
+
+          <div className="relative">
+            <span className="text-xs dark:text-white">Hasta:</span>
             <input
+              ref={finishInputRef}
+              readOnly
               id="finish-date-input"
-              type="date"
-              className="h-11 p-3 rounded-lg border text-sm outline-none
-                    dark:bg-[#2020226c] dark:border-[#101012] dark:text-white"
+              name="finish_date"
+              value={orderByFinishDateValue ? orderByFinishDateValue : "yyyy-mm-dd"}
+              onClick={() => setShowCalendarFinishDate(true)}
+              onChange={orderByFinishDateOnChange}
+              className="w-full h-11 rounded-lg border border-[#a1a1a131] bg-[#e5e5e527] text-center
+              dark:border-[#ffffff15]  dark:bg-[#ffffff1a] text-sm dark:text-white cursor-pointer"
             />
+
+            {showCalendarFinishDate && (
+              <div className="absolute top-full mt-1 left-0">
+                <Calendar
+                  triggerRef={finishInputRef}
+                  setShowCalendar={setShowCalendarFinishDate}
+                  value={orderByFinishDateValue}
+                  onClose={() => setShowCalendarFinishDate(false)}
+                  onChange={(formatted) => {
+                    orderByFinishDateOnChange({
+                      target: { name: "end_date", value: formatted },
+                    });
+                    setShowCalendarFinishDate(false);
+                  }}
+                />
+              </div>
+            )}
           </div>
-        </section>
-      </section>
+        </div>
+      </div>
+
+      <section className="w-full">{children}</section>
 
       {/* Botones de aplicar y cancelar */}
       <ConfirmCancelButtons
-        confirmButtonOnClick={onClose}
+        confirmButtonOnClick={applyButtonOnClick}
         confirmText="Aplicar"
         cancelButtonOnClick={onClose}
       />

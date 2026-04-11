@@ -11,7 +11,7 @@ export default function FilterButton({ onClick, filterButtonVisibility }) {
       <img
         src={actionsIcons.filterIcon}
         alt=""
-        className="w-6 h-6 dark:invert-[.7]"
+        className="w-5 h-5 dark:invert-[.7]"
       />
       <p className="text-base font-medium dark:text-gray-300"> Filtrar </p>
     </button>

@@ -9,8 +9,9 @@ export default function Modal({
   type,
   z_index = "50",
 }) {
-  const visible = isOpen || closing;
   const [closing, setClosing] = useState(false);
+
+  const visible = isOpen || closing;
 
   // Validación de si la modal no está visible
   if (!visible) return null;
@@ -28,21 +29,20 @@ export default function Modal({
     /* Container de la modal */
     <section
       style={{ zIndex: z_index }}
-      className={`fixed inset-0 bg-[#0000002c]
-            ${
-              type === "filter"
-                ? "flex justify-end items-start pr-[260px] pt-4 bg-[#00000013]"
-                : type === "download"
-                  ? "flex justify-end items-end p-4 bg-[#0000001e]"
-                  : "flex items-center justify-center"
-            }
-        `}
+      className={`fixed inset-0 bg-[#00000009] dark:bg-[#0000004f]
+        ${
+          type === "filter"
+            ? `flex justify-end items-start pt-4 bg-[#00000013] 
+              md:pr-[220px] lg:pr-[220px] xl:pr-[175px] 2xl:pr-[240px]`
+            : `flex items-center justify-center`
+        }
+      `}
       onClick={handleClose}
     >
       {/* Card blanca o modal */}
       {/* stopPropagation sirve para que al momento de seleccionar la modal no la cierre */}
       <section
-        className={`bg-white rounded-3xl shadow-lg w-[90%] p-6 relative animate-blur
+        className={`relative bg-white rounded-3xl shadow-lg w-[90%] p-6 animate-blur
             dark:bg-black dark:shadow-[0px_0px_0px_1px_#101012]
             ${closing ? "animate-modalFadeOut" : "animate-modalFadeIn"}
             ${
@@ -50,9 +50,7 @@ export default function Modal({
                 ? "max-w-sm"
                 : type === "user"
                   ? "max-w-2xl"
-                  : type === "download"
-                    ? "max-w-sm"
-                    : "max-w-xl"
+                  : "max-w-xl"
             }
         `}
         onClick={(e) => e.stopPropagation()}

@@ -11,7 +11,7 @@ export default function Layout({ avatarOnClick, helpOnClick, children }) {
     >
       <Aside avatarOnClick={avatarOnClick} helpOnClick={helpOnClick} />
       <main
-        className="min-w-full max-h-full px-1 py-4 dark:bg-black overflow-hidden order-1
+        className="min-w-full max-h-full px-0.5 py-4 dark:bg-black overflow-hidden order-1
         md:order-2
         xl:order-2"
       >
