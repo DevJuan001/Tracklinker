@@ -1,5 +1,5 @@
-import { productsIcons } from "../../../assets/icons/mainIcons";
-import { usersIcons } from "../../../assets/icons/mainIcons";
+import { usersIcons } from "../../../assets/icons/usersIcons";
+import { productsIcons } from "../../../assets/icons/productsIcons";
 
 export const productStatusConfig = {
   0: {
