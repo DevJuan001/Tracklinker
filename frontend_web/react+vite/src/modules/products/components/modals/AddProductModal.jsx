@@ -114,11 +114,18 @@ export default function AddProductModal({ onCloseModal }) {
               onChange={handleChange}
             />
 
-            <FormField
-              type="date"
+            <SelectMenu
               name={"product_garanty_input"}
-              labelText={"Tiempo de Garantía"}
               onChange={handleChange}
+              value={form.product_garanty_input}
+              spanText={"Tiempo de garantía"}
+              options={[
+                { value: "3", label: "3 Meses" },
+                { value: "6", label: "6 Meses" },
+                { value: "9", label: "9 Meses" },
+                { value: "12", label: "12 Meses" },
+                { value: "24", label: "24 Meses" },
+              ]}
             />
             <div className="flex items-center justify-center p-3">
               <span className="dark:text-white">o</span>
