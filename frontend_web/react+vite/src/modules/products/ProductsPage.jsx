@@ -2,11 +2,11 @@
 import { useCatalog } from "./hooks/useCatalog";
 import { useModal } from "../../globals/hooks/useModal";
 // Iconos
-import { productsIcons } from "../../assets/icons/mainIcons";
+import { productsIcons } from "../../assets/icons/productsIcons";
 // Componentes de la Ui
+import ProductsTable from "./components/ui/ProductsTable";
 import Layout from "../../globals/components/Layout/Layout";
 import TopSection from "../../globals/components/ui/TopSection";
-import ProductsTable from "./components/ui/ProductsTable";
 //Modales
 import Modal from "../../globals/components/modals/Modal";
 import HelpModal from "../../globals/components/modals/HelpModal";
