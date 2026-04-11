@@ -1,11 +1,11 @@
 import { apiRoutes } from "../../../config/apiRoutes";
+import { fetchWithAuth } from "../../../utils/fetchWithAuth";
 
 export async function enableUserService(userId) {
-  const res = await fetch(
+  const res = await fetchWithAuth(
     `${apiRoutes.apiUrl}${apiRoutes.users}/enable/${userId}`,
     {
       method: "PUT",
-      credentials: "include",
     },
   );
 
