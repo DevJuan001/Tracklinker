@@ -1,6 +1,6 @@
 import { userStatus } from "../../constants/userStatus";
-import { usersIcons } from "../../../../assets/icons/mainIcons";
-import { actionsIcons } from "../../../../assets/icons/mainIcons";
+import { usersIcons } from "../../../../assets/icons/usersIcons";
+import { actionsIcons } from "../../../../assets/icons/actionsIcons";
 import ActionButtons from "../../../../globals/components/ui/ActionButtons";
 
 export default function UserItem({
