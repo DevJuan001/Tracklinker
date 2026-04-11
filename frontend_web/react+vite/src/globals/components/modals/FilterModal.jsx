@@ -23,7 +23,10 @@ export default function FilterModal({
         {/* Inputs para seleccionar las fechas */}
         <span className="text-sm dark:text-white">Fecha de {fieldName}</span>
         <div className="flex justify-between gap-3">
-          <div className="relative">
+          <div
+            onClick={() => setShowCalendarStartDate(!showCalendarStartDate)}
+            className="relative"
+          >
             <span className="text-xs dark:text-white">Desde:</span>
             <input
               ref={startInputRef}
@@ -33,15 +36,14 @@ export default function FilterModal({
               value={
                 orderByStartDateValue ? orderByStartDateValue : "yyyy-mm-dd"
               }
-              onClick={() => setShowCalendarStartDate(true)}
               onChange={(formatted) => {
                 orderByStartDateOnChange({
                   target: { name: "start_date", value: formatted },
                 });
                 setShowCalendarStartDate(false);
               }}
-              className="w-full h-11 rounded-lg border border-[#a1a1a131] bg-[#e5e5e527] text-center
-              dark:border-[#ffffff15]  dark:bg-[#ffffff1a] text-sm dark:text-white cursor-pointer"
+              className="w-full h-11 rounded-lg border border-[#a1a1a131] outline-[#00000028] bg-[#e5e5e527] text-center cursor-pointer
+              dark:border-[#ffffff15] dark:bg-[#ffffff1a] text-sm dark:text-white"
             />
 
             {showCalendarStartDate && (
@@ -59,18 +61,22 @@ export default function FilterModal({
             )}
           </div>
 
-          <div className="relative">
+          <div
+            onClick={() => setShowCalendarFinishDate(!showCalendarFinishDate)}
+            className="relative"
+          >
             <span className="text-xs dark:text-white">Hasta:</span>
             <input
               ref={finishInputRef}
               readOnly
               id="finish-date-input"
               name="finish_date"
-              value={orderByFinishDateValue ? orderByFinishDateValue : "yyyy-mm-dd"}
-              onClick={() => setShowCalendarFinishDate(true)}
+              value={
+                orderByFinishDateValue ? orderByFinishDateValue : "yyyy-mm-dd"
+              }
               onChange={orderByFinishDateOnChange}
-              className="w-full h-11 rounded-lg border border-[#a1a1a131] bg-[#e5e5e527] text-center
-              dark:border-[#ffffff15]  dark:bg-[#ffffff1a] text-sm dark:text-white cursor-pointer"
+              className="w-full h-11 rounded-lg border border-[#a1a1a131] outline-[#00000028] bg-[#e5e5e527] text-center cursor-pointer
+              dark:border-[#ffffff15] dark:bg-[#ffffff1a] text-sm dark:text-white"
             />
 
             {showCalendarFinishDate && (
