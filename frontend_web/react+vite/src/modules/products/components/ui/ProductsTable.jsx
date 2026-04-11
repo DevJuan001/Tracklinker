@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { productsIcons } from "../../../../assets/icons/mainIcons";
+import { productsIcons } from "../../../../assets/icons/productsIcons";
 import { productStatusConfig } from "../../constants/productStatusConfig";
 import ActionButtons from "../../../../globals/components/ui/ActionButtons";
 
