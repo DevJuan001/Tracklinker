@@ -31,7 +31,7 @@ export default function DashBoardPage() {
         addButtonIcon={actionsIcons.uploadIcon}
         addButtonText={"Descargar"}
         createOnClick={() => setShowDownloadToast(true)}
-        filterOnClick={() => openModal(null, "filter")}
+        filterButton={false}
       />
       {/* Container de los gráficos */}
       <ChartsContainer />
