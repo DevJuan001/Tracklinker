@@ -9,7 +9,7 @@ class UserRepository:
 
     # Obtener todos los usuarios
     @staticmethod
-    def find_all_users():
+    def find_all_users(role_order: int = None, name_order: str = None, start_date: str = None, end_date: str = None):
         connection = get_connection()
         cursor = connection.cursor(dictionary=True)
 
@@ -30,11 +30,34 @@ class UserRepository:
             u.user_status
         FROM USERS AS u 
         INNER JOIN ROLES AS r 
-        ON u.rol_id = r.rol_id
+            ON u.rol_id = r.rol_id
         """
 
+        filters = []
+        values = []
+
+        if role_order:
+            filters.append("r.rol_id = %s")
+            values.append(role_order)
+
+        if start_date:
+            filters.append("DATE(u.user_date) >= %s")
+            values.append(start_date)
+
+        if end_date:
+            filters.append("DATE(u.user_date) <= %s")
+            values.append(end_date)
+
+        if filters:
+            query += " WHERE " + " AND ".join(filters)
+
+        if name_order == "asc":
+            query += " ORDER BY u.user_name ASC"
+        elif name_order == "desc":
+            query += " ORDER BY u.user_name DESC"
+
         try:
-            cursor.execute(query)
+            cursor.execute(query, values)
             results = cursor.fetchall()
             data = [
                 {
@@ -176,14 +199,14 @@ class UserRepository:
 
         try:
             cursor.execute(query, (
-                data["rol_id"], 
-                data["name"], 
-                data["first_surname"], 
-                data["second_surname"], 
-                data["address"], 
-                data["city"], 
+                data["rol_id"],
+                data["name"],
+                data["first_surname"],
+                data["second_surname"],
+                data["address"],
+                data["city"],
                 hash_password,
-                data["email"], 
+                data["email"],
                 data["phone"]))
             connection.commit()
             return None, True, "Usuario creado correctamente"
@@ -209,18 +232,17 @@ class UserRepository:
             cursor.close()
             connection.close()
             return "Usuario no encontrado", None, None
-        
-            
+
         # Verificar si existe el correo y no duplicarlo
         if "user_email" in user_data:
-            cursor.execute("SELECT user_id FROM USERS WHERE user_email = %s", (user_data["user_email"],))
+            cursor.execute(
+                "SELECT user_id FROM USERS WHERE user_email = %s", (user_data["user_email"],))
             existing = cursor.fetchone()
-            
+
             if existing and existing["user_id"] != user_id:
                 cursor.close()
                 connection.close()
                 return None, False, "El correo ya está registrado"
-
 
         query = """
         UPDATE USERS SET
@@ -236,15 +258,15 @@ class UserRepository:
 
         try:
             cursor.execute(query, (
-                data["name"], 
-                data["first_surname"], 
-                data["second_surname"], 
-                data["email"], 
+                data["name"],
+                data["first_surname"],
+                data["second_surname"],
+                data["email"],
                 data["phone"],
-                data["address"], 
+                data["address"],
                 data["city"],
                 data["status"],
-                user_id 
+                user_id
             ))
             connection.commit()
 
@@ -256,8 +278,8 @@ class UserRepository:
             cursor.close()
             connection.close()
 
-
     # Actualizar la información de un usuario
+
     @staticmethod
     def update_current_user(user_id: int, user_data: UpdateCurrentUser):
         data = user_data.model_dump()
@@ -273,12 +295,13 @@ class UserRepository:
             cursor.close()
             connection.close()
             return "Usuario no encontrado", None, None
-            
+
         # Verificar si existe el correo y no duplicarlo
         if "user_email" in user_data:
-            cursor.execute("SELECT user_id FROM USERS WHERE user_email = %s", (user_data["user_email"],))
+            cursor.execute(
+                "SELECT user_id FROM USERS WHERE user_email = %s", (user_data["user_email"],))
             existing = cursor.fetchone()
-            
+
             if existing and existing["user_id"] != user_id:
                 cursor.close()
                 connection.close()
@@ -297,14 +320,14 @@ class UserRepository:
 
         try:
             cursor.execute(query, (
-                data["name"], 
-                data["first_surname"], 
-                data["second_surname"], 
-                data["email"], 
+                data["name"],
+                data["first_surname"],
+                data["second_surname"],
+                data["email"],
                 data["phone"],
-                data["address"], 
+                data["address"],
                 data["city"],
-                user_id 
+                user_id
             ))
             connection.commit()
 
@@ -328,7 +351,8 @@ class UserRepository:
         WHERE user_id = %s
         """
         new_password = password.encode("utf-8")
-        hash_password = bcrypt.hashpw(new_password, bcrypt.gensalt(rounds=12)).decode("utf-8")
+        hash_password = bcrypt.hashpw(
+            new_password, bcrypt.gensalt(rounds=12)).decode("utf-8")
 
         try:
             cursor.execute(query, (hash_password, user_id))
@@ -417,7 +441,6 @@ class UserRepository:
         finally:
             connection.close()
             cursor.close()
-
 
     #   ------------ REPORTES DE USUARIOS ------------
 
