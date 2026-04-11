@@ -1,13 +1,13 @@
 import { apiRoutes } from "../../../config/apiRoutes";
-import { getToken } from "../../../utils/auth";
+import { fetchWithAuth } from "../../../utils/fetchWithAuth";
 
 export async function getProductModels() {
-  const res = await fetch(`${apiRoutes.apiUrl}${apiRoutes.products}/models`, {
-    method: "GET",
-    headers: {
-      Authorization: getToken(),
+  const res = await fetchWithAuth(
+    `${apiRoutes.apiUrl}${apiRoutes.products}/models`,
+    {
+      method: "GET",
     },
-  });
+  );
 
   if (!res.ok) {
     throw new Error("Error en la petición");

@@ -1,13 +1,12 @@
 import { apiRoutes } from "../../../config/apiRoutes";
-import { getToken } from "../../../utils/auth";
+import { fetchWithAuth } from "../../../utils/fetchWithAuth";
 
 export async function createProductModelService(form) {
-  const response = await fetch(
+  const response = await fetchWithAuth(
     `${apiRoutes.apiUrl}${apiRoutes.products}/create-model`,
     {
       method: "POST",
       headers: {
-        Authorization: getToken(),
         "Content-Type": "application/json",
       },
       body: JSON.stringify(form),

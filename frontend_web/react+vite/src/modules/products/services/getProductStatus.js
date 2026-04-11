@@ -1,14 +1,13 @@
 import { apiRoutes } from "../../../config/apiRoutes";
-import { getToken } from "../../../utils/auth";
+import { fetchWithAuth } from "../../../utils/fetchWithAuth";
 
 export async function getProductStatus() {
-  const res = await fetch(`${apiRoutes.apiUrl}${apiRoutes.products}/status`, {
-    method: "GET",
-    credentials: "include",
-    headers: {
-      Authorization: getToken(),
+  const res = await fetchWithAuth(
+    `${apiRoutes.apiUrl}${apiRoutes.products}/status`,
+    {
+      method: "GET",
     },
-  });
+  );
 
   // Validamos si la respuesta fue OK
   if (!res.ok) {

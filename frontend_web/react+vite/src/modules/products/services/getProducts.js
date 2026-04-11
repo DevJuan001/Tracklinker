@@ -1,12 +1,9 @@
 import { apiRoutes } from "../../../config/apiRoutes";
-import { getToken } from "../../../utils/auth";
+import { fetchWithAuth } from "../../../utils/fetchWithAuth";
 
 export async function getProducts() {
-  const res = await fetch(`${apiRoutes.apiUrl}${apiRoutes.products}/`, {
+  const res = await fetchWithAuth(`${apiRoutes.apiUrl}${apiRoutes.products}/`, {
     method: "GET",
-    headers: {
-      Authorization: getToken(),
-    },
   });
 
   // Validamos si la respuesta fue OK

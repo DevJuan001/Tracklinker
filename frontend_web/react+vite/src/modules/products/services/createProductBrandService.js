@@ -1,14 +1,12 @@
 import { apiRoutes } from "../../../config/apiRoutes";
-import { getToken } from "../../../utils/auth";
+import { fetchWithAuth } from "../../../utils/fetchWithAuth";
 
 export async function createProductBrandService(formData) {
-  const response = await fetch(
+  const response = await fetchWithAuth(
     `${apiRoutes.apiUrl}${apiRoutes.products}/create-brand`,
     {
       method: "POST",
-      credentials: "include",
       headers: {
-        Authorization: getToken(),
         "Content-Type": "application/json",
       },
       body: JSON.stringify(formData),
