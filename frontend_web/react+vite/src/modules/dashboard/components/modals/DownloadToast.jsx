@@ -17,7 +17,7 @@ export default function DownloadToast({ showDownloadToast, onClose }) {
       dark:bg-black dark:border-[#7e77773b]"
       >
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 flex items-center justify-center bg-green-700 rounded-full">
+          <div className="w-10 h-10 flex items-center justify-center bg-green-100 rounded-full dark:bg-green-950">
             <img src={modalIcons.confirmIcon} alt="" />
           </div>
           <div className="flex flex-col">
