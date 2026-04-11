@@ -9,7 +9,7 @@ import ConfirmCancelButtons from "../ConfirmCancelButtons";
 import Modal from "../Modal";
 import ErrorModal from "../ErrorModal";
 import SuccessModal from "../SuccessModal";
-import { actionsIcons } from "../../../../assets/icons/mainIcons";
+import { actionsIcons } from "../../../../assets/icons/actionsIcons";
 
 export default function ChangePasswordModal({ isOpen, onClose }) {
   const [innerModal, setInnerModal] = useState(null);

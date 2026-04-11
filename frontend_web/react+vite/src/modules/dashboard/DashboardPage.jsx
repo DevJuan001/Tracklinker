@@ -2,7 +2,7 @@
 import { useModal } from "../../globals/hooks/useModal";
 import { useState } from "react";
 // Iconos
-import { actionsIcons } from "../../assets/icons/mainIcons";
+import { actionsIcons } from "../../assets/icons/actionsIcons";
 // Componentes
 import Layout from "../../globals/components/Layout/Layout";
 import TopSection from "../../globals/components/ui/TopSection";

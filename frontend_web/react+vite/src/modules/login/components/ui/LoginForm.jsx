@@ -2,7 +2,7 @@
 import { useLogin } from "../../hooks/useLogin";
 // Iconos
 import { loginIcons } from "../../../../assets/icons/loginIcons";
-import { actionsIcons } from "../../../../assets/icons/mainIcons";
+import { actionsIcons } from "../../../../assets/icons/actionsIcons";
 // Components
 import FormButtons from "./FormButtons";
 import Loader from "../../../../globals/components/ui/Loader";
