@@ -27,27 +27,29 @@ export default function FilterUserModal({ refetch, onClose }) {
         handleApply();
       }}
     >
-      <SelectMenu
-        name={"name_order"}
-        value={form.name_order}
-        onChange={handleChange}
-        spanText={"Nombres"}
-        options={[
-          { value: "asc", label: "a - Z" },
-          { value: "desc", label: "Z - a" },
-        ]}
-      />
+      <div className="flex flex-col gap-2">
+        <SelectMenu
+          name={"name_order"}
+          value={form.name_order}
+          onChange={handleChange}
+          spanText={"Nombres"}
+          options={[
+            { value: "asc", label: "a - Z" },
+            { value: "desc", label: "Z - a" },
+          ]}
+        />
 
-      <SelectMenu
-        name={"role_order"}
-        value={form.role_order}
-        onChange={handleChange}
-        spanText={"Rol"}
-        options={roles.map((role) => ({
-          value: role.id,
-          label: role.name,
-        }))}
-      />
+        <SelectMenu
+          name={"role_order"}
+          value={form.role_order}
+          onChange={handleChange}
+          spanText={"Rol"}
+          options={roles.map((role) => ({
+            value: role.id,
+            label: role.name,
+          }))}
+        />
+      </div>
     </FilterModal>
   );
 }
