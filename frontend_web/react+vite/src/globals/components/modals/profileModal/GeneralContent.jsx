@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 // Services
 import { logout } from "../../../../modules/login/services/authService";
 // Icons
-import { actionsIcons } from "../../../../assets/icons/mainIcons";
+import { actionsIcons } from "../../../../assets/icons/actionsIcons";
 import { asideIcons } from "../../../../assets/icons/asideIcons";
 
 export default function GeneralContent({ user, setInnerModal }) {
