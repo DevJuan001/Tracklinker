@@ -29,7 +29,10 @@ export default function AddUserModal({ onClose }) {
   return (
     <section className="flex flex-col items-center">
       {/* Formulario para la informacion del nuevo usuario */}
-      <form action="" className="flex flex-col gap-1">
+      <form
+        action=""
+        className="flex flex-col gap-2 min-w-[350px] max-w-[350px]"
+      >
         {/* Menú de roles */}
         <SelectMenu
           value={form.rol_id}
