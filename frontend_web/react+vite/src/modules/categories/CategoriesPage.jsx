@@ -1,21 +1,21 @@
 // Hooks
-import { useModal } from "../../globals/hooks/useModal";
 import { useCategories } from "./hooks/useCategories";
+import { useModal } from "../../globals/hooks/useModal";
 // Iconos
-import { actionsIcons } from "../../assets/icons/mainIcons";
+import { actionsIcons } from "../../assets/icons/actionsIcons";
 // Componentes
 import Layout from "../../globals/components/Layout/Layout";
-import TopSection from "../../globals/components/ui/TopSection";
 import CategoriesList from "./components/ui/CategoriesList";
+import TopSection from "../../globals/components/ui/TopSection";
 // Modales
 import Modal from "../../globals/components/modals/Modal";
 import MoreInfoModal from "./components/modals/MoreInfoModal";
 import HelpModal from "../../globals/components/modals/HelpModal";
 import AddCategoryModal from "./components/modals/AddCategoryModal";
 import FilterModal from "../../globals/components/modals/FilterModal";
-import ProfileModal from "../../globals/components/modals/profileModal/ProfileModal";
 import DeleteCategoryModal from "./components/modals/DeleteCategoryModal";
 import EditCategoryInfoModal from "./components/modals/EditCategoryInfoModal";
+import ProfileModal from "../../globals/components/modals/profileModal/ProfileModal";
 
 export default function CategoriesPage() {
   const { categories, loading, error, fetchCategories } = useCategories();
