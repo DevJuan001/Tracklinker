@@ -1,6 +1,8 @@
 import { useState, useRef } from "react";
 import Calendar from "../ui/Calendar";
 import ConfirmCancelButtons from "./ConfirmCancelButtons";
+import { actionsIcons } from "../../../assets/icons/actionsIcons";
+import DateField from "../ui/DateField";
 
 export default function FilterModal({
   applyButtonOnClick,
@@ -18,34 +20,24 @@ export default function FilterModal({
   const finishInputRef = useRef(null);
 
   return (
-    <section className="flex flex-col gap-3 px-1 font-dmsans">
-      <div className="flex flex-col">
+    <section className="flex flex-col gap-2 px-1 font-dmsans">
+      <div className="flex flex-col gap-1">
         {/* Inputs para seleccionar las fechas */}
         <span className="text-sm dark:text-white">Fecha de {fieldName}</span>
-        <div className="flex justify-between gap-3">
-          <div
+        <div className="flex gap-2">
+          <DateField
             onClick={() => setShowCalendarStartDate(!showCalendarStartDate)}
-            className="relative"
+            spanText={"Desde:"}
+            inputRef={startInputRef}
+            name={"start_date"}
+            value={orderByStartDateValue ? orderByStartDateValue : "yyyy-mm-dd"}
+            onChange={(formatted) => {
+              orderByStartDateOnChange({
+                target: { name: "start_date", value: formatted },
+              });
+              setShowCalendarStartDate(false);
+            }}
           >
-            <span className="text-xs dark:text-white">Desde:</span>
-            <input
-              ref={startInputRef}
-              readOnly
-              id="start-date-input"
-              name="start_date"
-              value={
-                orderByStartDateValue ? orderByStartDateValue : "yyyy-mm-dd"
-              }
-              onChange={(formatted) => {
-                orderByStartDateOnChange({
-                  target: { name: "start_date", value: formatted },
-                });
-                setShowCalendarStartDate(false);
-              }}
-              className="w-full h-11 rounded-lg border border-[#a1a1a131] outline-[#00000028] bg-[#e5e5e527] text-center cursor-pointer
-              dark:border-[#ffffff15] dark:bg-[#ffffff1a] text-sm dark:text-white"
-            />
-
             {showCalendarStartDate && (
               <Calendar
                 triggerRef={startInputRef}
@@ -59,43 +51,37 @@ export default function FilterModal({
                 }}
               />
             )}
-          </div>
+          </DateField>
 
-          <div
+          <DateField
             onClick={() => setShowCalendarFinishDate(!showCalendarFinishDate)}
-            className="relative"
+            spanText={"Hasta:"}
+            inputRef={finishInputRef}
+            name={"end_date"}
+            value={
+              orderByFinishDateValue ? orderByFinishDateValue : "yyyy-mm-dd"
+            }
+            onChange={(formatted) => {
+              orderByFinishDateOnChange({
+                target: { name: "end_date", value: formatted },
+              });
+              setShowCalendarFinishDate(false);
+            }}
           >
-            <span className="text-xs dark:text-white">Hasta:</span>
-            <input
-              ref={finishInputRef}
-              readOnly
-              id="finish-date-input"
-              name="finish_date"
-              value={
-                orderByFinishDateValue ? orderByFinishDateValue : "yyyy-mm-dd"
-              }
-              onChange={orderByFinishDateOnChange}
-              className="w-full h-11 rounded-lg border border-[#a1a1a131] outline-[#00000028] bg-[#e5e5e527] text-center cursor-pointer
-              dark:border-[#ffffff15] dark:bg-[#ffffff1a] text-sm dark:text-white"
-            />
-
             {showCalendarFinishDate && (
-              <div className="absolute top-full mt-1 left-0">
-                <Calendar
-                  triggerRef={finishInputRef}
-                  setShowCalendar={setShowCalendarFinishDate}
-                  value={orderByFinishDateValue}
-                  onClose={() => setShowCalendarFinishDate(false)}
-                  onChange={(formatted) => {
-                    orderByFinishDateOnChange({
-                      target: { name: "end_date", value: formatted },
-                    });
-                    setShowCalendarFinishDate(false);
-                  }}
-                />
-              </div>
+              <Calendar
+                triggerRef={finishInputRef}
+                value={orderByFinishDateValue}
+                onClose={() => setShowCalendarFinishDate(false)}
+                onChange={(formatted) => {
+                  orderByFinishDateOnChange({
+                    target: { name: "end_date", value: formatted },
+                  });
+                  setShowCalendarFinishDate(false);
+                }}
+              />
             )}
-          </div>
+          </DateField>
         </div>
       </div>
 

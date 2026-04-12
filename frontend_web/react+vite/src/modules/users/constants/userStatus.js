@@ -1,4 +1,4 @@
-import { usersIcons } from "../../../assets/icons/mainIcons";
+import { usersIcons } from "../../../assets/icons/usersIcons";
 
 export const userStatus = {
   0: {

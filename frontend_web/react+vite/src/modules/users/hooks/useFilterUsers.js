@@ -1,12 +1,7 @@
 import { useState } from "react";
 
-export function useFilterUsers(refetch) {
-  const [form, setForm] = useState({
-    role_order: "",
-    name_order: "",
-    start_date: "",
-    end_date: "",
-  });
+export function useFilterUsers(filters, refetch) {
+  const [form, setForm] = useState(filters);
 
   function handleChange(e) {
     setForm((prev) => ({

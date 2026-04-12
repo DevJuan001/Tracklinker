@@ -1,9 +1,10 @@
 // Hooks
-import { useModal } from "../../globals/hooks/useModal";
-import { useUsers } from "./hooks/useUsers";
 import { useState } from "react";
+import { useUsers } from "./hooks/useUsers";
+import { useModal } from "../../globals/hooks/useModal";
+import { useSearch } from "../../globals/hooks/useSearch";
 // Iconos
-import { usersIcons } from "../../assets/icons/mainIcons";
+import { usersIcons } from "../../assets/icons/usersIcons";
 // Modales
 import Modal from "../../globals/components/modals/Modal";
 import AddUserModal from "./components/modals/AddUserModal";
@@ -19,7 +20,6 @@ import Layout from "../../globals/components/Layout/Layout";
 import SearchBar from "../../globals/components/ui/SearchBar";
 import TopSection from "../../globals/components/ui/TopSection";
 import EnableUserModal from "./components/modals/EnableUserModal";
-import { useSearch } from "../../globals/hooks/useSearch";
 
 export default function UsersPage() {
   // Traer todos los datos o states de sus hooks

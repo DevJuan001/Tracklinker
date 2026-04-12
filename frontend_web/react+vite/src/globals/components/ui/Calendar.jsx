@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { months } from "../../../utils/months";
+import { actionsIcons } from "../../../assets/icons/actionsIcons";
 
 export default function Calendar({ onClose, value, onChange, triggerRef }) {
   const [coords, setCoords] = useState(null);
@@ -12,10 +13,8 @@ export default function Calendar({ onClose, value, onChange, triggerRef }) {
 
   const { year, month } = current;
 
-  const firstDow = (() => {
-    const day = new Date(year, month, 1).getDay();
-    return day === 0 ? 6 : day - 1;
-  })();
+  const firstDow = new Date(year, month, 1).getDay();
+
   const daysInMonth = new Date(year, month + 1, 0).getDate();
 
   const prevMonth = () =>
@@ -66,43 +65,53 @@ export default function Calendar({ onClose, value, onChange, triggerRef }) {
       {coords && (
         <div
           style={{ top: coords.top, right: coords.right }}
-          className="fixed w-80 h-fit mt-11 bg-white border border-[#a1a1a131] rounded-2xl overflow-hidden z-[600]
+          className="fixed min-w-[400px] max-w-[600px] mt-[50px] p-2 bg-white border border-[#a1a1a131] rounded-[32px] cursor-default overflow-hidden z-[600]
         dark:border-[#ffffff15] dark:bg-black"
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header */}
-          <div className="flex items-center justify-between px-4 py-3 border-b border-[#a1a1a13f] dark:border-[#ffffff15]">
-            <button
-              onClick={prevMonth}
-              className="text-gray-400 hover:bg-gray-100 dark:hover:bg-[#ffffff15] rounded-lg px-2 py-1 text-lg leading-none"
-            >
-              ‹
-            </button>
-            <span className="text-sm font-medium dark:text-white">
+          <div className="flex items-center justify-between px-4 py-3 border-[#a1a1a13f] dark:border-[#ffffff15]">
+            <span className="text-base font-medium dark:text-white">
               {months[month]} {year}
             </span>
-            <button
-              onClick={nextMonth}
-              className="text-gray-400 hover:bg-gray-100 dark:hover:bg-[#ffffff15] rounded-lg px-2 py-1 text-lg leading-none"
-            >
-              ›
-            </button>
+            <div className="flex">
+              <button
+                onClick={prevMonth}
+                className="w-10 h-10 flex items-center justify-center text-gray-400 hover:bg-gray-100 dark:hover:bg-[#ffffff15] rounded-full"
+              >
+                <actionsIcons.arrowBackCalendar />
+              </button>
+              <button
+                onClick={nextMonth}
+                className="w-10 h-10 flex items-center justify-center text-gray-400 hover:bg-gray-100 dark:hover:bg-[#ffffff15] rounded-full"
+              >
+                <actionsIcons.arrowForwardCalendar />
+              </button>
+            </div>
           </div>
 
           {/* Grid */}
           <div className="grid grid-cols-7 gap-0.5">
+            <div>Do</div>
+            <div>Lu</div>
+            <div>Ma</div>
+            <div>Mi</div>
+            <div>Ju</div>
+            <div>Vi</div>
+            <div>Sa</div>
             {/* Mes anterior */}
             {Array.from({ length: firstDow }).map((_, i) => {
               const prevMonthDays = new Date(year, month, 0).getDate();
-              const d = prevMonthDays - firstDow + i + 1;
+              const day = prevMonthDays - firstDow + i;
               return (
                 <button
                   key={`prev-${i}`}
                   type="button"
                   disabled
-                  className="aspect-square flex items-center justify-center text-[13px] rounded-full text-gray-300 dark:text-[#ffffff25]"
+                  style={{ aspectRatio: 1 }}
+                  className="flex items-center justify-center text-[13px] rounded-full text-gray-300 dark:text-[#ffffff25]"
                 >
-                  {d}
+                  {day}
                 </button>
               );
             })}
@@ -113,13 +122,14 @@ export default function Calendar({ onClose, value, onChange, triggerRef }) {
                 key={day}
                 type="button"
                 onClick={() => handleSelect(day)}
-                className={`aspect-square flex items-center justify-center text-[13px] rounded-full transition-colors
+                style={{ aspectRatio: 1 }}
+                className={`flex items-center justify-center text-base rounded-2xl transition-colors hover:text-black
                 ${
                   isSelected(day)
-                    ? "bg-black text-white dark:bg-white dark:text-black font-medium"
+                    ? "bg-black text-white font-bold text-lg dark:bg-white dark:text-black hover:bg-gray-200"
                     : isToday(day)
-                      ? "bg-gray-100 dark:bg-[#ffffff15] font-medium dark:text-white"
-                      : "hover:bg-gray-100 dark:hover:bg-[#ffffff15] dark:text-white"
+                      ? "bg-gray-100 dark:bg-[#ffffff15] font-medium dark:text-white hover:bg-gray-200"
+                      : "text-[#44474e] hover:bg-gray-200 dark:hover:bg-[#ffffff15] dark:text-white hover:font-bold"
                 }`}
               >
                 {day}
@@ -135,27 +145,13 @@ export default function Calendar({ onClose, value, onChange, triggerRef }) {
                   key={`next-${i}`}
                   type="button"
                   disabled
-                  className="aspect-square flex items-center justify-center text-[13px] rounded-full text-gray-300 dark:text-[#ffffff25]"
+                  style={{ aspectRatio: 1 }}
+                  className="flex items-center justify-center text-[13px] rounded-full text-gray-300 dark:text-[#ffffff25]"
                 >
                   {i + 1}
                 </button>
               ));
             })()}
-          </div>
-
-          {/* Footer */}
-          <div className="px-3 pb-3 flex justify-between items-center">
-            <span className="text-xs text-gray-400">
-              {value ?? "Sin selección"}
-            </span>
-            {value && (
-              <button
-                onClick={() => onChange(null)}
-                className="text-xs text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 px-2 py-1 rounded-lg hover:bg-gray-100 dark:hover:bg-[#ffffff15]"
-              >
-                Limpiar
-              </button>
-            )}
           </div>
         </div>
       )}
