@@ -2,10 +2,9 @@ from app.core.database import get_connection
 from app.models.output_details_model import OutputDetails
 from app.repository.output_orders_repository import OutputOrdersRepository
 from app.models.output_orders_model import OutputOrder
-from datetime import datetime
 
 
-class OutputDetailsrepository:
+class OutputDetailsRepository:
 
     # Obtener todos los detalles de salida
     @staticmethod
@@ -45,6 +44,32 @@ class OutputDetailsrepository:
         finally:
             cursor.close()
             connection.close()
+
+    @staticmethod
+    def find_by_product_serial(product_serial: str):
+        connection = get_connection()
+        cursor = connection.cursor(dictionary=True)
+
+        query = """
+        SELECT 
+            od.out_order_id,
+            oo.out_order_date 
+        FROM OUTPUT_DETAILS as od
+        INNER JOIN OUTPUT_ORDERS as oo
+            ON od.out_order_id = oo.out_order_id
+        WHERE od.product_serial = %s"""
+
+        try:
+            cursor.execute(query, (product_serial,))
+
+            output_order = cursor.fetchone()
+
+            if not output_order:
+                return None, None, None
+
+            return None, output_order["out_order_id"], output_order["out_order_date"]
+        except Exception:
+            return "Error al ejecutar la consulta", None, None
 
     @staticmethod
     def create(output_details_data: OutputDetails):
