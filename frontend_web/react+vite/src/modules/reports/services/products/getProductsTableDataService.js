@@ -1,15 +1,11 @@
 import { apiRoutes } from "../../../../config/apiRoutes";
-import { getToken } from "../../../../utils/auth";
+import { fetchWithAuth } from "../../../../utils/fetchWithAuth";
 
 export async function getProductsTableDataService(signal) {
-  const response = await fetch(
+  const response = await fetchWithAuth(
     `${apiRoutes.apiUrl}${apiRoutes.reports}/get_recent_products`,
     {
       method: "GET",
-      credentials: "include",
-      headers: {
-        Authorization: getToken(),
-      },
       signal,
     },
   );
