@@ -1,6 +1,6 @@
-import { actionsIcons } from "../../../../assets/icons/mainIcons";
-import ActionButtons from "../../../../globals/components/ui/ActionButtons";
 import { userStatus } from "../../../users/constants/userStatus";
+import { actionsIcons } from "../../../../assets/icons/actionsIcons";
+import ActionButtons from "../../../../globals/components/ui/ActionButtons";
 
 export default function TransformationsTable({
   transformations,
