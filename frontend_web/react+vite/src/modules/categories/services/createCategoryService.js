@@ -1,15 +1,17 @@
 import { apiRoutes } from "../../../config/apiRoutes";
-import { getToken } from "../../../utils/auth";
+import { fetchWithAuth } from "../../../utils/fetchWithAuth";
 
 export async function createCategoryService(category_data) {
-  const res = await fetch(`${apiRoutes.apiUrl}${apiRoutes.categories}/create`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: getToken(),
+  const res = await fetchWithAuth(
+    `${apiRoutes.apiUrl}${apiRoutes.categories}/create`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(category_data),
     },
-    body: JSON.stringify(category_data),
-  });
+  );
 
   // Validamos si la petición falló
   if (!res.ok) {

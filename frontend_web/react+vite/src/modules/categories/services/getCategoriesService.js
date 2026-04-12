@@ -1,14 +1,13 @@
 import { apiRoutes } from "../../../config/apiRoutes";
-import { getToken } from "../../../utils/auth";
+import { fetchWithAuth } from "../../../utils/fetchWithAuth";
 
-// Servicio para obtener una sola categoría por ID
 export async function getCategoriesService() {
-  const res = await fetch(`${apiRoutes.apiUrl}${apiRoutes.categories}/`, {
-    method: "GET",
-    headers: {
-      Authorization: getToken(),
+  const res = await fetchWithAuth(
+    `${apiRoutes.apiUrl}${apiRoutes.categories}/`,
+    {
+      method: "GET",
     },
-  });
+  );
 
   if (!res.ok) {
     throw new Error("Error al obtener la categoría");

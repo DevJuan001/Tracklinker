@@ -1,15 +1,12 @@
 import { apiRoutes } from "../../../config/apiRoutes";
-import { getToken } from "../../../utils/auth";
+import { fetchWithAuth } from "../../../utils/fetchWithAuth";
 
 export async function deleteCategoryService(id) {
-  const res = await fetch(
+  const res = await fetchWithAuth(
     `${apiRoutes.apiUrl}${apiRoutes.categories}/delete/${id}`,
     {
       method: "DELETE",
-      headers: {
-        Authorization: getToken(),
-      }
-    }
+    },
   );
 
   // Validamos si la petición falló
