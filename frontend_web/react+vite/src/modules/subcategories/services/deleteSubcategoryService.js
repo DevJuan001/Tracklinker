@@ -1,18 +1,17 @@
 import { apiRoutes } from "../../../config/apiRoutes";
-import { getToken } from "../../../utils/auth";
+import { fetchWithAuth } from "../../../utils/fetchWithAuth";
 
 export async function deleteSubcategoryService(subcategory_id) {
-    const res = await fetch(`${apiRoutes.apiUrl}${apiRoutes.subcategories}/delete/${subcategory_id}`, {
-        method: "DELETE",
-        credentials: "include",
-        headers: {
-            Authorization: getToken()
-        }
-    });
+  const res = await fetchWithAuth(
+    `${apiRoutes.apiUrl}${apiRoutes.subcategories}/delete/${subcategory_id}`,
+    {
+      method: "DELETE",
+    },
+  );
 
-    if (!res.ok) {
-        throw new Error("Error al intentar eliminar la subcategoria");
-    }
+  if (!res.ok) {
+    throw new Error("Error al intentar eliminar la subcategoria");
+  }
 
-    return await res.json()
+  return await res.json();
 }

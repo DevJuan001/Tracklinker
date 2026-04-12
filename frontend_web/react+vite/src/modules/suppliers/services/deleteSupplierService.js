@@ -1,15 +1,12 @@
 import { apiRoutes } from "../../../config/apiRoutes";
-import { getToken } from "../../../utils/auth";
+import { fetchWithAuth } from "../../../utils/fetchWithAuth";
 
 export async function deleteSupplierService(supplier_id) {
-  const res = await fetch(
+  const res = await fetchWithAuth(
     `${apiRoutes.apiUrl}${apiRoutes.suppliers}/delete/${supplier_id}`,
     {
       method: "DELETE",
-      headers: {
-        Authorization: getToken(),
-      },
-    }
+    },
   );
 
   // Validar si la respuesta no fue ok

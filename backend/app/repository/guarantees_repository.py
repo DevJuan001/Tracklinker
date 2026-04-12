@@ -3,6 +3,10 @@ from app.models.guarantiees_model import Guarantee
 from app.utils.date_formatter import date_formatter
 from app.utils.periods import period_map, daily_periods
 from app.repository.products_repository import ProductsRepository
+from app.repository.output_details_repository import OutputDetailsRepository
+from app.models.output_details_model import OutputDetails
+from dateutil.relativedelta import relativedelta
+from datetime import datetime
 from datetime import datetime
 from fastapi import HTTPException
 
@@ -81,7 +85,7 @@ class GuaranteeRepository:
         data = warranty_data.model_dump()
 
         connection = get_connection()
-        cursor = connection.cursor()
+        cursor = connection.cursor(buffered=True)
 
         # Petición a la base de datos
         query = """
@@ -98,12 +102,38 @@ class GuaranteeRepository:
 
         try:
             cursor.execute("""
+                SELECT warranty_incidents_id 
+                FROM WARRANTY_INCIDENTS 
+                WHERE product_serial = %s 
+                AND DATE(warranty_date) = CURDATE()
+            """, (data["product_serial"],))
+
+            existing_warranty = cursor.fetchone()
+
+            if existing_warranty:
+                return "Ya existe una garantía creada hoy para este serial", None, None
+
+            cursor.execute("""
             SELECT 
                 product_id
             FROM PRODUCT_SERIALS WHERE product_serial = %s
             """, (data["product_serial"],))
 
             product_id = cursor.fetchone()
+                        
+            error, output_order_id, output_order_date = OutputDetailsRepository.find_by_product_serial(data["product_serial"])
+
+            garanty_time = (datetime.now() + relativedelta(months=12)).date()
+
+            if output_order_date and output_order_date.date() == datetime.now().date():
+                return "Ya existe una garantía creada hoy para este serial", None, None
+
+            if not output_order_id and not output_order_date:
+                error, success, message = OutputDetailsRepository.create(OutputDetails(
+                    product_serial = data["product_serial"],
+                    out_product_garanty = garanty_time,
+                    product_transformation = "No necesita"
+                ))
 
             error, success, message = ProductsRepository.update_product_status(
                 {"product_id": product_id[0], "product_status": 3})

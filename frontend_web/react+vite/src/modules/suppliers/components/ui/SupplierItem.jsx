@@ -1,7 +1,7 @@
-import { usersIcons } from "../../../../assets/icons/mainIcons";
 import SupplierActions from "./SupplierActions";
+import { usersIcons } from "../../../../assets/icons/usersIcons";
 
-export default function SuppleirItem({
+export default function SupplierItem({
   supplier,
   moreInfoOnClick,
   deleteButtonOnClick,

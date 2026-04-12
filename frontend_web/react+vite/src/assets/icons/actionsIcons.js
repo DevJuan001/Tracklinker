@@ -9,6 +9,9 @@ import lockVisibility from "./main/actions/visibility-lock.svg";
 import arrowBack from "./main/actions/arrow-back.svg";
 import exportIcon from "./main/actions/export-icon.svg";
 import sendIcon from "./main/actions/send-icon.svg";
+import calendarIcon from "./main/actions/calendar-icon.svg";
+import arrowBackCalendar from "./main/actions/arrow-back-calendar.svg?react";
+import arrowForwardCalendar from "./main/actions/arrow-forward-calendar.svg?react";
 
 export const actionsIcons = {
   moreInfoIcon,
@@ -22,4 +25,7 @@ export const actionsIcons = {
   arrowBack,
   exportIcon,
   sendIcon,
+  calendarIcon,
+  arrowBackCalendar,
+  arrowForwardCalendar,
 };

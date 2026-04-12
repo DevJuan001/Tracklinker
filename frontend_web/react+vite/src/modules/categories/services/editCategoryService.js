@@ -1,17 +1,16 @@
 import { apiRoutes } from "../../../config/apiRoutes";
-import { getToken } from "../../../utils/auth";
+import { fetchWithAuth } from "../../../utils/fetchWithAuth";
 
 export async function editCategoryService(id, category_data) {
-  const res = await fetch(
+  const res = await fetchWithAuth(
     `${apiRoutes.apiUrl}${apiRoutes.categories}/update/${id}`,
     {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
-        Authorization: getToken()
       },
       body: JSON.stringify(category_data),
-    }
+    },
   );
 
   // Validamos si la petición falló

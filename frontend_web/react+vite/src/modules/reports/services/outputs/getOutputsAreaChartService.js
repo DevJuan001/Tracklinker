@@ -1,15 +1,11 @@
 import { apiRoutes } from "../../../../config/apiRoutes";
-import { getToken } from "../../../../utils/auth";
+import { fetchWithAuth } from "../../../../utils/fetchWithAuth";
 
 export async function getOutputsAreaChartService(period, signal) {
-  const response = await fetch(
+  const response = await fetchWithAuth(
     `${apiRoutes.apiUrl}${apiRoutes.reports}/get_outputs_growth/${period}`,
     {
       method: "GET",
-      credentials: "include",
-      headers: {
-        Authorization: getToken(),
-      },
       signal,
     },
   );

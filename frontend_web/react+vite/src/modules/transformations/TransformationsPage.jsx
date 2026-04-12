@@ -1,8 +1,8 @@
 // Hooks
-import { useTransformations } from "./hooks/useTransformations";
 import { useModal } from "../../globals/hooks/useModal";
+import { useTransformations } from "./hooks/useTransformations";
 // Iconos
-import { actionsIcons } from "../../assets/icons/mainIcons";
+import { actionsIcons } from "../../assets/icons/actionsIcons";
 // Componentes
 import Layout from "../../globals/components/Layout/Layout";
 import TopSection from "../../globals/components/ui/TopSection";
@@ -11,9 +11,9 @@ import TransformationsTable from "./components/ui/TransformationsTable";
 import Modal from "../../globals/components/modals/Modal";
 import HelpModal from "../../globals/components/modals/HelpModal";
 import FilterModal from "../../globals/components/modals/FilterModal";
-import ProfileModal from "../../globals/components/modals/profileModal/ProfileModal";
 import AddTransformationModal from "./components/modals/AddTransformationModal";
 import EditTransformationModal from "./components/modals/EditTransformationModal";
+import ProfileModal from "../../globals/components/modals/profileModal/ProfileModal";
 import EnableTransformationModal from "./components/modals/EnableTransformationModal";
 import DisableTransformationModal from "./components/modals/DisableTransformationModal";
 import MoreInfoTransformationModal from "./components/modals/MoreInfoTransformationModal";

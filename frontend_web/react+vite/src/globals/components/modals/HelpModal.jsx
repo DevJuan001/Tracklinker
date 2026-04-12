@@ -1,4 +1,4 @@
-import { actionsIcons } from "../../../assets/icons/mainIcons";
+import { actionsIcons } from "../../../assets/icons/actionsIcons";
 import ConfirmCancelButtons from "./ConfirmCancelButtons";
 
 export default function HelpModal({ onClose }) {

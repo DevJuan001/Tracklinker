@@ -1,4 +1,4 @@
-import { actionsIcons } from "../../../../assets/icons/mainIcons";
+import { actionsIcons } from "../../../../assets/icons/actionsIcons";
 import ActionButtons from "../../../../globals/components/ui/ActionButtons";
 
 export default function SubcategoriesActions({editButtonOnClick, deleteButtonOnClick, moreInfoOnClick}) {

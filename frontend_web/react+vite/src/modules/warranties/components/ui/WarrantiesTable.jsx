@@ -1,4 +1,4 @@
-import { actionsIcons } from "../../../../assets/icons/mainIcons";
+import { actionsIcons } from "../../../../assets/icons/actionsIcons";
 import { warrantyStatusConfig } from "../../constants/warrantyStatus";
 import ActionButtons from "../../../../globals/components/ui/ActionButtons";
 
