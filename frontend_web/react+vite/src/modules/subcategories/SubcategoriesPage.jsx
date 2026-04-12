@@ -2,7 +2,7 @@
 import { useModal } from "../../globals/hooks/useModal";
 import { useSubcategories } from "./hooks/useSubcategories";
 // Iconos
-import { actionsIcons } from "../../assets/icons/mainIcons";
+import { actionsIcons } from "../../assets/icons/actionsIcons";
 // Modales
 import Modal from "../../globals/components/modals/Modal";
 import HelpModal from "../../globals/components/modals/HelpModal";
