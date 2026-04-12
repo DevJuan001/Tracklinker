@@ -1,5 +1,5 @@
+import { actionsIcons } from "../../../../assets/icons/actionsIcons";
 import ActionButtons from "../../../../globals/components/ui/ActionButtons";
-import { actionsIcons } from "../../../../assets/icons/mainIcons";
 
 export default function SupplierActions({
   editButtonOnClick,
