@@ -1,4 +1,4 @@
-import { warrantiesIcons } from "../../../assets/icons/mainIcons";
+import { warrantiesIcons } from "../../../assets/icons/warrantiesIcons";
 
 export const warrantyStatusConfig = {
   0: {
@@ -9,11 +9,13 @@ export const warrantyStatusConfig = {
   1: {
     text: "En Proceso",
     icon: warrantiesIcons.inprocessIcon,
-    styles: "bg-yellow-50 text-yellow-700 dark:text-[#eeff009d] dark:bg-[#fbff001f]",
+    styles:
+      "bg-yellow-50 text-yellow-700 dark:text-[#eeff009d] dark:bg-[#fbff001f]",
   },
   2: {
     text: "Completada",
     icon: warrantiesIcons.completeIcon,
-    styles: "bg-green-50 text-green-600 dark:text-[#00ff3779] dark:bg-[#00ff151f]",
+    styles:
+      "bg-green-50 text-green-600 dark:text-[#00ff3779] dark:bg-[#00ff151f]",
   },
 };
