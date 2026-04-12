@@ -2,7 +2,7 @@
 import { useModal } from "../../globals/hooks/useModal";
 import { useSuppliers } from "./hooks/useSuppliers";
 // Iconos
-import { actionsIcons } from "../../assets/icons/mainIcons";
+import { actionsIcons } from "../../assets/icons/actionsIcons";
 // Componentes
 import SuppliersList from "./components/ui/SuppliersList";
 import Layout from "../../globals/components/Layout/Layout";

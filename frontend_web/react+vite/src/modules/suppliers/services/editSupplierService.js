@@ -1,17 +1,16 @@
-import { getToken } from "../../../utils/auth";
 import { apiRoutes } from "../../../config/apiRoutes";
+import { fetchWithAuth } from "../../../utils/fetchWithAuth";
 
 export async function editSupplierService(supplier_id, supplier_data) {
-  const res = await fetch(
+  const res = await fetchWithAuth(
     `${apiRoutes.apiUrl}${apiRoutes.suppliers}/update/${supplier_id}`,
     {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
-        Authorization: getToken(),
       },
       body: JSON.stringify(supplier_data),
-    }
+    },
   );
 
   // Validamos si la respuesta no fue OK
