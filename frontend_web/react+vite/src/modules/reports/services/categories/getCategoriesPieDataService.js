@@ -1,15 +1,12 @@
 import { apiRoutes } from "../../../../config/apiRoutes";
-import { getToken } from "../../../../utils/auth";
+import { fetchWithAuth } from "../../../../utils/fetchWithAuth";
 
 export async function getCategoriesPieDataService(period, signal) {
-  const response = await fetch(
+  const response = await fetchWithAuth(
     `${apiRoutes.apiUrl}${apiRoutes.reports}/get_categories_by_brand/${period}`,
     {
       method: "GET",
       credentials: "include",
-      headers: {
-        Authorization: getToken(),
-      },
       signal,
     },
   );
