@@ -5,40 +5,50 @@ import ActionButtons from "../../../../globals/components/ui/ActionButtons";
 
 export default function ProductsTable({ products, openModal, refetch }) {
   const [openId, setOpenId] = useState(null);
+  const noProducts = products.length === 0;
 
-  return (
+  return noProducts ? (
+    <div className="flex items-center justify-center">
+      <span>No se encontraron productos</span>
+    </div>
+  ) : (
     <section
-      className="max-h-[95%] max-w-full border border-gray-200 rounded-xl shadow-md overflow-y-auto overflow-x-auto overflow-hidden
+      className="max-h-[95%] max-w-full border rounded-3xl overflow-y-auto overflow-x-auto overflow-hidden
       dark:border-[#303033]"
     >
       <table
-        className="min-w-full min-h-full appearance-none border-collapse
-      dark:bg-black"
+        className={`${noProducts ? "hidden" : "block"} min-w-full min-h-full border-gray-200 appearance-none border-collapse
+      dark:bg-black`}
       >
         {/* Cabecera de la tabla */}
         <thead
-          className="sticky top-0 z-[1]
+          className="sticky h-10 top-0 z-10
         dark:text-white dark:bg-black"
         >
           <tr
-            className="h-[40px] border-b bg-white border-gray-200 text-sm
+            className="min-w-full min-h-full border-b bg-white border-gray-200 text-sm
             dark:border-[#303033] dark:bg-[#1a1a1a]"
           >
-            <th className="font-medium text-start pl-4">Estado</th>
-            <th className="font-medium text-start pl-4">Fecha de Ingreso</th>
-            <th className="font-medium text-start pl-4">Orden De Entrada</th>
-            <th className="font-medium text-start pl-4">Subcategoria</th>
-            <th className="font-medium text-start pl-4">Serial</th>
-            <th className="font-medium text-start pl-4">Modelo</th>
-            <th className="font-medium text-start pl-2">Descripción</th>
-            <th className="font-medium text-start pl-4">Marca</th>
-            <th className="font-medium text-start pl-4">Tiempo de Garantia</th>
+            <th className="font-medium text-start pl-4 pt-1">Estado</th>
+            <th className="font-medium text-start pl-4 pt-1">
+              Fecha de Ingreso
+            </th>
+            <th className="font-medium text-start pl-4 pt-1">
+              Orden De Entrada
+            </th>
+            <th className="font-medium text-start pt-1">Categoria</th>
+            <th className="font-medium text-start pl-4 pt-1">Subcategoria</th>
+            <th className="font-medium text-start pl-4 pt-1">Serial</th>
+            <th className="font-medium text-start pl-4 pt-1">Modelo</th>
+            <th className="font-medium text-start pt-1">Descripción</th>
+            <th className="font-medium text-start pl-4 pt-1">Marca</th>
+            <th className="font-medium text-start pt-1">Tiempo de Garantia</th>
             <th className="font-medium text-start pr-4">Acciones</th>
           </tr>
         </thead>
 
         {/* Contenido de la tabla */}
-        <tbody className="font-normal dark:text-gray-300">
+        <tbody className="min-w-full min-h-full font-normal dark:text-gray-300">
           {products.map((product) => (
             /* Productos */
             <tr
@@ -57,9 +67,9 @@ export default function ProductsTable({ products, openModal, refetch }) {
                   <img
                     src={productStatusConfig[product.status]?.icon}
                     alt=""
-                    className="w-4"
+                    className="w-3 h-3"
                   />
-                  <span>{productStatusConfig[product.status]?.text}</span>
+                  <span>{product.status_text}</span>
                 </div>
               </th>
 
@@ -71,6 +81,10 @@ export default function ProductsTable({ products, openModal, refetch }) {
               {/* Orden de Entrada */}
               <th className="font-normal text-start pl-4 text-sm">
                 {product.input_order}
+              </th>
+              {/* Subcategoria */}
+              <th className="font-normal text-start text-sm">
+                {product.category}
               </th>
 
               {/* Subcategoria */}
@@ -89,7 +103,7 @@ export default function ProductsTable({ products, openModal, refetch }) {
               </th>
 
               {/* Descripción */}
-              <th className="font-normal text-start pl-2 text-sm">
+              <th className="font-normal text-start text-sm">
                 {product.description}
               </th>
 
@@ -99,7 +113,7 @@ export default function ProductsTable({ products, openModal, refetch }) {
               </th>
 
               {/* Tiempo de garantía */}
-              <th className="font-normal text-start pl-4 text-sm">
+              <th className="font-normal text-start text-sm">
                 {product.warranty_time}
               </th>
 
@@ -131,7 +145,7 @@ export default function ProductsTable({ products, openModal, refetch }) {
 
                 {openId === product.product_serial && (
                   <div
-                    className="absolute top-full right-0 w-48 max-h-96 overflow-y-auto rounded-lg border bg-white shadow-lg z-[400]
+                    className="absolute top-full right-0 w-48 max-h-96 overflow-y-auto rounded-lg border bg-white shadow-lg z-10
                   dark:bg-[#1a1a1a] dark:text-white dark:border-none"
                   >
                     <div className="flex items-center font-bold py-1.5 px-2 border-b text-sm">
@@ -146,7 +160,8 @@ export default function ProductsTable({ products, openModal, refetch }) {
                             openModal(product, config.modalType, refetch);
                             setOpenId(null);
                           }}
-                          className={`${config.optionStyles} px-3 py-2 cursor-pointer text-sm font-normal transition-all duration-200 hover:bg-gray-200 dark:hover:bg-[#333]`}
+                          className={`${config.optionStyles} px-3 py-2 cursor-pointer text-sm font-normal transition-all duration-200 
+                          hover:bg-gray-200 dark:hover:bg-[#333]`}
                         >
                           <span>{config.optionText}</span>
                         </div>
