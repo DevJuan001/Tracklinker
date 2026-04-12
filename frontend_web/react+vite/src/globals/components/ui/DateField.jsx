@@ -12,7 +12,7 @@ export default function DateField({
   return (
     <div
       onClick={onClick}
-      className="relative w-full h-[50px] flex items-center px-2 rounded-lg border border-[#a1a1a131] outline-[#00000028] bg-[#e5e5e527] text-center cursor-pointer
+      className="relative w-full h-14 flex items-center px-4 rounded-lg border border-[#a1a1a131] outline-[#00000028] bg-[#e5e5e527] text-center cursor-pointer
     dark:border-[#ffffff15] dark:bg-[#ffffff1a] text-sm dark:text-white"
     >
       <div className="w-full max-w-32 flex flex-col items-start">
