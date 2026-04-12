@@ -42,12 +42,12 @@ export default function Modal({
       {/* Card blanca o modal */}
       {/* stopPropagation sirve para que al momento de seleccionar la modal no la cierre */}
       <section
-        className={`relative bg-white rounded-3xl shadow-lg w-[90%] p-6 animate-blur
+        className={`relative bg-white rounded-[32px] shadow-lg w-[90%] p-6 animate-blur
             dark:bg-black dark:shadow-[0px_0px_0px_1px_#101012]
             ${closing ? "animate-modalFadeOut" : "animate-modalFadeIn"}
             ${
               type === "filter"
-                ? "max-w-sm"
+                ? "max-w-[400px]"
                 : type === "user"
                   ? "max-w-2xl"
                   : "max-w-xl"
