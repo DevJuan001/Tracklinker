@@ -1,15 +1,11 @@
 import { apiRoutes } from "../../../../config/apiRoutes";
-import { getToken } from "../../../../utils/auth";
+import { fetchWithAuth } from "../../../../utils/fetchWithAuth";
 
 export async function getWarrantiesPieDataService(period, signal) {
-  const response = await fetch(
+  const response = await fetchWithAuth(
     `${apiRoutes.apiUrl}${apiRoutes.reports}/get_warranties_by_brand/${period}`,
     {
       method: "GET",
-      credentials: "include",
-      headers: {
-        Authorization: getToken(),
-      },
       signal,
     },
   );
