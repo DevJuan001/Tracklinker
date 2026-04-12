@@ -1,12 +1,12 @@
 // Hooks
-import { useModal } from "../../globals/hooks/useModal";
 import { useWarranties } from "./hooks/useWarranties";
+import { useModal } from "../../globals/hooks/useModal";
 // Iconos
-import { warrantiesIcons } from "../../assets/icons/mainIcons";
+import { warrantiesIcons } from "../../assets/icons/warrantiesIcons";
 // Componentes
 import Layout from "../../globals/components/Layout/Layout";
-import TopSection from "../../globals/components/ui/TopSection";
 import WarrantiesTable from "./components/ui/WarrantiesTable";
+import TopSection from "../../globals/components/ui/TopSection";
 // Modales
 import Modal from "../../globals/components/modals/Modal";
 import HelpModal from "../../globals/components/modals/HelpModal";
