@@ -32,9 +32,15 @@ export default function Modal({
       className={`fixed inset-0 bg-[#00000009] dark:bg-[#0000004f]
         ${
           type === "filter"
-            ? `flex justify-end items-start pt-4 bg-[#00000013] 
-              md:pr-[220px] lg:pr-[220px] xl:pr-[175px] 2xl:pr-[240px]`
-            : `flex items-center justify-center`
+            ? `flex justify-end items-start pt-3 pr-2 bg-[#00000013] 
+              md:pr-[220px] xl:pr-[175px] 2xl:pr-[240px]`
+            : type === "add"
+              ? `flex justify-end 
+                sm:pr-3 sm:pt-1 
+                lg:pt-2 
+                md:pr-3 
+                xl:pt-3`
+              : `flex items-center justify-center`
         }
       `}
       onClick={handleClose}
@@ -50,26 +56,33 @@ export default function Modal({
                 ? "max-w-[400px]"
                 : type === "user"
                   ? "max-w-2xl"
-                  : "max-w-xl"
+                  : type === "add"
+                    ? `w-full h-full rounded-none 
+                    sm:max-w-[440px] sm:h-fit sm:rounded-[32px]`
+                    : type === "innerModal"
+                      ? "w-full"
+                      : type === "moreInfo"
+                        ? "max-w-xl h-fit"
+                        : "max-w-xl"
             }
         `}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Cabecera de la modal donde esta el titúlo y el icono para cerrarla */}
         <header className="flex justify-between items-center mb-4">
-          <h2 className="text-lg font-medium dark:text-white">{title}</h2>
+          <span className="font-medium dark:text-white">{title}</span>
           {/* Icono "x" para cerrar la modal */}
           <button
             onClick={handleClose}
             className="p-1.5 rounded-3xl transition
-                    hover:bg-[#efedf0]
-                     dark:hover:bg-[#c5c6ce27]"
+            hover:bg-[#efedf0]
+            dark:hover:bg-[#c5c6ce27]"
           >
             <img
               src={modalIcons.closeIcon}
               alt=""
               className="invert brightness-200 transition duration-300
-                    dark:brightness-0 dark:hover:bg-transparent"
+              dark:brightness-0 dark:hover:bg-transparent"
             />
           </button>
         </header>
