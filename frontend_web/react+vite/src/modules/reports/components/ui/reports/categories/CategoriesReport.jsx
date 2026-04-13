@@ -1,6 +1,8 @@
 // Hooks
 import { useCategoriesData } from "../../../../hooks/categories/useCategoriesData";
 import { useState } from "react";
+// Utils
+import { getDateRange } from "../../../../../../utils/getDateRange";
 // Components
 import KpisContainer from "../../KpisContainer";
 import ReportsContainer from "../../ReportsContainer";
@@ -13,6 +15,8 @@ import CategoriesTable from "./CategoriesTable";
 export default function CategoriesReport({ setReport }) {
   const { categoriesData } = useCategoriesData();
   const [period, setPeriod] = useState("1a");
+  const { startDate, endDate } = getDateRange(period);
+
   return (
     <section className="w-full h-full flex flex-col gap-2 animate-blurUp">
       <ReportsTopSection
@@ -25,7 +29,7 @@ export default function CategoriesReport({ setReport }) {
       {categoriesData.map((item) => (
         <ReportsContainer
           reportsName={"Categorias"}
-          reportsDate={"16 De Marzo - 23 De Marzo 2025"}
+          reportsDate={`${startDate} - ${endDate}`}
         >
           {/* Cards o KPIs principales */}
           <KpisContainer
