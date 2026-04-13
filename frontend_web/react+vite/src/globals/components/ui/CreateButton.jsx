@@ -16,7 +16,7 @@ export default function CreateButton({
         alt=""
         className="w-6 h-6 invert brightness-0 dark:brightness-200 dark:invert-0"
       />
-      <span className="text-base text-white font-medium dark:text-black">
+      <span className="hidden sm:block lg:block md:block xl:block text-base text-white font-medium dark:text-black">
         {text}
       </span>
     </button>

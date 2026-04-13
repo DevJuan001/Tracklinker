@@ -1,13 +1,13 @@
 import { apiRoutes } from "../../../config/apiRoutes";
-import { getToken } from "../../../utils/auth";
+import { fetchWithAuth } from "../../../utils/fetchWithAuth";
 
 export async function getSuppliersService() {
-  const res = await fetch(`${apiRoutes.apiUrl}${apiRoutes.suppliers}/`, {
-    method: "GET",
-    headers: {
-      Authorization: getToken(),
+  const res = await fetchWithAuth(
+    `${apiRoutes.apiUrl}${apiRoutes.suppliers}/`,
+    {
+      method: "GET",
     },
-  });
+  );
 
   if (!res.ok) {
     throw new Error("Error en la petición");

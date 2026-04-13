@@ -28,8 +28,8 @@ export default function SelectMenu({
       <div className="w-full flex items-center gap-1.5">
         <div
           onClick={() => setOpen(!open)}
-          className="w-full h-11 pr-1 flex items-center border border-[#a1a1a131] 
-            bg-[#e5e5e527] rounded-lg cursor-pointer text-sm
+          className="w-full h-14 pr-2 flex items-center border border-[#a1a1a131] 
+            bg-[#e5e5e527] rounded-2xl cursor-pointer text-sm
             dark:bg-[#ffffff1a] dark:border-[#ffffff15] dark:text-white"
         >
           <div className="w-full h-11 flex items-center pl-5">
@@ -53,26 +53,27 @@ export default function SelectMenu({
           }}
           disabled={addButtonInvisible}
           type="button"
-          className={`${addButtonInvisible ? "hidden" : "opacity-100"} w-12 h-11 flex items-center justify-center border rounded-2xl
-              dark:invert`}
+          className={`w-16 h-14 flex items-center justify-center border rounded-2xl bg-[#e5e5e527]
+          ${addButtonInvisible ? "hidden" : "opacity-100"} 
+          dark:bg-[#ffffff1a] dark:border-[#ffffff15]`}
         >
-          <img src={addIcon} className="h-5 w-5" />
+          <img src={addIcon} className="h-4 w-4 dark:invert" />
         </button>
       </div>
 
       {open && (
         <div
           onClick={() => setOpen(false)}
-          className="absolute top-full left-0 w-full max-h-96 overflow-y-auto rounded-lg border bg-white shadow-lg z-[400]
+          className="absolute top-full left-0 w-full max-h-96 overflow-y-auto rounded-2xl border bg-white shadow-lg z-[400]
         dark:bg-[#1a1a1a] dark:text-white dark:border-none"
         >
           {options.map((option) => (
             <div
               key={option.value}
               onClick={() => handleSelect(option)}
-              className="px-3 py-2 cursor-pointer text-sm hover:bg-gray-200 dark:hover:bg-[#333]"
+              className="h-12 flex items-center px-3 py-2 cursor-pointer text-sm hover:bg-[#efedf0] dark:hover:bg-[#333]"
             >
-              {option.label}
+              <span>{option.label}</span>
             </div>
           ))}
         </div>

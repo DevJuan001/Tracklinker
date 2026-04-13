@@ -1,12 +1,15 @@
 // Hooks
 import { useState, useEffect } from "react";
+// Services
 import { getProducts } from "../services/getProducts";
+import { getProductStatus } from "../services/getProductStatus";
 import { getProductBrands } from "../services/getProductBrands";
 import { getProductModels } from "../services/getProductModels";
 import { getInputOrdersService } from "../services/getInputOrdersService";
 import { getCategoriesService } from "../../categories/services/getCategoriesService";
 import { getSubcategories } from "../../subcategories/services/getSubcategoriesService";
-import { getProductStatus } from "../services/getProductStatus";
+// Status
+import { productStatusConfig } from "../constants/productStatusConfig";
 
 export function useCatalog() {
   // Definir los estados y sus valores por defecto
@@ -20,11 +23,15 @@ export function useCatalog() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  async function fetchProducts() {
+  async function fetchProducts(filters) {
     try {
       setLoading(true);
-      const data = await getProducts();
-      setProducts(data);
+      const data = await getProducts(filters);
+      const formattedProducts = data.map((product) => ({
+        ...product,
+        status_text: productStatusConfig[product.status]?.text,
+      }));
+      setProducts(formattedProducts);
     } catch (error) {
       setError(error.message);
     } finally {

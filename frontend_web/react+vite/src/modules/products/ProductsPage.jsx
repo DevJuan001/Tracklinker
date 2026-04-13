@@ -1,12 +1,15 @@
 // Hooks
+import { useState } from "react";
 import { useCatalog } from "./hooks/useCatalog";
 import { useModal } from "../../globals/hooks/useModal";
+import { useSearch } from "../../globals/hooks/useSearch";
 // Iconos
-import { productsIcons } from "../../assets/icons/mainIcons";
-// Componentes de la Ui
-import Layout from "../../globals/components/Layout/Layout";
-import TopSection from "../../globals/components/ui/TopSection";
+import { productsIcons } from "../../assets/icons/productsIcons";
+// Componentes
 import ProductsTable from "./components/ui/ProductsTable";
+import Layout from "../../globals/components/Layout/Layout";
+import SearchBar from "../../globals/components/ui/SearchBar";
+import TopSection from "../../globals/components/ui/TopSection";
 //Modales
 import Modal from "../../globals/components/modals/Modal";
 import HelpModal from "../../globals/components/modals/HelpModal";
@@ -21,6 +24,8 @@ import ProfileModal from "../../globals/components/modals/profileModal/ProfileMo
 export default function ProductsPage() {
   const { modalType, modalData, isOpen, openModal, closeModal } = useModal();
   const { fetchProducts, products } = useCatalog();
+  const [search, setSearch] = useState();
+  const filteredProducts = useSearch(products, search);
 
   return (
     <Layout
@@ -41,11 +46,13 @@ export default function ProductsPage() {
         filterOnClick={() => {
           openModal(null, "filter");
         }}
-      />
+      >
+        <SearchBar value={search} onChange={setSearch} />
+      </TopSection>
 
       {/* Contenedor de la tabla */}
       <ProductsTable
-        products={products}
+        products={filteredProducts}
         openModal={openModal}
         refetch={fetchProducts}
       />
@@ -80,7 +87,10 @@ export default function ProductsPage() {
         >
           {modalType === "user" && <ProfileModal />}
           {modalType === "filter" && (
-            <ProductsFilterModal onCloseModal={() => closeModal()} />
+            <ProductsFilterModal
+              refetch={fetchProducts}
+              onCloseModal={() => closeModal()}
+            />
           )}
           {modalType === "help" && <HelpModal onClose={() => closeModal()} />}
           {modalType === "add" && (

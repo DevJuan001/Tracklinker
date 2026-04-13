@@ -65,7 +65,7 @@ export default function Calendar({ onClose, value, onChange, triggerRef }) {
       {coords && (
         <div
           style={{ top: coords.top, right: coords.right }}
-          className="fixed min-w-[400px] max-w-[600px] mt-[50px] p-2 bg-white border border-[#a1a1a131] rounded-[32px] cursor-default overflow-hidden z-[600]
+          className="fixed min-w-[400px] max-w-[600px] mt-14 p-2 bg-white border border-[#a1a1a131] rounded-[32px] cursor-default overflow-hidden z-[600]
         dark:border-[#ffffff15] dark:bg-black"
           onClick={(e) => e.stopPropagation()}
         >

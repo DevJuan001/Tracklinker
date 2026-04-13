@@ -1,14 +1,11 @@
-import { getToken } from "../../../utils/auth";
 import { apiRoutes } from "../../../config/apiRoutes";
+import { fetchWithAuth } from "../../../utils/fetchWithAuth";
 
 export async function getInputOrdersService() {
-  const response = await fetch(
+  const response = await fetchWithAuth(
     `${apiRoutes.apiUrl}${apiRoutes.products}/input-orders`,
     {
       method: "GET",
-      headers: {
-        Authorization: getToken(),
-      },
     },
   );
 
