@@ -6,16 +6,16 @@ import { actionsIcons } from "../../assets/icons/actionsIcons";
 // Modales
 import Modal from "../../globals/components/modals/Modal";
 import HelpModal from "../../globals/components/modals/HelpModal";
-import FilterModal from "../../globals/components/modals/FilterModal";
 import AddSubcategoryModal from "./components/modals/AddSubcategoryModal";
 import EditSubcategoryModal from "./components/modals/EditSubcategoryModal";
 import DeleteSubcategoryModal from "./components/modals/DeleteSubcategoryModal";
+import MoreSubcategoryInfoModal from "./components/modals/MoreSubcategoryInfoModal";
+import FilterSubcategoriesModal from "./components/modals/FilterSubcategoriesModal";
 import ProfileModal from "../../globals/components/modals/profileModal/ProfileModal";
 // Componentes
 import Layout from "../../globals/components/Layout/Layout";
 import TopSection from "../../globals/components/ui/TopSection";
 import SubcategoriesList from "./components/ui/SubcategoriesList";
-import MoreSubcategoryInfoModal from "./components/modals/MoreSubcategoryInfoModal";
 
 export default function SubcategoriesPage() {
   const { subcategories, loading, error, fetchSubcategories } =
@@ -68,7 +68,10 @@ export default function SubcategoriesPage() {
         >
           {modalType === "user" && <ProfileModal />}
           {modalType === "filter" && (
-            <FilterModal onClose={() => closeModal()}></FilterModal>
+            <FilterSubcategoriesModal
+              refetch={fetchSubcategories}
+              onClose={() => closeModal()}
+            />
           )}
           {modalType === "help" && <HelpModal onClose={() => closeModal()} />}
           {/* Modal para agregar una subcategoria */}

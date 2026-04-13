@@ -23,7 +23,7 @@ export default function AddSubcategoryModal({ onClose }) {
   return (
     <section className="flex flex-col items-center">
       {/* Formulario para la informacion de la nueva subcategoria */}
-      <form action="" className="flex flex-col gap-1">
+      <form action="" className="flex flex-col w-full gap-1">
         {/* Menú para elegir la categoria a la cúal pertenecera la subcategoria */}
         <SelectMenu
           value={form.category_id}
