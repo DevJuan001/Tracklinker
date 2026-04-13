@@ -33,7 +33,7 @@ export default function EditProductModal({
   });
   return (
     <section className="flex flex-col items-center">
-      <form action="" className="flex flex-col items-center gap-2">
+      <form action="" className="w-full flex flex-col gap-2 px-20">
         <SelectMenu
           value={form.subcategory_id}
           name={"subcategory_id"}
