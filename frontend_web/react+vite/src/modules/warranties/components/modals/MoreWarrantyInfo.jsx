@@ -1,6 +1,8 @@
+import { warrantyStatusConfig } from "../../constants/warrantyStatus";
+
 export default function MoreWarrantyInfo({ modalData }) {
   return (
-    <address className="flex flex-col justify-center items-center not-italic gap-2">
+    <address className="flex flex-col justify-center items-center not-italic gap-2 dark:text-white">
       <div className="flex flex-col items-center">
         <span>
           <strong>Nombre del cliente</strong>
@@ -41,7 +43,7 @@ export default function MoreWarrantyInfo({ modalData }) {
         <span>
           <strong>Estado</strong>
         </span>
-        <p>{modalData.warranty_status}</p>
+        <p>{warrantyStatusConfig[modalData.warranty_status]?.text}</p>
       </div>
     </address>
   );

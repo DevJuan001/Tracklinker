@@ -16,12 +16,12 @@ export default function DisableSubcategoryModal({ subcategory, onClose }) {
   return (
     <section className="flex flex-col justify-center items-center dark:text-white">
       <p>
-        ¿Seguro que deseas eliminar la subcategoria
+        ¿Seguro que deseas Deshabilitar la subcategoria
         <span className="font-medium"> {subcategory.subcategory_name}</span>?
       </p>
       {/* Botones */}
       <ConfirmCancelButtons
-        confirmText={loading ? <Loader /> : "Eliminar"}
+        confirmText={loading ? <Loader /> : "Deshabilitar"}
         confirmBgColor="red-600"
         confirmDarkBgColor=""
         cancelText={"Cancelar"}
