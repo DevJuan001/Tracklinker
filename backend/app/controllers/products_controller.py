@@ -5,8 +5,28 @@ from fastapi import HTTPException
 
 class ProductsController:
     @staticmethod
-    def get_all_products():
-        error, products = ProductsRepository.find_all_products()
+    def get_all_products(
+        start_date: str = None,
+        end_date: str = None,
+        input_order: int = None,
+        category_order: int = None,
+        subcategory_order: int = None,
+        warranty_time: int = None,
+        product_status: int = None,
+        brand: int = None,
+        product_model: int = None,
+    ):
+        error, products = ProductsRepository.find_all_products(
+            start_date,
+            end_date,
+            input_order,
+            category_order,
+            subcategory_order,
+            warranty_time,
+            product_status,
+            brand,
+            product_model,
+        )
 
         if error:
             raise HTTPException(status_code=404, detail=error)
@@ -47,7 +67,7 @@ class ProductsController:
         return {
             "data": models
         }
-    
+
     @staticmethod
     def get_all_product_status():
         error, status = ProductsRepository.find_all_product_status()
@@ -73,7 +93,8 @@ class ProductsController:
 
     @staticmethod
     def create_product_model(product_model):
-        error, success, message = ProductsRepository.create_product_details(product_model)
+        error, success, message = ProductsRepository.create_product_details(
+            product_model)
 
         if error:
             raise HTTPException(status_code=400, detail=error)
@@ -108,8 +129,9 @@ class ProductsController:
 
     @staticmethod
     def update_product(product_data: UpdateProduct):
-        error, success, message = ProductsRepository.update_product(product_data)
-        
+        error, success, message = ProductsRepository.update_product(
+            product_data)
+
         if error:
             raise HTTPException(status_code=400, detail=error)
         return {
@@ -119,8 +141,9 @@ class ProductsController:
 
     @staticmethod
     def update_product_status(product_data: dict):
-        error, success, message = ProductsRepository.update_product_status(product_data)
-        
+        error, success, message = ProductsRepository.update_product_status(
+            product_data)
+
         if error:
             raise HTTPException(status_code=400, detail=error)
         return {
