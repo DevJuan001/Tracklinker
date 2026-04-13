@@ -5,8 +5,16 @@ from app.models.guarantiees_model import Guarantee, GuaranteeUpdate
 class GuaranteeController:
        
     @staticmethod
-    def get_all_guarantee():
-        error, guarantiee = GuaranteeRepository.find_all_guarantiee()
+    def get_all_guarantee(
+        start_date: str = None,
+        end_date: str = None,
+        status: int = None,
+    ):
+        error, guarantiee = GuaranteeRepository.find_all_guarantiee(
+            start_date,
+            end_date,
+            status,
+        )
         if error:
             raise HTTPException(status_code=404, detail=error)
         return {

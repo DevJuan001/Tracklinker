@@ -14,7 +14,11 @@ from fastapi import HTTPException
 class GuaranteeRepository:
 
     @staticmethod
-    def find_all_guarantiee():
+    def find_all_guarantiee(
+        start_date: str = None,
+        end_date: str = None,
+        status: int = None,
+    ):
         connection = get_connection()
         cursor = connection.cursor(dictionary=True)
 
@@ -32,10 +36,28 @@ class GuaranteeRepository:
             warranty_date,
             warranty_status
         FROM WARRANTY_INCIDENTS
-        ORDER BY warranty_incidents_id DESC
         """
+
+        filters = []
+        values = []
+
+        if start_date:
+            filters.append("DATE(warranty_date) >= %s")
+            values.append(start_date)
+
+        if end_date:
+            filters.append("DATE(warranty_date) <= %s")
+            values.append(end_date)
+
+        if status:
+            filters.append("warranty_status = %s")
+            values.append(status)
+        
+        if filters:
+            query += " WHERE " + " AND ".join(filters)
+
         try:
-            cursor.execute(query)
+            cursor.execute(query, values)
             results = cursor.fetchall()
             data = [
                 {
