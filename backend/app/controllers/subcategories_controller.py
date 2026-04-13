@@ -7,8 +7,16 @@ from app.core.security import create_access_token
 class SubcategoriesController:
 
     @staticmethod
-    def get_all_subcategories():
-        error, subcategories = SubcategoriesRepository.find_all_subcategories()
+    def get_all_subcategories(
+        start_date: str = None,
+        end_date: str = None,
+        category_order: int = None,
+    ):
+        error, subcategories = SubcategoriesRepository.find_all_subcategories(
+            start_date,
+            end_date,
+            category_order,
+        )
 
         if error:
             raise HTTPException(status_code=404, detail=error)
