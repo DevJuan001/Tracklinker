@@ -9,8 +9,18 @@ router = APIRouter(
 )
 
 @router.get("/")
-def get_all_categories():
-    return CategoryController.get_all_categories()
+def get_all_categories(
+    name_order: str = None,
+    start_date: str = None,
+    end_date: str = None,
+    status: int = None,
+):
+    return CategoryController.get_all_categories(
+        name_order,
+        start_date,
+        end_date,
+        status,
+    )
 
 @router.get("/{category_id}")
 def get_category_by_id(category_id: int):
@@ -24,7 +34,10 @@ def create_category(category_data: CategoryCreate):
 def update_category(category_id: int, category_data: CategoryUpdate):
     return CategoryController.update_category(category_id, category_data)
 
-# Endpoint para eliminar una categoría mediante su id
-@router.delete("/delete/{category_id}")
-def delete_category(category_id: int):
-    return CategoryController.delete_category(category_id)
+@router.put("/disable/{category_id}")
+def disable_category(category_id: int):
+    return CategoryController.disable_category(category_id)
+
+@router.put("/enable/{category_id}")
+def enable_category(category_id: int):
+    return CategoryController.enable_category(category_id)
