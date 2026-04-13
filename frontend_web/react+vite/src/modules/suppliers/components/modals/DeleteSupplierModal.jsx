@@ -12,7 +12,7 @@ export default function DeleteSupplierModal({ supplier, onClose }) {
   const [innerModal, setInnerModal] = useState(null);
   const { loading, handleSubmit } = useDeleteSupplier(supplier.supplier_id);
   return (
-    <div className="flex flex-col justify-center items-center">
+    <div className="flex flex-col justify-center items-center dark:text-white">
       <p>
         ¿Seguro que deseas eliminar a{" "}
         <span className="font-medium">{supplier.supplier_name}</span>?

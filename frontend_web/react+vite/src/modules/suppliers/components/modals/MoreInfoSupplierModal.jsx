@@ -1,6 +1,6 @@
 export default function MoreInfoSupplierModal({ supplier }) {
   return (
-    <section className="flex flex-col justify-center">
+    <section className="flex flex-col justify-center dark:text-white">
       <p>
         <strong>Nombre:</strong> {supplier.supplier_name}
       </p>
