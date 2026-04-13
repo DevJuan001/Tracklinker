@@ -95,8 +95,8 @@ export default function EditUserInfoModal({ user, onClose }) {
           spanText={"Estado"}
           onChange={handleChange}
           options={[
-            { value: 0, label: "Deshabilitado" },
-            { value: 1, label: "Activo" },
+            { value: 1, label: "Deshabilitado" },
+            { value: 2, label: "Activo" },
           ]}
         />
       </form>
