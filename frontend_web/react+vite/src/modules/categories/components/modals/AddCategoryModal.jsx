@@ -16,8 +16,8 @@ export default function AddCategoryModal({ onClose }) {
     description: "",
   });
   return (
-    <section className="flex flex-col items-center">
-      <form action="" className="min-w-[350px] max-w-[350px] flex flex-col gap-1">
+    <section className="w-full flex flex-col items-center">
+      <form action="" className="w-full flex flex-col gap-1">
         <FormField
           onChange={handleChange}
           value={form.name}
