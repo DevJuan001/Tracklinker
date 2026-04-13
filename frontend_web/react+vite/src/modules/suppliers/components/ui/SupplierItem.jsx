@@ -17,22 +17,30 @@ export default function SupplierItem({
       id="user-field"
     >
       {/* Información del proveedor */}
-      <article className="flex">
+      <article className="flex dark:text-white">
         <address className="flex gap-5 not-italic font-medium">
           <p className="text-[22px]">{supplier.supplier_name}</p>
           <div className="flex items-center">
-            <img src={usersIcons.phoneIcon} alt="" className="w-5 h-5" />
+            <img
+              src={usersIcons.phoneIcon}
+              alt=""
+              className="w-5 h-5 dark:invert"
+            />
             <p>{supplier.supplier_phone}</p>
           </div>
           <div className="flex items-center">
-            <img src={usersIcons.rolIcon} alt="" className="w-5 h-5" />
+            <img
+              src={usersIcons.rolIcon}
+              alt=""
+              className="w-5 h-5 dark:invert"
+            />
             <p>{supplier.supplier_address}</p>
           </div>
           <div className="flex items-center">
             <img
               src={usersIcons.cityIcon}
               alt=""
-              className="invert brightness-200"
+              className="invert brightness-200 dark:invert-0"
             />
             <p>{supplier.supplier_city}</p>
           </div>
