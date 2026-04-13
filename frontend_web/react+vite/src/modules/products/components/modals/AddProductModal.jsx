@@ -41,10 +41,7 @@ export default function AddProductModal({ onCloseModal }) {
 
   return (
     <section className="w-full flex flex-col items-center">
-      <form
-        action=""
-        className="min-w-[400px] flex flex-col items-center justify-between gap-1"
-      >
+
         <div className="w-full">
           {/* Menú de ordenes de entrada */}
           <SelectMenu
@@ -156,7 +153,6 @@ export default function AddProductModal({ onCloseModal }) {
             confirmButtonOnClick={(e) => handleSubmit(e, setInnerModal)}
           />
         </div>
-      </form>
 
       {/* Modales internos */}
       {innerModal === "success" && (

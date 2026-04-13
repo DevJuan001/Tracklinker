@@ -19,8 +19,8 @@ export default function AddProductBrandModal({ isOpen, onClose }) {
   });
   return (
     <AddInnerModal isOpen={isOpen} onClose={onClose} title={"Crear Marca"}>
-      <section className="flex flex-col items-center">
-        <form className="flex flex-col gap-1">
+      <section className="w-full flex flex-col items-center">
+        <form className="w-full flex flex-col gap-1">
           <FormField
             name={"product_brand_name"}
             labelText={"Nombre de la marca"}

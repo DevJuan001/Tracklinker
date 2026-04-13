@@ -35,11 +35,7 @@ export default function Modal({
             ? `flex justify-end items-start pt-3 pr-2 bg-[#00000013] 
               md:pr-[220px] xl:pr-[175px] 2xl:pr-[240px]`
             : type === "add"
-              ? `flex justify-end 
-                sm:pr-3 sm:pt-1 
-                lg:pt-2 
-                md:pr-3 
-                xl:pt-3`
+              ? `flex items-center justify-center`
               : `flex items-center justify-center`
         }
       `}
@@ -48,7 +44,7 @@ export default function Modal({
       {/* Card blanca o modal */}
       {/* stopPropagation sirve para que al momento de seleccionar la modal no la cierre */}
       <section
-        className={`relative bg-white rounded-[32px] shadow-lg w-[90%] p-6 animate-blur
+        className={`relative bg-white rounded-[32px] shadow-lg w-[90%] p-7 animate-blur
             dark:bg-black dark:shadow-[0px_0px_0px_1px_#101012]
             ${closing ? "animate-modalFadeOut" : "animate-modalFadeIn"}
             ${
@@ -58,7 +54,7 @@ export default function Modal({
                   ? "max-w-2xl"
                   : type === "add"
                     ? `w-full h-full rounded-none 
-                    sm:max-w-[440px] sm:h-fit sm:rounded-[32px]`
+                    sm:max-w-[550px] sm:h-fit sm:rounded-[32px]`
                     : type === "innerModal"
                       ? "w-full"
                       : type === "moreInfo"

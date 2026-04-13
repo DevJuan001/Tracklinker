@@ -25,8 +25,8 @@ export default function AddInputOrderModal({ isOpen, onClose }) {
       onClose={onClose}
       title={"Agregar orden de entrada"}
     >
-      <section className="flex flex-col items-center">
-        <section className="flex flex-col items-center">
+      <section className="w-full flex flex-col items-center">
+        <section className="w-full flex flex-col items-center">
           <SelectMenu
             value={form.supplier_id}
             name={"supplier_id"}
