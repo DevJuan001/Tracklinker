@@ -22,7 +22,7 @@ export default function EditSubcategoryInfoModal({ subcategory, onClose }) {
     },
   );
   return (
-    <section className="flex flex-col items-center px-12">
+    <section className="w-full flex flex-col items-center">
       <form action="" className="w-full flex flex-col gap-2">
         {/* Menú para elegir la categoria a la cúal pertenecera la subcategoria */}
         <SelectMenu
