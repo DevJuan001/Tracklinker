@@ -12,23 +12,28 @@ export default function OutputsTable() {
             Fecha final de garantía
           </th>
           <th className="font-normal text-start pl-4">Fecha de creación</th>
-          <th className="font-normal text-start pl-4">Correo</th>
+          <th className="font-normal text-start pl-4">Estado</th>
         </tr>
       </thead>
-      {outputs.map((supplier) => (
+      {outputs.map((output) => (
         <tbody>
           <tr className="pb-1 text-sm border-b dark:border-[#94909028]">
-            <th className="font-normal text-start pl-4">{supplier.serial}</th>
+            <th className="font-normal text-start pl-4">{output.serial}</th>
             <th className="font-normal text-start pl-4">
-              {supplier.warranty_time}
+              {output.warranty_time}
             </th>
-            <th className="font-normal text-start pl-4">{supplier.date}</th>
+            <th className="font-normal text-start pl-4">{output.date}</th>
             <th className="font-normal text-start pl-4">
-              <span
-                className={`px-2 py-1 rounded-md ${userStatus[supplier.status]?.styles}`}
+              <div
+                className={`w-fit flex items-center px-2 py-1 gap-1 rounded-md ${userStatus[output.status]?.styles}`}
               >
-                {userStatus[supplier.status]?.text}
-              </span>
+                <img
+                  src={userStatus[output.status]?.icon}
+                  alt=""
+                  className="w-3 h-3"
+                />
+                <span>{userStatus[output.status]?.text}</span>
+              </div>
             </th>
           </tr>
         </tbody>
