@@ -1,6 +1,7 @@
 import { Navigate, Outlet } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { apiRoutes } from "../config/apiRoutes";
+import { fetchWithAuth } from "../utils/fetchWithAuth";
 
 export default function ProtectedRoutes({ roles }) {
   const [authorized, setAuthorized] = useState(null);
@@ -8,7 +9,7 @@ export default function ProtectedRoutes({ roles }) {
   useEffect(() => {
     const verifyRole = async () => {
       try {
-        const res = await fetch(
+        const res = await fetchWithAuth(
           `${apiRoutes.apiUrl}${apiRoutes.auth}/verify-roles`,
           {
             method: "POST",
