@@ -10,7 +10,7 @@ import Modal from "../../globals/components/modals/Modal";
 import HelpModal from "../../globals/components/modals/HelpModal";
 import AddSubcategoryModal from "./components/modals/AddSubcategoryModal";
 import EditSubcategoryModal from "./components/modals/EditSubcategoryModal";
-import DeleteSubcategoryModal from "./components/modals/DeleteSubcategoryModal";
+import DisableSubcategoryModal from "./components/modals/DisableSubcategoryModal";
 import MoreSubcategoryInfoModal from "./components/modals/MoreSubcategoryInfoModal";
 import FilterSubcategoriesModal from "./components/modals/FilterSubcategoriesModal";
 import ProfileModal from "../../globals/components/modals/profileModal/ProfileModal";
@@ -19,6 +19,7 @@ import Layout from "../../globals/components/Layout/Layout";
 import TopSection from "../../globals/components/ui/TopSection";
 import SubcategoriesList from "./components/ui/SubcategoriesList";
 import SearchBar from "../../globals/components/ui/SearchBar";
+import EnableSubcategoryModal from "./components/modals/EnableSubcategoryModal";
 
 export default function SubcategoriesPage() {
   const { subcategories, loading, error, fetchSubcategories } =
@@ -65,9 +66,11 @@ export default function SubcategoriesPage() {
                     ? "Información de la subcategoría"
                     : modalType === "edit"
                       ? "Editar Subcategoria"
-                      : modalType === "delete"
-                        ? "Eliminar Subcategoria"
-                        : "Ayuda"
+                      : modalType === "disable"
+                        ? "Deshabilitar Subcategoria"
+                        : modalType === "enable"
+                          ? "Habilitar Subcategoria"
+                          : "Ayuda"
           }
           type={modalType}
           isOpen={isOpen}
@@ -99,9 +102,16 @@ export default function SubcategoriesPage() {
               onClose={() => closeModal()}
             />
           )}
-          {/* Modal para eliminar la subcategoria */}
-          {modalType === "delete" && (
-            <DeleteSubcategoryModal
+          {/* Modal para deshabilitar la subcategoria */}
+          {modalType === "disable" && (
+            <DisableSubcategoryModal
+              subcategory={modalData}
+              onClose={() => closeModal()}
+            />
+          )}
+          {/* Modal para habilitar la subcategoria */}
+          {modalType === "enable" && (
+            <EnableSubcategoryModal
               subcategory={modalData}
               onClose={() => closeModal()}
             />
