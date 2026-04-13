@@ -87,7 +87,10 @@ export default function ProductsPage() {
         >
           {modalType === "user" && <ProfileModal />}
           {modalType === "filter" && (
-            <ProductsFilterModal onCloseModal={() => closeModal()} />
+            <ProductsFilterModal
+              refetch={fetchProducts}
+              onCloseModal={() => closeModal()}
+            />
           )}
           {modalType === "help" && <HelpModal onClose={() => closeModal()} />}
           {modalType === "add" && (
