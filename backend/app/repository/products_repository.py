@@ -612,7 +612,8 @@ class ProductsRepository:
             pd.product_detail_date,
             ps.product_serial,
             pd.product_detail_model,
-            pb.product_brand_name
+            pb.product_brand_name,
+            p.product_status
         FROM PRODUCT_SERIALS as ps
         INNER JOIN PRODUCTS as p
         ON ps.product_id = p.product_id
@@ -632,7 +633,8 @@ class ProductsRepository:
                     "input_date": date_formatter(item["product_detail_date"]),
                     "serial": item["product_serial"],
                     "model": item["product_detail_model"],
-                    "brand": item["product_brand_name"]
+                    "brand": item["product_brand_name"],
+                    "status": item["product_status"]
                 }
                 for item in results
             ]
@@ -663,9 +665,10 @@ class ProductsRepository:
             FROM WARRANTY_INCIDENTS
             ) AS warranties_products,
 
-            (SELECT COUNT(DISTINCT product_serial)
-            FROM OUTPUT_DETAILS
-            ) AS transformations_products;
+            (SELECT COUNT(DISTINCT product_id)
+            FROM PRODUCTS
+            WHERE product_status = 3
+            ) AS sold_products;
         """
 
         try:
