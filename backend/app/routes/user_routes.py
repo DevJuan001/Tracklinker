@@ -19,8 +19,16 @@ def get_all_users(
     role_order: int = None,
     name_order: str = None,
     start_date: str = None,
-    end_date: str = None,):
-    return UserController.get_all_users(role_order, name_order, start_date, end_date)
+    end_date: str = None,
+    status: int = None,
+):
+    return UserController.get_all_users(
+        role_order,
+        name_order,
+        start_date,
+        end_date,
+        status
+    )
 
 # Endpoint para obtener un usuario mediante el id
 @router.get("/{user_id}")
