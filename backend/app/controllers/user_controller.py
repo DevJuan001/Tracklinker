@@ -28,8 +28,20 @@ class UserController:
         }
     
     @staticmethod
-    def get_all_users(role_order: int = None, name_order: str = None, start_date: str = None, end_date: str = None):
-        error, users = UserRepository.find_all_users(role_order, name_order, start_date, end_date)
+    def get_all_users(
+        role_order: int = None,
+        name_order: str = None,
+        start_date: str = None,
+        end_date: str = None,
+        status: int = None,
+    ):
+        error, users = UserRepository.find_all_users(
+            role_order,
+            name_order,
+            start_date,
+            end_date,
+            status,
+        )
         if error:
             raise HTTPException(status_code=404, detail=error)
         return {
