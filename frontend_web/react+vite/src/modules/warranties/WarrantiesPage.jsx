@@ -1,6 +1,8 @@
 // Hooks
+import { useState } from "react";
 import { useWarranties } from "./hooks/useWarranties";
 import { useModal } from "../../globals/hooks/useModal";
+import { useSearch } from "../../globals/hooks/useSearch";
 // Iconos
 import { warrantiesIcons } from "../../assets/icons/warrantiesIcons";
 // Componentes
@@ -16,11 +18,14 @@ import EditWarrantyModal from "./components/modals/EditWarrantyModal";
 import FilterModal from "../../globals/components/modals/FilterModal";
 import DeleteWarrantyModal from "./components/modals/DeleteWarrantyModal";
 import ProfileModal from "../../globals/components/modals/profileModal/ProfileModal";
+import SearchBar from "../../globals/components/ui/SearchBar";
 
 export default function WarrantiesPage() {
   const { isOpen, modalData, modalType, refetch, openModal, closeModal } =
     useModal();
   const { warranties, fetchWarranties } = useWarranties();
+  const [search, setSearch] = useState("");
+  const filteredWarranties = useSearch(warranties, search);
 
   return (
     <Layout
@@ -35,9 +40,12 @@ export default function WarrantiesPage() {
         addButtonText={"Agregar Garantía"}
         createOnClick={() => openModal(null, "add")}
         filterOnClick={() => openModal(null, "filter")}
-      />
+      >
+        <SearchBar value={search} onChange={setSearch} />
+      </TopSection>
+
       <WarrantiesTable
-        warranties={warranties}
+        warranties={filteredWarranties}
         openModal={openModal}
         refetch={refetch}
       />
