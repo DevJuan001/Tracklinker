@@ -1,6 +1,8 @@
 // Hooks
 import { useState } from "react";
 import { useUsersData } from "../../../../hooks/users/useUsersData";
+// Utils
+import { getDateRange } from "../../../../../../utils/getDateRange";
 // Components
 import UsersTable from "./UsersTable";
 import TableCard from "../../TableCard";
@@ -14,6 +16,7 @@ import ReportsTopSection from "../../ReportsTopSection";
 export default function UsersReport({ setReport }) {
   const { usersData } = useUsersData();
   const [period, setPeriod] = useState("30d");
+  const { startDate, endDate } = getDateRange(period);
   return (
     <section className="w-full h-full flex flex-col gap-2 animate-blurUp">
       <ReportsTopSection
@@ -26,7 +29,7 @@ export default function UsersReport({ setReport }) {
       {usersData.map((item) => (
         <ReportsContainer
           reportsName={"Usuarios"}
-          reportsDate={"16 De Marzo - 23 De Marzo 2025"}
+          reportsDate={`${startDate} - ${endDate}`}
         >
           {/* Cards o KPIs principales */}
           <KpisContainer
