@@ -29,7 +29,7 @@ CREATE TABLE USERS (
   user_password VARCHAR(255) NOT NULL COMMENT 'Contrasena del usuario, se debe almacenar hasheada para mayor seguridad (VARCHAR, Not null)',
   user_city VARCHAR(255) NOT NULL COMMENT 'Ciudad en la que se encuentra el usuario',
   user_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Fecha de creación del usuario (DATE, Not null)',
-  user_status INT NOT NULL DEFAULT 1 COMMENT "Estado en el que se encuentra el usuario 0 = deshabilitado, 1 = activo",
+  user_status INT NOT NULL DEFAULT 2 COMMENT "Estado en el que se encuentra el usuario 1 = deshabilitado, 2 = activo",
   PRIMARY KEY (user_id),
   INDEX fk_rol_users_idx (rol_id ASC),
   UNIQUE INDEX users_id_UNIQUE (user_id ASC),
@@ -75,7 +75,7 @@ ENGINE = InnoDB;
 CREATE TABLE OUTPUT_ORDERS (
   out_order_id INT NOT NULL AUTO_INCREMENT COMMENT 'Identificador autogenerado de las ordenes de salida (INT, Not null)',
   out_order_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Fecha de creación de la orden de salida, se usa para manejar control de las salidas (DATE, Not null)',
-  out_order_status INT NOT NULL DEFAULT 1 COMMENT "Estado en el que se encuentra la orden, 0 = Deshabilitada, 1 = Habilitada",
+  out_order_status INT NOT NULL DEFAULT 2 COMMENT "Estado en el que se encuentra la orden, 1 = Deshabilitada, 2 = Habilitada",
   PRIMARY KEY (out_order_id)
   )
 ENGINE = InnoDB;
@@ -113,7 +113,7 @@ CREATE TABLE SUPPLIERS (
   supplier_email VARCHAR(255) NOT NULL COMMENT 'Correo electronico del proveedor (VARCHAR, Not null)',
   supplier_phone VARCHAR(255) NOT NULL COMMENT 'Número de teléfono del proveedor (VARCHAR, Not null)',
   supplier_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Fecha de creación del proveedor (DATE, Not null)',
-  supplier_status INT NOT NULL DEFAULT 1 COMMENT "Estado en el que se encuentra el proveedor 0 = deshabilitado, 1 = activo",
+  supplier_status INT NOT NULL DEFAULT 2 COMMENT "Estado en el que se encuentra el proveedor 1 = deshabilitado, 2 = activo",
   PRIMARY KEY (supplier_id))
 ENGINE = InnoDB;
 
@@ -145,7 +145,7 @@ CREATE TABLE CATEGORIES (
   category_name VARCHAR(100) NOT NULL COMMENT 'Identificar y clasificar los productos tecnológicos en el sistema.',
   category_description TEXT NOT NULL COMMENT 'Razón por la cual la categoria fue creada o que tipo de productos almacena',
   category_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  category_status INT NOT NULL DEFAULT 1,
+  category_status INT NOT NULL DEFAULT 2 COMMENT 'Estado 1 = deshabilitado, 2 = activa',
   UNIQUE INDEX category_id_UNIQUE (category_id ASC),
   PRIMARY KEY (category_id))
 ENGINE = InnoDB;
@@ -159,7 +159,7 @@ CREATE TABLE SUBCATEGORIES (
   category_id INT NOT NULL COMMENT 'Es un Identificador único autogenerado para cada categoría de producto, (INT, Not null)',
   subcategory_name VARCHAR(100) NOT NULL COMMENT 'Nombre de cada subcategoria (VARCHAR, Not null)',
   subcategory_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  subcategory_status INT NOT NULL DEFAULT 1,
+  subcategory_status INT NOT NULL DEFAULT 2 COMMENT 'Estado 1 = deshabilitado, 2 = activa',
   PRIMARY KEY (subcategory_id),
   UNIQUE INDEX subcategory_id_UNIQUE (subcategory_id ASC),
   INDEX fk_subcategory_category_idx (category_id ASC),
@@ -178,7 +178,7 @@ CREATE TABLE PRODUCTS (
   product_id INT NOT NULL AUTO_INCREMENT COMMENT 'Identificador de cada producto, El cúal sirve para relacionar los productos con su respectivo serial (INT, Not Null, Auto Increment)',
   subcategory_id INT NOT NULL COMMENT 'Identificador de cada Subcategoria, Este campo sirve para relacionar los productos con las subcategorias y poder clasificarlos según el grupo que los agrupe (INT, Not null)',
   product_details_id INT NOT NULL COMMENT 'Identificador de detalles del producto\n.\nIdentificador único que referencia un conjunto específico de detalles asociados a un producto, como sus especificaciones técnicas, presentación, lote, ubicación, estado o características adicionales. Este campo es obligatorio para asegurar la trazabilidad y correcta asociación con los productos registrados.',
-  product_status INT NOT NULL DEFAULT 1 COMMENT 'Estado actual del producto 0 = inactivo, 1 = activo, 2 = Vendido, 3 = En garantía',
+  product_status INT NOT NULL DEFAULT 2 COMMENT 'Estado actual del producto 1 = inactivo, 2 = activo, 3 = Vendido, 4 = En garantía',
   PRIMARY KEY (product_id),
   UNIQUE INDEX idPRODUCTS_UNIQUE (product_id ASC),
   INDEX fk_products_subcategory_idx (subcategory_id ASC),
@@ -258,7 +258,7 @@ CREATE TABLE WARRANTY_INCIDENTS (
   warranty_link_attachments VARCHAR(255) NOT NULL COMMENT'Campo que contiene la URL o el path a los archivos adjuntos (imágenes, documentos) de la garantía, como facturas o fotos del producto.',
   warranty_city VARCHAR(100) NOT NULL COMMENT'Nombre de la ciudad del cliente. Utilizado para determinar la ubicación geográfica y asignar el caso a un centro de servicio local.' ,
   warranty_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Fecha y hora en que se reportó el incidente de garantía al sistema.' ,
-  warranty_status INT NOT NULL DEFAULT 0 COMMENT 'Estado actual de la garantía , 0 = Sin Completar, 1 = En Proceso, 2 = Sin Completar, Al momento de ingresar la garantia nueva se le da un estado de 0 o Sin completar',
+  warranty_status INT NOT NULL DEFAULT 2 COMMENT 'Estado actual de la garantía , 1 = Sin Completar, 2 = En Proceso, 3 = Sin Completar, Al momento de ingresar la garantia nueva se le da un estado de 0 o Sin completar',
   PRIMARY KEY (warranty_incidents_id),
   UNIQUE INDEX warranty_incidents_id_UNIQUE (warranty_incidents_id ASC),
   INDEX fk_warranty_incidents_output_details_idx (product_serial ASC),
