@@ -9,9 +9,11 @@ export default function SupplierItem({
 }) {
   return (
     <li
-      className="flex items-center justify-between p-5 bg-[#f3eef5] rounded-lg shadow-md transition duration-300  
-    dark:bg-[#0f0f11] dark:hover:bg-[#212125] dark:text-white"
+      className="flex items-center justify-between p-5 bg-[#96929213] rounded-lg transition duration-300 cursor-pointer
+      hover:bg-[#96929231]
+      dark:bg-[#0f0f11] dark:hover:bg-[#212125]"
       hey={supplier.supplier_id}
+      onClick={moreInfoOnClick}
       id="user-field"
     >
       {/* Información del proveedor */}
