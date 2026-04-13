@@ -9,7 +9,13 @@ class UserRepository:
 
     # Obtener todos los usuarios
     @staticmethod
-    def find_all_users(role_order: int = None, name_order: str = None, start_date: str = None, end_date: str = None):
+    def find_all_users(
+        role_order: int = None,
+        name_order: str = None,
+        start_date: str = None,
+        end_date: str = None,
+        status: int = None,
+    ):
         connection = get_connection()
         cursor = connection.cursor(dictionary=True)
 
@@ -48,13 +54,18 @@ class UserRepository:
             filters.append("DATE(u.user_date) <= %s")
             values.append(end_date)
 
-        if filters:
-            query += " WHERE " + " AND ".join(filters)
 
         if name_order == "asc":
             query += " ORDER BY u.user_name ASC"
         elif name_order == "desc":
             query += " ORDER BY u.user_name DESC"
+
+        if status:
+            filters.append("u.user_status = %s")
+            values.append(status)
+        
+        if filters:
+            query += " WHERE " + " AND ".join(filters)
 
         try:
             cursor.execute(query, values)
@@ -150,7 +161,7 @@ class UserRepository:
         FROM USERS AS u 
         INNER JOIN ROLES AS r 
         ON r.rol_id = u.rol_id 
-        WHERE u.user_email = %s AND u.user_status = 1
+        WHERE u.user_email = %s AND u.user_status = 2
         """
 
         try:
@@ -380,7 +391,7 @@ class UserRepository:
             connection.close()
             return "Usuario no encontrado", False, None
 
-        query = "UPDATE USERS SET user_status = 0 WHERE user_id = %s"
+        query = "UPDATE USERS SET user_status = 1 WHERE user_id = %s"
 
         try:
             cursor.execute(query, (user_id,))
@@ -405,7 +416,7 @@ class UserRepository:
             connection.close()
             return "Usuario no encontrado", False, None
 
-        query = "UPDATE USERS SET user_status = 1 WHERE user_id = %s"
+        query = "UPDATE USERS SET user_status = 2 WHERE user_id = %s"
 
         try:
             cursor.execute(query, (user_id,))
