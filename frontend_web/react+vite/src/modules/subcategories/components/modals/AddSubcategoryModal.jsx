@@ -21,7 +21,7 @@ export default function AddSubcategoryModal({ onClose }) {
   });
 
   return (
-    <section className="flex flex-col items-center">
+    <section className="w-full flex flex-col items-center">
       {/* Formulario para la informacion de la nueva subcategoria */}
       <form action="" className="flex flex-col w-full gap-1">
         {/* Menú para elegir la categoria a la cúal pertenecera la subcategoria */}
@@ -35,7 +35,7 @@ export default function AddSubcategoryModal({ onClose }) {
             value: category.category_id,
             label: category.category_name,
           }))}
-        ></SelectMenu>
+        />
 
         <FormField
           labelText={"Nombre de la Subcategoria"}
@@ -46,15 +46,15 @@ export default function AddSubcategoryModal({ onClose }) {
           autoComplete="off"
           onChange={handleChange}
         />
-      </form>
 
-      {/* Botones */}
-      <ConfirmCancelButtons
-        confirmText={loading ? <Loader /> : "Crear"}
-        cancelText={"Cancelar"}
-        confirmButtonOnClick={(e) => handleSubmit(e, setInnerModal)}
-        cancelButtonOnClick={onClose}
-      />
+        {/* Botones */}
+        <ConfirmCancelButtons
+          confirmText={loading ? <Loader /> : "Crear"}
+          cancelText={"Cancelar"}
+          confirmButtonOnClick={(e) => handleSubmit(e, setInnerModal)}
+          cancelButtonOnClick={onClose}
+        />
+      </form>
 
       {/* Modales Internas */}
       {innerModal === "success" && (
