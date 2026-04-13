@@ -21,10 +21,10 @@ export default function UserItem({
       {/* Datos del Usuario */}
       <article>
         <address className="flex items-center gap-3 not-italic font-medium dark:text-white">
-          <p className="text-xl">
+          <p className="text-base sm:text-xl md:text-xl lg:text-xl xl:text-xl">
             {user.name} {user.first_surname} {user.second_surname}
           </p>
-          <div className="flex items-center">
+          <div className="hidden sm:flex md:flex lg:flex xl:flex items-center">
             <img
               src={usersIcons.phoneIcon}
               alt=""
@@ -32,7 +32,7 @@ export default function UserItem({
             />
             <p>{user.phone}</p>
           </div>
-          <div className="flex items-center">
+          <div className="hidden sm:flex md:flex lg:flex xl:flex items-center">
             <img
               src={usersIcons.rolIcon}
               alt=""
