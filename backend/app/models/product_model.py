@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from datetime import datetime
+from typing import Optional
 
 
 class Product(BaseModel):
@@ -8,7 +9,7 @@ class Product(BaseModel):
     product_serial: str
     product_brand_name: int
     product_details_id: int
-    product_garanty_input: datetime
+    product_garanty_input: Optional[int] = None
 
 
 class UpdateProduct(BaseModel):

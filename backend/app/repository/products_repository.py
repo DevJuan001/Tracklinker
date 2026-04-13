@@ -6,19 +6,108 @@ from app.models.product_serial_model import ProductSerial, UpdateProductSerial
 from app.models.input_order_model import InputOrder
 from app.models.product_brand_model import ProductBrand
 from app.utils.periods import period_map, daily_periods
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
 
 class ProductsRepository:
 
     @staticmethod
-    def find_all_products():
+    def find_all_products(
+        start_date: str = None,
+        end_date: str = None,
+        input_order: int = None,
+        category_order: int = None,
+        subcategory_order: int = None,
+        warranty_time: int = None,
+        product_status: int = None,
+        brand: int = None,
+        product_model: int = None,
+    ):
         connection = get_connection()
         cursor = connection.cursor()
 
-        query = "SELECT * FROM get_all_products"
+        query = """
+        SELECT
+            io.input_order_id,
+            pd.product_detail_date,
+            io.input_order_bill,
+            c.category_name,
+            sc.subcategory_id,
+            sc.subcategory_name,
+            p.product_id,
+            s.supplier_name,
+            ps.product_serial,
+            pd.product_detail_model,
+            pd.product_details_id,
+            pd.product_detail_description,
+            pb.product_brand_id,
+            pb.product_brand_name,
+            ps.product_garanty_input,
+            p.product_status
+            FROM SUPPLIERS AS s
+            INNER JOIN INPUT_ORDERS AS io
+            ON s.supplier_id = io.supplier_id
+            INNER JOIN PRODUCT_SERIALS AS ps
+            ON io.input_order_id = ps.input_order_id
+            INNER JOIN PRODUCTS as p
+            ON ps.product_id = p.product_id
+            INNER JOIN SUBCATEGORIES AS sc
+            ON p.subcategory_id = sc.subcategory_id
+            INNER JOIN CATEGORIES AS c
+            ON sc.category_id = c.category_id
+            INNER JOIN PRODUCT_DETAILS AS pd
+            ON p.product_details_id = pd.product_details_id
+            INNER JOIN PRODUCT_BRANDS AS pb
+            ON pd.product_brand_id = pb.product_brand_id
+            """
+
+        filters = []
+        values = []
+
+        if start_date:
+            filters.append("DATE(pd.product_detail_date) >= %s")
+            values.append(start_date)
+
+        if end_date:
+            filters.append("DATE(pd.product_detail_date) <= %s")
+            values.append(end_date)
+
+        if input_order:
+            filters.append("io.input_order_id = %s")
+            values.append(input_order)
+
+        if category_order:
+            filters.append("c.category_id = %s")
+            values.append(category_order)
+
+        if subcategory_order:
+            filters.append("sc.subcategory_id = %s")
+            values.append(subcategory_order)
+
+        if warranty_time:
+            garanty_time = (datetime.now() + relativedelta(months=warranty_time)).date()
+            filters.append("ps.product_garanty_input <= %s")
+            values.append(garanty_time)
+
+        if product_status:
+            filters.append("p.product_status = %s")
+            values.append(product_status)
+
+        if brand:
+            filters.append("pb.product_brand_id = %s")
+            values.append(brand)
+
+        if product_model:
+            filters.append("pd.product_details_id")
+            values.append(product_model)
+
+        if filters:
+            query += " WHERE " + " AND ".join(filters)
 
         try:
-            cursor.execute(query)
+            print(f"{query}")
+            cursor.execute(query, values)
             result = cursor.fetchall()
             # Mapeamos cada item que devuelve la query y le agregamos una llave para identificarlos
             data = [
@@ -159,16 +248,20 @@ class ProductsRepository:
         cursor = connection.cursor()
         try:
             cursor.execute("""
-            SELECT 
-                product_details_id,
-                product_detail_model
-            FROM PRODUCT_DETAILS
+            SELECT DISTINCT
+                p.subcategory_id,
+                pd.product_details_id,
+                pd.product_detail_model
+            FROM PRODUCT_DETAILS as pd
+            INNER JOIN PRODUCTS as p
+                ON pd.product_details_id = p.product_details_id
             """)
 
             data = [
-                {
-                    "id": item[0],
-                    "model": item[1]
+                {   
+                    "subcategory_id": item[0],
+                    "id": item[1],
+                    "model": item[2]
                 }
                 for item in cursor.fetchall()
             ]
@@ -265,6 +358,11 @@ class ProductsRepository:
         connection = get_connection()
         cursor = connection.cursor()
         try:
+            garanty_time = None
+
+            if data["product_garanty_input"] is not None:
+                garanty_time = datetime.now(
+                ) + relativedelta(months=data["product_garanty_input"])
 
             cursor.execute("""
             SELECT product_id FROM PRODUCT_SERIALS WHERE product_serial = %s 
@@ -287,14 +385,14 @@ class ProductsRepository:
                                data["product_serial"],
                                data["product_id"],
                                data["input_order_id"],
-                               data["product_garanty_input"]
+                               garanty_time
                            ))
 
             connection.commit()
 
             return None, True, f"Serial del producto creado correctamente"
-        except Exception:
-            return f"Error al crear el serial del producto", False, None
+        except Exception as e:
+            return f"Error al crear el serial del producto {e}", False, None
 
     @staticmethod
     def update_product_serial(serial_data: UpdateProductSerial, cursor):
@@ -309,17 +407,17 @@ class ProductsRepository:
                 product_garanty_input = %s
             WHERE product_id = %s
             """,
-            (
-                data["product_serial"],
-                data["product_id"],
-                data["input_order_id"],
-                data["product_garanty_input"],
-                data["product_id"],
-            ))
+                           (
+                               data["product_serial"],
+                               data["product_id"],
+                               data["input_order_id"],
+                               data["product_garanty_input"],
+                               data["product_id"],
+                           ))
 
             return None, True, f"Serial del producto actualizado correctamente"
-        except Exception:
-            return f"Error al actualizar el serial del producto", False, None
+        except Exception as e:
+            return f"Error al actualizar el serial del producto {e}", False, None
 
     @staticmethod
     def create_product_brand(brand_data: ProductBrand):
@@ -455,9 +553,9 @@ class ProductsRepository:
             connection.commit()
 
             return None, True, f"Producto actualizado correctamente"
-        except Exception:
+        except Exception as e:
             connection.rollback()
-            return f"Error al intentar actualizar el producto", False, None
+            return f"Error al intentar actualizar el producto {e}", False, None
         finally:
             cursor.close()
             connection.close()
@@ -479,7 +577,7 @@ class ProductsRepository:
                 cursor.close()
                 connection.close()
                 return "Producto no encontrado", False, None
-            
+
             if product[0] == 0 and (product_data["product_status"] == 2 or product_data["product_status"] == 3):
                 cursor.close()
                 connection.close()

@@ -13,8 +13,28 @@ router = APIRouter(
 
 # Endpoint para obtener todos los productos
 @router.get("/")
-def get_all_products():
-    return ProductsController.get_all_products()
+def get_all_products(
+    start_date: str = None,
+    end_date: str = None,
+    input_order: int = None,
+    category_order: int = None,
+    subcategory_order: int = None,
+    warranty_time: int = None,
+    product_status: int = None,
+    brand: int = None,
+    product_model: int = None,
+):
+    return ProductsController.get_all_products(
+        start_date,
+        end_date,
+        input_order,
+        category_order,
+        subcategory_order,
+        warranty_time,
+        product_status,
+        brand,
+        product_model,
+    )
 
 # Endpoint para obtener todas las marcas de productos
 @router.get("/brands")
