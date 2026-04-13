@@ -1,9 +1,12 @@
 import { apiRoutes } from "../../../config/apiRoutes";
+import { buildQueryParams } from "../../../utils/buildQueryParams";
 import { fetchWithAuth } from "../../../utils/fetchWithAuth";
 
-export async function getSubcategories() {
+export async function getSubcategories(filters = {}) {
+  const params = buildQueryParams(filters);
+
   const res = await fetchWithAuth(
-    `${apiRoutes.apiUrl}${apiRoutes.subcategories}/`,
+    `${apiRoutes.apiUrl}${apiRoutes.subcategories}/?${params}`,
     {
       method: "GET",
     },
