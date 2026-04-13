@@ -53,8 +53,8 @@ class GuaranteeRepository:
                 for item in results
             ]
             return None, data
-        except Exception as e:
-            return f"Error al ejecutar la consulta: {e}", None
+        except Exception:
+            return f"Error al ejecutar la consulta", None
         finally:
             cursor.close()
             connection.close()
@@ -73,8 +73,8 @@ class GuaranteeRepository:
             cursor.execute(query, (warranty_incidents_id,))
             result = cursor.fetchall()
             return None, result
-        except Exception as e:
-            return f"Error al ejecutar la consulta: {e}", None
+        except Exception:
+            return f"Error al ejecutar la consulta", None
         finally:
             cursor.close()
             connection.close()
@@ -136,7 +136,7 @@ class GuaranteeRepository:
                 ))
 
             error, success, message = ProductsRepository.update_product_status(
-                {"product_id": product_id[0], "product_status": 3})
+                {"product_id": product_id[0], "product_status": 4})
 
             if error:
                 raise HTTPException(status_code=500, detail=error)
@@ -153,9 +153,9 @@ class GuaranteeRepository:
             connection.commit()
 
             return None, True, "Incidencia creado correctamente"
-        except Exception as e:
+        except Exception:
             connection.rollback()
-            return f"Error al ejecutar la consulta: {e}", None, None
+            return f"Error al ejecutar la consulta", None, None
         finally:
             cursor.close()
             connection.close()
@@ -179,6 +179,29 @@ class GuaranteeRepository:
         WHERE warranty_incidents_id = %s"""
 
         try:
+            if data["warranty_status"] == 3:
+                cursor.execute("""
+                SELECT
+                    product_id
+                FROM PRODUCT_SERIALS
+                WHERE product_serial = %s
+                """, (data["product_serial"],))
+
+                row = cursor.fetchone()
+
+                if not row:
+                    return "Serial no encontrado", False, None
+                
+                product_id = row["product_id"]
+
+                error, success, message = ProductsRepository.update_product_status({
+                    "product_status": 3,
+                    "product_id": product_id
+                })
+
+                if error:
+                    return f"Error al ejecutar la  de estado", False, None
+
             cursor.execute(query, (
                 data["warranty_customer"],
                 data["warranty_phone"],
@@ -192,8 +215,9 @@ class GuaranteeRepository:
 
             connection.commit()
             return None, True, "Incidencia actualizada correctamente"
-        except Exception as e:
-            return f"Error al ejecutar la consulta: {e}", False, None
+        except Exception:
+            connection.rollback()
+            return f"Error al ejecutar la consulta", False, None
         finally:
             cursor.close()
             connection.close()
@@ -209,8 +233,8 @@ class GuaranteeRepository:
             cursor.execute(query, (warranty_incidents_id,))
             connection.commit()
             return None, True, "Incidencia eliminada correctamente"
-        except Exception as e:
-            return f"Error al ejecutar la consulta: {e}", None, None
+        except Exception:
+            return f"Error al ejecutar la consulta", None, None
         finally:
             cursor.close()
             connection.close()
@@ -229,8 +253,8 @@ class GuaranteeRepository:
             cursor.execute(query)
             results = cursor.fetchall()
             return None, results
-        except Exception as e:
-            return f"Error al ejecutar la consulta: {e}", None
+        except Exception:
+            return f"Error al ejecutar la consulta", None
         finally:
             cursor.close()
             connection.close()
@@ -270,7 +294,7 @@ class GuaranteeRepository:
                 for item in results
             ]
             return None, data
-        except Exception as e:
+        except Exception:
             return f"Error al ejecutar la consulta", None
         finally:
             cursor.close()
@@ -315,8 +339,8 @@ class GuaranteeRepository:
                 for item in results
             ]
             return None, data
-        except Exception as e:
-            return f"Error al ejecutar la consulta: {e}", None
+        except Exception:
+            return f"Error al ejecutar la consulta", None
         finally:
             cursor.close()
             connection.close()
@@ -339,8 +363,8 @@ class GuaranteeRepository:
             cursor.execute(query)
             results = cursor.fetchall()
             return None, results
-        except Exception as e:
-            return f"Error al ejecutar la consulta: {e}", None
+        except Exception:
+            return f"Error al ejecutar la consulta", None
         finally:
             cursor.close()
             connection.close()
@@ -377,8 +401,8 @@ class GuaranteeRepository:
             cursor.execute(query)
             results = cursor.fetchall()
             return None, results
-        except Exception as e:
-            return f"Error al ejecutar la consulta: {e}", None
+        except Exception:
+            return f"Error al ejecutar la consulta", None
         finally:
             cursor.close()
             connection.close()
