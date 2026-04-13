@@ -178,7 +178,7 @@ class OutputDetailsRepository:
             connection.close()
             return "Detalle de salida no encontrado", False, None
 
-        query = "UPDATE OUTPUT_ORDERS SET out_order_status = 0 WHERE out_order_id = %s"
+        query = "UPDATE OUTPUT_ORDERS SET out_order_status = 1 WHERE out_order_id = %s"
 
         try:
             cursor.execute(query, (out_order_id,))
@@ -204,7 +204,7 @@ class OutputDetailsRepository:
             connection.close()
             return "Detalle de salida no encontrado", False, None
 
-        query = "UPDATE OUTPUT_ORDERS SET out_order_status = 1 WHERE out_order_id = %s"
+        query = "UPDATE OUTPUT_ORDERS SET out_order_status = 2 WHERE out_order_id = %s"
 
         try:
             cursor.execute(query, (out_order_id,))
