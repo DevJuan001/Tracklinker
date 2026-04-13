@@ -11,6 +11,8 @@ class SubcategoriesRepository:
         start_date: str = None,
         end_date: str = None,
         category_order: int = None,
+        status: int = None,
+        name_order: str = None,
     ):
         connection = get_connection()
         cursor = connection.cursor(dictionary=True)
@@ -21,7 +23,8 @@ class SubcategoriesRepository:
         c.category_name,
         s.subcategory_id,
         s.subcategory_name,
-        s.subcategory_date
+        s.subcategory_date,
+        s.subcategory_status
         FROM SUBCATEGORIES AS s
         INNER JOIN CATEGORIES AS c 
             ON s.category_id = c.category_id
@@ -41,6 +44,15 @@ class SubcategoriesRepository:
             filters.append("c.category_id = %s")
             values.append(category_order)
 
+        if name_order == "asc":
+            query += " ORDER BY s.subcategory_name ASC"
+        elif name_order == "desc":
+            query += " ORDER BY s.subcategory_name DESC"
+
+        if status:
+            filters.append("s.subcategory_status = %s")
+            values.append(status)
+
         if filters:
             query += " WHERE " + " AND ".join(filters)
 
@@ -55,10 +67,35 @@ class SubcategoriesRepository:
                     "subcategory_id": item["subcategory_id"],
                     "subcategory_name": item["subcategory_name"],
                     "subcategory_date": date_formatter(item["subcategory_date"]),
+                    "subcategory_status": item["subcategory_status"]
                 }
                 for item in result
             ]
             return None, data
+        except Exception:
+            return f"Error al ejecutar la consulta", None
+        finally:
+            cursor.close()
+            connection.close()
+
+    @staticmethod
+    def find_categories():
+        connection = get_connection()
+        cursor = connection.cursor(dictionary=True)
+
+        query = """
+        SELECT
+            category_id,
+            category_name
+        FROM CATEGORIES
+        WHERE category_status = 2 
+        """
+
+        try:
+            cursor.execute(query)
+            result = cursor.fetchall()
+
+            return None, result
         except Exception:
             return f"Error al ejecutar la consulta", None
         finally:
@@ -154,19 +191,42 @@ class SubcategoriesRepository:
             cursor.close()
             connection.close()
 
-    # Eliminar una subcategoría por el ID
     @staticmethod
-    def delete_subcategory(subcategory_id: int):
+    def disable_subcategory(subcategory_id: int):
         connection = get_connection()
         cursor = connection.cursor()
 
         # Petición a la base de datos
-        query = "DELETE FROM SUBCATEGORIES WHERE subcategory_id = %s"
+        query = """
+        UPDATE SUBCATEGORIES SET 
+            subcategory_status = 1
+        WHERE subcategory_id = %s"""
 
         try:
             cursor.execute(query, (subcategory_id,))
             connection.commit()
-            return None, cursor.rowcount
+            return None, "Categoria deshabiltiada correctamente"
+        except Exception:
+            return f"Error al ejecutar la consulta", None
+        finally:
+            cursor.close()
+            connection.close()
+
+    @staticmethod
+    def enable_subcategory(subcategory_id: int):
+        connection = get_connection()
+        cursor = connection.cursor()
+
+        # Petición a la base de datos
+        query = """
+        UPDATE SUBCATEGORIES SET 
+            subcategory_status = 2
+        WHERE subcategory_id = %s"""
+
+        try:
+            cursor.execute(query, (subcategory_id,))
+            connection.commit()
+            return None, "Categoria deshabiltiada correctamente"
         except Exception:
             return f"Error al ejecutar la consulta", None
         finally:
