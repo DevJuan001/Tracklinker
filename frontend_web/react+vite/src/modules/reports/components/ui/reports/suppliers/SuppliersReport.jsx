@@ -1,6 +1,8 @@
 // Hooks
 import { useState } from "react";
 import { useSuppliersData } from "../../../../hooks/suppliers/useSuppliersData";
+// Utils
+import { getDateRange } from "../../../../../../utils/getDateRange";
 // Components
 import KpisContainer from "../../KpisContainer";
 import ReportsContainer from "../../ReportsContainer";
@@ -14,6 +16,8 @@ import SuppliersTable from "./SuppliersTable";
 export default function SuppliersReport({ setReport }) {
   const { suppliersData } = useSuppliersData();
   const [period, setPeriod] = useState("1a");
+  const { startDate, endDate } = getDateRange(period);
+
   return (
     <section className="w-full h-full flex flex-col gap-2 animate-blurUp">
       <ReportsTopSection
@@ -25,7 +29,7 @@ export default function SuppliersReport({ setReport }) {
       {suppliersData.map((item) => (
         <ReportsContainer
           reportsName={"Proveedores"}
-          reportsDate={"16 De Marzo - 23 De Marzo 2025"}
+          reportsDate={`${startDate} - ${endDate}`}
         >
           {/* Cards o KPIs principales */}
           <KpisContainer

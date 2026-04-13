@@ -1,3 +1,4 @@
+import { productStatusConfig } from "../../../../../products/constants/productStatusConfig";
 import { useProductsTableData } from "../../../../hooks/products/useProductsTableData";
 
 export default function ProductsTable() {
@@ -10,6 +11,7 @@ export default function ProductsTable() {
           <th className="font-normal text-start pl-4">Serial</th>
           <th className="font-normal text-start pl-4">Marca</th>
           <th className="font-normal text-start pl-4">Fecha de entrada</th>
+          <th className="font-normal text-start pl-4">Estado</th>
         </tr>
       </thead>
       {productsData.map((product) => (
@@ -21,10 +23,17 @@ export default function ProductsTable() {
             <th className="font-normal text-start pl-4">
               {product.input_date}
             </th>
+            <th className="font-normal text-start pl-4">
+              <div
+                className={`flex items-center py-1 px-2 gap-1 rounded-md ${productStatusConfig[product.status]?.styles}`}
+              >
+                <img src={productStatusConfig[product.status]?.icon} alt="" />
+                <span>{productStatusConfig[product.status]?.text}</span>
+              </div>
+            </th>
           </tr>
         </tbody>
       ))}
     </table>
   );
 }
-  

@@ -1,6 +1,8 @@
 // Hooks
 import { useState } from "react";
 import { useOutputsData } from "../../../../hooks/outputs/useOutputsData";
+// Utils
+import { getDateRange } from "../../../../../../utils/getDateRange";
 // Components
 import KpisContainer from "../../KpisContainer";
 import ReportsContainer from "../../ReportsContainer";
@@ -14,6 +16,8 @@ import OutputsTable from "./OutputsTable";
 export default function OutputsReport({ setReport }) {
   const { outputsData } = useOutputsData();
   const [period, setPeriod] = useState("1a");
+  const { startDate, endDate } = getDateRange(period);
+
   return (
     <section className="w-full h-full flex flex-col gap-2 animate-blurUp">
       <ReportsTopSection
@@ -25,7 +29,7 @@ export default function OutputsReport({ setReport }) {
       {outputsData.map((item) => (
         <ReportsContainer
           reportsName={"Salidas"}
-          reportsDate={"16 De Marzo - 23 De Marzo 2025"}
+          reportsDate={`${startDate} - ${endDate}`}
         >
           {/* Cards o KPIs principales */}
           <KpisContainer

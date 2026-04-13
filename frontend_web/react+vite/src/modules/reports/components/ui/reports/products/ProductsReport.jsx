@@ -1,6 +1,8 @@
 // Hooks
 import { useState } from "react";
 import { useProductsData } from "../../../../hooks/products/useProductsData";
+// Utils
+import { getDateRange } from "../../../../../../utils/getDateRange";
 // Components
 import KpisContainer from "../../KpisContainer";
 import ReportsContainer from "../../ReportsContainer";
@@ -14,6 +16,8 @@ import ProductsAreaChart from "./ProductsAreaChart";
 export default function ProductsReport({ setReport }) {
   const { productsData } = useProductsData();
   const [period, setPeriod] = useState("1a");
+  const { startDate, endDate } = getDateRange(period);
+
   return (
     <section className="w-full h-full flex flex-col gap-2 animate-blurUp">
       <ReportsTopSection
@@ -26,7 +30,7 @@ export default function ProductsReport({ setReport }) {
       {productsData.map((item) => (
         <ReportsContainer
           reportsName={"Productos"}
-          reportsDate={"16 De Marzo - 23 De Marzo 2025"}
+          reportsDate={`${startDate} - ${endDate}`}
         >
           {/* Cards o KPIs principales */}
           <KpisContainer
@@ -36,8 +40,8 @@ export default function ProductsReport({ setReport }) {
             secondKpiValue={item.recent_products}
             thirdKpiName={"En garantía"}
             thirdKpiValue={item.warranties_products}
-            fourthKpiName={"En salidas"}
-            fourthKpiValue={item.transformations_products}
+            fourthKpiName={"Vendidos"}
+            fourthKpiValue={item.sold_products}
           />
 
           <ReportCard name={"Crecimiento"} colSpan={12}>

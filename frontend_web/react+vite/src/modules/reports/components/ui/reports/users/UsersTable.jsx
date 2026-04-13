@@ -24,11 +24,12 @@ export default function UsersTable() {
             <th className="font-normal text-start pl-4">{user.phone}</th>
             <th className="font-normal text-start pl-4">{user.date}</th>
             <th className="font-normal text-start pl-4">
-              <span
-                className={`px-2 py-1 rounded-md ${userStatus[user.status]?.styles}`}
+              <div
+                className={`flex items-center px-2 py-1 gap-1 rounded-md ${userStatus[user.status]?.styles}`}
               >
-                {userStatus[user.status]?.text}
-              </span>
+                <img src={userStatus[user.status]?.icon} alt="" />
+                <span>{userStatus[user.status]?.text}</span>
+              </div>
             </th>
           </tr>
         </tbody>

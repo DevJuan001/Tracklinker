@@ -17,14 +17,17 @@ export default function CategoriesTable() {
         <tbody>
           <tr className="pb-1 text-sm border-b dark:border-[#94909028]">
             <th className="font-normal text-start pl-4">{category.name}</th>
-            <th className="font-normal text-start pl-4">{category.description}</th>
+            <th className="font-normal text-start pl-4">
+              {category.description}
+            </th>
             <th className="font-normal text-start pl-4">{category.date}</th>
             <th className="font-normal text-start pl-4">
-              <span
-                className={`px-2 py-1 rounded-md ${userStatus[category.status]?.styles}`}
+              <div
+                className={`flex items-center px-2 py-1 gap-1 rounded-md ${userStatus[category.status]?.styles}`}
               >
-                {userStatus[category.status]?.text}
-              </span>
+                <img src={userStatus[category.status]?.icon} alt="" />
+                <span>{userStatus[category.status]?.text}</span>
+              </div>
             </th>
           </tr>
         </tbody>
