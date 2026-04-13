@@ -1,29 +1,30 @@
 // Hooks
 import { useState } from "react";
-import { useDeleteCategory } from "../../hooks/useDeleteCategory";
+import { useDisableCategory } from "../../hooks/useDisableCategory";
 // Componentes
 import ConfirmCancelButtons from "../../../../globals/components/modals/ConfirmCancelButtons";
 // Modales
 import ErrorModal from "../../../../globals/components/modals/ErrorModal";
 import SuccessModal from "../../../../globals/components/modals/SuccessModal";
+import Loader from "../../../../globals/components/ui/Loader";
 
-export default function DeleteCategoryModal({ category, onClose }) {
+export default function DisableCategoryModal({ category, onClose }) {
   const [innerModal, setInnerModal] = useState(null);
-  const { handleDelete } = useDeleteCategory(category.category_id);
+  const { loading, handleDisable } = useDisableCategory(category.category_id);
   return (
     <section className="flex flex-col justify-center items-center dark:text-white">
       <p>
-        ¿Seguro que deseas eliminar la categoría{" "}
+        ¿Seguro que deseas deshabilitar la categoría{" "}
         <span className="font-medium">{category.category_name}</span>?
       </p>
 
       {/* Botones */}
       <ConfirmCancelButtons
-        confirmText={"Eliminar"}
+        confirmText={loading ? <Loader /> : "Deshabilitar"}
         confirmBgColor="red-600"
         confirmDarkBgColor=""
         cancelText={"Cancelar"}
-        confirmButtonOnClick={() => handleDelete(setInnerModal)}
+        confirmButtonOnClick={() => handleDisable(setInnerModal)}
         cancelButtonOnClick={onClose}
       />
 
@@ -31,9 +32,9 @@ export default function DeleteCategoryModal({ category, onClose }) {
       {innerModal === "success" && (
         <SuccessModal
           isOpen={true}
-          confirmTitle={"Categoría eliminada con éxito!"}
+          confirmTitle={"Categoría deshabilitada con éxito!"}
           confirmText={
-            "La categoría fue eliminada correctamente. Toca el botón para volver."
+            "La categoría fue deshabilitada correctamente. Toca el botón para volver."
           }
           confirmButtonText={"Volver a la página"}
           onClose={() => {
