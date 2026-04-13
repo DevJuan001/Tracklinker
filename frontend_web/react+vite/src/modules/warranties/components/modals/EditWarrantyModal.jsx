@@ -91,11 +91,11 @@ export default function EditWarrantyModal({
           onChange={handleChange}
           options={[
             {
-              value: 0,
+              value: 1,
               label: "Pendiente",
             },
-            { value: 1, label: "En proceso" },
-            { value: 2, label: "Completada" },
+            { value: 2, label: "En proceso" },
+            { value: 3, label: "Completada" },
           ]}
         />
       </form>
