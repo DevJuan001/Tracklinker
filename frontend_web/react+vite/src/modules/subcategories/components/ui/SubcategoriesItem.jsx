@@ -1,10 +1,13 @@
-import SubcategoriesActions from "./SubcategoriesActions";
+import ActionButtons from "../../../../globals/components/ui/ActionButtons";
+import { actionsIcons } from "../../../../assets/icons/actionsIcons";
+import { categoryStatusConfig } from "../../../categories/constants/categoryStatusConfig";
 import { asideIcons } from "../../../../assets/icons/asideIcons";
 
 export default function SubcategoriesItem({
   subcategory,
   editButtonOnClick,
-  deleteButtonOnClick,
+  openModal,
+  refetch,
   moreInfoOnClick,
 }) {
   return (
@@ -23,13 +26,44 @@ export default function SubcategoriesItem({
             <asideIcons.categoriesIcon className="w-5 h-5 stroke-[90] stroke-black dark:stroke-white" />
             <p>{subcategory.category_name}</p>
           </div>
+          <div
+            className={`flex items-center px-2 py-0.5 gap-1 rounded-full text-xs border ${categoryStatusConfig[subcategory.subcategory_status]?.styles}`}
+          >
+            <img
+              src={categoryStatusConfig[subcategory.subcategory_status]?.icon}
+              alt=""
+              className="w-4 h-4"
+            />
+            <span>
+              {categoryStatusConfig[subcategory.subcategory_status]?.text}
+            </span>
+          </div>
         </address>
       </article>
-      <SubcategoriesActions
+      <ActionButtons
         editButtonOnClick={editButtonOnClick}
-        deleteButtonOnClick={deleteButtonOnClick}
+        deleteButtonOnClick={(e) => {
+          e.stopPropagation();
+          openModal(
+            subcategory,
+            categoryStatusConfig[subcategory.subcategory_status]?.modalType,
+            refetch,
+          );
+        }}
+        visibilityIcon={
+          categoryStatusConfig[subcategory.subcategory_status]?.visibilityIcon
+        }
         moreInfoOnClick={moreInfoOnClick}
-      />
+      >
+        {/* Botón de más información del usuario */}
+        <button onClick={moreInfoOnClick}>
+          <img
+            src={actionsIcons.moreInfoIcon}
+            alt=""
+            className="transition-all duration-300 hover:scale-125"
+          />
+        </button>
+      </ActionButtons>
     </li>
   );
 }
