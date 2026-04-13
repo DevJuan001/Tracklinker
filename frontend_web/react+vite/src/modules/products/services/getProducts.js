@@ -1,10 +1,16 @@
 import { apiRoutes } from "../../../config/apiRoutes";
 import { fetchWithAuth } from "../../../utils/fetchWithAuth";
+import { buildQueryParams } from "../../../utils/buildQueryParams";
 
-export async function getProducts() {
-  const res = await fetchWithAuth(`${apiRoutes.apiUrl}${apiRoutes.products}/`, {
-    method: "GET",
-  });
+export async function getProducts(filters = {}) {
+  const params = buildQueryParams(filters);
+
+  const res = await fetchWithAuth(
+    `${apiRoutes.apiUrl}${apiRoutes.products}/?${params}`,
+    {
+      method: "GET",
+    },
+  );
 
   // Validamos si la respuesta fue OK
   if (!res.ok) {
