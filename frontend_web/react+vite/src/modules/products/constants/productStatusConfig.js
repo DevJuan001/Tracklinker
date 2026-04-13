@@ -2,7 +2,7 @@ import { usersIcons } from "../../../assets/icons/usersIcons";
 import { productsIcons } from "../../../assets/icons/productsIcons";
 
 export const productStatusConfig = {
-  0: {
+  1: {
     text: "Deshabilitado",
     modalType: "disable",
     optionText: "Deshabilitar",
@@ -12,7 +12,7 @@ export const productStatusConfig = {
     styles:
       "w-32 bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400",
   },
-  1: {
+  2: {
     text: "Activo",
     modalType: "enable",
     optionText: "Habilitar",
@@ -22,7 +22,7 @@ export const productStatusConfig = {
     styles:
       "w-20 bg-green-100 text-green-600 dark:bg-[#00ff151f] dark:text-[#00ff3779]",
   },
-  2: {
+  3: {
     text: "Vendido",
     optionText: "Vender",
     optionStyles: "hover:bg-blue-50 text-blue-600 dark:text-blue-400",
@@ -31,7 +31,7 @@ export const productStatusConfig = {
     styles:
       "w-20 bg-blue-100 text-blue-600 dark:bg-[#1e3a5f] dark:text-[#60a5fa]",
   },
-  3: {
+  4: {
     text: "En garantía",
     optionText: "Agregar garantía",
     optionStyles: "hover:bg-amber-50 text-amber-600 dark:text-amber-400",
