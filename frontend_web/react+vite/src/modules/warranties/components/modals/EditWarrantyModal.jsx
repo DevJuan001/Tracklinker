@@ -32,7 +32,7 @@ export default function EditWarrantyModal({
 
   return (
     <section className="flex flex-col items-center">
-      <form className="flex flex-col gap-1 w-72">
+      <form className="w-full flex flex-col gap-1 w-72">
         <FormField
           name={"product_serial"}
           labelText={"Serial"}
