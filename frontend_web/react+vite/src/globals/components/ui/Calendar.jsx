@@ -128,7 +128,7 @@ export default function Calendar({ onClose, value, onChange, triggerRef }) {
                   isSelected(day)
                     ? "bg-black text-white font-bold text-lg dark:bg-white dark:text-black hover:bg-gray-200"
                     : isToday(day)
-                      ? "bg-gray-100 dark:bg-[#ffffff15] font-medium dark:text-white hover:bg-gray-200"
+                      ? "bg-gray-100 dark:bg-[#ffffff15] dark:bg-[#75777e60] font-medium dark:text-white hover:bg-gray-200"
                       : "text-[#44474e] hover:bg-gray-200 dark:hover:bg-[#ffffff15] dark:text-white hover:font-bold"
                 }`}
               >
