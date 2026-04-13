@@ -1,16 +1,12 @@
 import { apiRoutes } from "../../../config/apiRoutes";
 import { fetchWithAuth } from "../../../utils/fetchWithAuth";
+import { buildQueryParams } from "../../../utils/buildQueryParams";
 
 export async function getUsers(signal, filters = {}) {
-  const params = new URLSearchParams();
-  
-  if (filters.name_order) params.append("name_order", filters.name_order);
-  if (filters.start_date) params.append("start_date", filters.start_date);
-  if (filters.end_date) params.append("end_date", filters.end_date);
-  if (filters.role_order) params.append("role_order", filters.role_order);
+  const params = buildQueryParams(filters);
 
   const res = await fetchWithAuth(
-    `${apiRoutes.apiUrl}${apiRoutes.users}/?${params.toString()}`,
+    `${apiRoutes.apiUrl}${apiRoutes.users}/?${params}`,
     {
       method: "GET",
       credentials: "include",
