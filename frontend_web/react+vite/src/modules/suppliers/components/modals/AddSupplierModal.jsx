@@ -20,7 +20,7 @@ export default function AddSupplierModal({ onClose }) {
   });
   return (
     <section className="flex flex-col items-center">
-      <form action="" className="flex flex-col gap-1">
+      <form action="" className="w-full flex flex-col gap-1">
         <FormField
           onChange={handleChange}
           name={"supplier_name"}
