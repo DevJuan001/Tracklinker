@@ -28,7 +28,7 @@ export default function EditUserInfoModal({ user, onClose }) {
 
   return (
     <section className="flex flex-col items-center">
-      <form action="" className="flex flex-col gap-2">
+      <form action="" className="w-full flex flex-col gap-2 px-20">
         <SelectMenu
           name={"rol_id"}
           value={form.rol_id}
@@ -95,8 +95,8 @@ export default function EditUserInfoModal({ user, onClose }) {
           spanText={"Estado"}
           onChange={handleChange}
           options={[
-            { value: 0, label: "Deshabilitado" },
-            { value: 1, label: "Activo" },
+            { value: 1, label: "Deshabilitado" },
+            { value: 2, label: "Activo" },
           ]}
         />
       </form>

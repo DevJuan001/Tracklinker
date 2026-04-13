@@ -11,6 +11,7 @@ export default function FilterUserModal({ refetch, onClose }) {
       name_order: "",
       start_date: "",
       end_date: "",
+      status: "",
     },
     refetch,
   );
@@ -48,6 +49,17 @@ export default function FilterUserModal({ refetch, onClose }) {
             value: role.id,
             label: role.name,
           }))}
+        />
+
+        <SelectMenu
+          name={"status"}
+          value={form.status}
+          onChange={handleChange}
+          spanText={"Estado"}
+          options={[
+            { value: 1, label: "Deshabilitado" },
+            { value: 2, label: "Activo" },
+          ]}
         />
       </div>
     </FilterModal>
