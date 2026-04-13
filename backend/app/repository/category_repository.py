@@ -7,28 +7,64 @@ class CategoryRepository:
 
     # Obtener todas las categorias
     @staticmethod
-    def find_all_categories():
+    def find_all_categories(
+        name_order: str = None,
+        start_date: str = None,
+        end_date: str = None,
+        status: int = None,
+    ):
 
         connection = get_connection()
         cursor = connection.cursor(dictionary=True)
 
-        query = "SELECT category_id, category_name, category_description, category_date FROM categories"
+        query = """
+        SELECT 
+            category_id,
+            category_name,
+            category_description,
+            category_date,
+            category_status
+        FROM CATEGORIES"""
+
+        filters = []
+        values = []
+
+        if start_date:
+            filters.append("DATE(category_date) >= %s")
+            values.append(start_date)
+
+        if end_date:
+            filters.append("DATE(category_date) <= %s")
+            values.append(end_date)
+
+        if name_order == "asc":
+            query += " ORDER BY category_name ASC"
+        elif name_order == "desc":
+            query += " ORDER BY category_name DESC"
+
+        if status:
+            filters.append("category_status = %s")
+            values.append(status)
+        
+        if filters:
+            query += " WHERE " + " AND ".join(filters)
 
         try:
-            cursor.execute(query)
+            cursor.execute(query, values)
             result = cursor.fetchall()
             data = [
                 {
                     "category_id": item["category_id"],
                     "category_name": item["category_name"],
                     "category_description": item["category_description"],
-                    "category_date": date_formatter(item["category_date"])
+                    "category_date": date_formatter(item["category_date"]),
+                    "category_status": item["category_status"]
                 }
                 for item in result
             ]
             return None, data
         except Exception:
-            return f"Error al ejecutar la consulta: {e}", None
+            return f"Error al ejecutar la consulta", None
         finally:
             cursor.close()
             connection.close()
@@ -129,7 +165,7 @@ class CategoryRepository:
             connection.close()
 
     @staticmethod
-    def delete(category_id: int):
+    def disable(category_id: int):
         connection = get_connection()
         cursor = connection.cursor()
 
@@ -141,12 +177,43 @@ class CategoryRepository:
             connection.close()
             return "Categoría no encontrada", False, None
 
-        query = "DELETE FROM CATEGORIES WHERE category_id = %s"
+        query = """
+        UPDATE CATEGORIES SET
+            category_status = 1
+        WHERE category_id = %s"""
 
         try:
             cursor.execute(query, (category_id,))
             connection.commit()
-            return None, True, "Categoría eliminada correctamente"
+            return None, True, "Categoría deshabilitada correctamente"
+        except Exception:
+            return f"Error al intentar ejecutar la consulta", False, None
+        finally:
+            cursor.close()
+            connection.close()
+
+    @staticmethod
+    def enable(category_id: int):
+        connection = get_connection()
+        cursor = connection.cursor()
+
+        cursor.execute(
+            "SELECT * FROM CATEGORIES WHERE category_id = %s", (category_id,))
+        category = cursor.fetchone()
+        if not category:
+            cursor.close()
+            connection.close()
+            return "Categoría no encontrada", False, None
+
+        query = """
+        UPDATE CATEGORIES SET
+            category_status = 2
+        WHERE category_id = %s"""
+
+        try:
+            cursor.execute(query, (category_id,))
+            connection.commit()
+            return None, True, "Categoría habilitada correctamente"
         except Exception:
             return f"Error al intentar ejecutar la consulta", False, None
         finally:

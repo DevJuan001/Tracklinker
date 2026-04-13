@@ -10,6 +10,7 @@ export default function SubcategoriesList({
 }) {
   const noSubcategories = subcategories.length === 0 && !loading;
   const isFirstLoad = subcategories.length === 0 && loading;
+
   return (
     /* Contenedor de las subcategorías */
     <section className="max-h-[95%] max-w-full overflow-x-auto overflow-y-auto overflow-hidden">
@@ -31,6 +32,8 @@ export default function SubcategoriesList({
             <SubcategoriesItem
               key={subcategory.subcategory_id}
               subcategory={subcategory}
+              openModal={openModal}
+              refetch={refetch}
               moreInfoOnClick={(e) => {
                 e.stopPropagation();
                 openModal(subcategory, "info", refetch);
@@ -38,10 +41,6 @@ export default function SubcategoriesList({
               editButtonOnClick={(e) => {
                 e.stopPropagation();
                 openModal(subcategory, "edit", refetch);
-              }}
-              deleteButtonOnClick={(e) => {
-                e.stopPropagation();
-                openModal(subcategory, "delete", refetch);
               }}
             />
           ))

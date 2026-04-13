@@ -5,8 +5,18 @@ from fastapi import HTTPException
 class CategoryController:
 
     @staticmethod
-    def get_all_categories():
-        error, categories = CategoryRepository.find_all_categories()
+    def get_all_categories(
+        name_order: str = None,
+        start_date: str = None,
+        end_date: str = None,
+        status: int = None,
+    ):
+        error, categories = CategoryRepository.find_all_categories(
+            name_order,
+            start_date,
+            end_date,
+            status,
+        )
 
         if error:
             raise HTTPException(status_code=400, detail=error)
@@ -46,12 +56,22 @@ class CategoryController:
             "success": success,
             "message": message
         }
-
+    
     @staticmethod
-    def delete_category(category_id: int):
-        error, success, message = CategoryRepository.delete(category_id)
+    def enable_category(category_id: int):
+        error, success, message = CategoryRepository.enable(category_id)
         if error:
-            raise HTTPException(status_code=404, detail=error)
+            raise HTTPException(status_code=400, detail=error)
+        return {
+            "success": success,
+            "message": message
+        }
+    
+    @staticmethod
+    def disable_category(category_id: int):
+        error, success, message = CategoryRepository.disable(category_id)
+        if error:
+            raise HTTPException(status_code=400, detail=error)
         return {
             "success": success,
             "message": message

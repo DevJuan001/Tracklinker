@@ -7,9 +7,9 @@ export function useCategories() {
   const [error, setError] = useState(null);
 
   // Esta función llama al service getCategories para obtener las categorías
-  async function fetchCategories() {
+  async function fetchCategories(filters) {
     try {
-      const data = await getCategoriesService();
+      const data = await getCategoriesService(filters);
       setCategories(data);
       setLoading(false);
     } catch (error) {

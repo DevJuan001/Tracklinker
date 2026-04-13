@@ -1,10 +1,13 @@
 // Hooks
+import { useState } from "react";
 import { useWarranties } from "./hooks/useWarranties";
 import { useModal } from "../../globals/hooks/useModal";
+import { useSearch } from "../../globals/hooks/useSearch";
 // Iconos
 import { warrantiesIcons } from "../../assets/icons/warrantiesIcons";
 // Componentes
 import Layout from "../../globals/components/Layout/Layout";
+import SearchBar from "../../globals/components/ui/SearchBar";
 import WarrantiesTable from "./components/ui/WarrantiesTable";
 import TopSection from "../../globals/components/ui/TopSection";
 // Modales
@@ -13,14 +16,16 @@ import HelpModal from "../../globals/components/modals/HelpModal";
 import MoreWarrantyInfo from "./components/modals/MoreWarrantyInfo";
 import AddWarrantyModal from "./components/modals/AddWarrantyModal";
 import EditWarrantyModal from "./components/modals/EditWarrantyModal";
-import FilterModal from "../../globals/components/modals/FilterModal";
 import DeleteWarrantyModal from "./components/modals/DeleteWarrantyModal";
+import FilterWarrantyModal from "./components/modals/FilterWarrantyModal";
 import ProfileModal from "../../globals/components/modals/profileModal/ProfileModal";
 
 export default function WarrantiesPage() {
   const { isOpen, modalData, modalType, refetch, openModal, closeModal } =
     useModal();
   const { warranties, fetchWarranties } = useWarranties();
+  const [search, setSearch] = useState("");
+  const filteredWarranties = useSearch(warranties, search);
 
   return (
     <Layout
@@ -35,9 +40,12 @@ export default function WarrantiesPage() {
         addButtonText={"Agregar Garantía"}
         createOnClick={() => openModal(null, "add")}
         filterOnClick={() => openModal(null, "filter")}
-      />
+      >
+        <SearchBar value={search} onChange={setSearch} />
+      </TopSection>
+
       <WarrantiesTable
-        warranties={warranties}
+        warranties={filteredWarranties}
         openModal={openModal}
         refetch={refetch}
       />
@@ -65,7 +73,12 @@ export default function WarrantiesPage() {
           onClose={closeModal}
         >
           {modalType === "user" && <ProfileModal />}
-          {modalType === "filter" && <FilterModal onClose={closeModal} />}
+          {modalType === "filter" && (
+            <FilterWarrantyModal
+              refetch={fetchWarranties}
+              onClose={closeModal}
+            />
+          )}
           {modalType === "help" && <HelpModal onClose={() => closeModal()} />}
           {modalType === "add" && (
             <AddWarrantyModal

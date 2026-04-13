@@ -1,16 +1,16 @@
 import { useState } from "react";
-import { deleteSubcategoryService } from "../services/deleteSubcategoryService";
+import { disableSubcategoryService } from "../services/disableSubcategoryService";
 
-export function useDeleteSubcategory(formData) {
+export function useDisableSubcategory(formData) {
   const [form, setForm] = useState(formData);
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   function handleChange(e) {
-    setForm(prev => ({
+    setForm((prev) => ({
       ...prev,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     }));
   }
 
@@ -21,13 +21,13 @@ export function useDeleteSubcategory(formData) {
     setLoading(true);
 
     try {
-      const response = await deleteSubcategoryService(form);
+      const response = await disableSubcategoryService(form);
       setData(response);
-      if(response.success){
-        setInnerModal("success")
+      if (response.success) {
+        setInnerModal("success");
       }
     } catch (error) {
-      setInnerModal("error")
+      setInnerModal("error");
       setError(error);
     } finally {
       setLoading(false);

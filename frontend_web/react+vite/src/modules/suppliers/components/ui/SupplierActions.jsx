@@ -14,7 +14,7 @@ export default function SupplierActions({
         deleteButtonOnClick={deleteButtonOnClick}
       >
         {/* Botón de más información del usuario */}
-        <button onClick={moreInfoOnClick}>
+        <button onClick={moreInfoOnClick} className="transition-all duration-300 hover:scale-125">
           <img src={actionsIcons.moreInfoIcon} alt="" />
         </button>
       </ActionButtons>

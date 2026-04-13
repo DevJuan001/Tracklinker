@@ -1,29 +1,30 @@
 // Hooks
 import { useState } from "react";
-import { useDeleteCategory } from "../../hooks/useDeleteCategory";
+import { useEnableSubcategory } from "../../hooks/useEnableSubcategory";
 // Componentes
+import Loader from "../../../../globals/components/ui/Loader";
 import ConfirmCancelButtons from "../../../../globals/components/modals/ConfirmCancelButtons";
 // Modales
 import ErrorModal from "../../../../globals/components/modals/ErrorModal";
 import SuccessModal from "../../../../globals/components/modals/SuccessModal";
 
-export default function DeleteCategoryModal({ category, onClose }) {
+export default function EnableSubcategoryModal({ subcategory, onClose }) {
   const [innerModal, setInnerModal] = useState(null);
-  const { handleDelete } = useDeleteCategory(category.category_id);
+  const { handleSubmit, loading } = useEnableSubcategory(
+    subcategory.subcategory_id,
+  );
   return (
     <section className="flex flex-col justify-center items-center dark:text-white">
       <p>
-        ¿Seguro que deseas eliminar la categoría{" "}
-        <span className="font-medium">{category.category_name}</span>?
+        ¿Seguro que deseas habilitar la subcategoria
+        <span className="font-medium"> {subcategory.subcategory_name}</span>?
       </p>
-
       {/* Botones */}
       <ConfirmCancelButtons
-        confirmText={"Eliminar"}
-        confirmBgColor="red-600"
+        confirmText={loading ? <Loader /> : "Habilitar"}
         confirmDarkBgColor=""
         cancelText={"Cancelar"}
-        confirmButtonOnClick={() => handleDelete(setInnerModal)}
+        confirmButtonOnClick={(e) => handleSubmit(e, setInnerModal)}
         cancelButtonOnClick={onClose}
       />
 
@@ -31,23 +32,22 @@ export default function DeleteCategoryModal({ category, onClose }) {
       {innerModal === "success" && (
         <SuccessModal
           isOpen={true}
-          confirmTitle={"Categoría eliminada con éxito!"}
+          confirmTitle={"Subcategoria habilitada con éxito!"}
           confirmText={
-            "La categoría fue eliminada correctamente. Toca el botón para volver."
+            "Se ha habilitado correctamente la subcategoria, toca el botón de volver a la pagina de subcategorias"
           }
-          confirmButtonText={"Volver a la página"}
+          confirmButtonText={"Volver a la pagina"}
           onClose={() => {
             setInnerModal(null);
             onClose();
           }}
         />
       )}
-
       {innerModal === "error" && (
         <ErrorModal
           isOpen={true}
-          errorTitle="¡No se pudo completar está acción!"
-          errorText="Vuelve a intentar esta acción, si el error sigue comunicate con servicio al cliente"
+          errorTitle="¡No se pudo habilitar la subcategoria!"
+          errorText="No pudimos completar tu petición, por favor vuelve a intentarlo"
           confirmButtonText="Volver a intentarlo"
           onClose={() => setInnerModal(null)}
         />

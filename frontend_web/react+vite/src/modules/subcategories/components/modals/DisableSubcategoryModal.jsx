@@ -1,6 +1,6 @@
 // Hooks
 import { useState } from "react";
-import { useDeleteSupplier } from "../../hooks/useDeleteSupplier";
+import { useDisableSubcategory } from "../../hooks/useDisableSubcategory";
 // Componentes
 import Loader from "../../../../globals/components/ui/Loader";
 import ConfirmCancelButtons from "../../../../globals/components/modals/ConfirmCancelButtons";
@@ -8,30 +8,34 @@ import ConfirmCancelButtons from "../../../../globals/components/modals/ConfirmC
 import ErrorModal from "../../../../globals/components/modals/ErrorModal";
 import SuccessModal from "../../../../globals/components/modals/SuccessModal";
 
-export default function DeleteSupplierModal({ supplier, onClose }) {
+export default function DisableSubcategoryModal({ subcategory, onClose }) {
   const [innerModal, setInnerModal] = useState(null);
-  const { loading, handleSubmit } = useDeleteSupplier(supplier.supplier_id);
+  const { handleSubmit, loading } = useDisableSubcategory(
+    subcategory.subcategory_id,
+  );
   return (
-    <div className="flex flex-col justify-center items-center dark:text-white">
+    <section className="flex flex-col justify-center items-center dark:text-white">
       <p>
-        ¿Seguro que deseas eliminar a{" "}
-        <span className="font-medium">{supplier.supplier_name}</span>?
+        ¿Seguro que deseas Deshabilitar la subcategoria
+        <span className="font-medium"> {subcategory.subcategory_name}</span>?
       </p>
-
       {/* Botones */}
       <ConfirmCancelButtons
-        confirmText={loading ? <Loader /> : "Eliminar"}
+        confirmText={loading ? <Loader /> : "Deshabilitar"}
         confirmBgColor="red-600"
-        confirmButtonOnClick={() => handleSubmit(setInnerModal)}
+        confirmDarkBgColor=""
+        cancelText={"Cancelar"}
+        confirmButtonOnClick={(e) => handleSubmit(e, setInnerModal)}
         cancelButtonOnClick={onClose}
       />
-      {/* Modales internas */}
+
+      {/* Modales Internas */}
       {innerModal === "success" && (
         <SuccessModal
           isOpen={true}
-          confirmTitle={"Proveedor eliminado con éxito!"}
+          confirmTitle={"Subcategoria deshabilitada con éxito!"}
           confirmText={
-            "Se ha eliminado correctamente el proveedor, toca el botón de volver a la pagina"
+            "Se ha deshabilitado correctamente la subcategoria, toca el botón de volver a la pagina de subcategorias"
           }
           confirmButtonText={"Volver a la pagina"}
           onClose={() => {
@@ -43,12 +47,12 @@ export default function DeleteSupplierModal({ supplier, onClose }) {
       {innerModal === "error" && (
         <ErrorModal
           isOpen={true}
-          errorTitle="¡No se puedo eliminar el proveedor!"
-          errorText="Intenta realizar nuevamente esta acción y si el error persiste comunicate con el servicio al cliente"
+          errorTitle="¡No se pudo deshabilitar la subcategoria!"
+          errorText="No pudimos completar tu petición, por favor vuelve a intentarlo"
           confirmButtonText="Volver a intentarlo"
           onClose={() => setInnerModal(null)}
         />
       )}
-    </div>
+    </section>
   );
 }

@@ -19,8 +19,8 @@ export default function EditCategoryInfoModal({ category, onClose}) {
     }
   );
   return (
-    <section className="flex flex-col items-center">
-      <form action="" className="flex flex-col gap-2">
+    <section className="w-full flex flex-col items-center">
+      <form action="" className="w-full flex flex-col gap-2">
         <FormField
           onChange={handleChange}
           value={form.name}

@@ -1,15 +1,16 @@
 import { usersIcons } from "../../../assets/icons/usersIcons";
 
-export const userStatus = {
+export const categoryStatusConfig = {
   1: {
-    text: "Deshabilitado",
+    text: "Deshabilitada",
     modalType: "enable",
     visibilityIcon: false,
     icon: usersIcons.inactiveCircle,
-    styles: "w-32 bg-gray-50 text-gray-400 border-gray-300 dark:border-gray-700 dark:bg-[#75777e80]",
+    styles:
+      "w-32 bg-gray-50 text-gray-400 border-gray-300 dark:border-gray-700 dark:bg-[#75777e80]",
   },
   2: {
-    text: "Activo",
+    text: "Activa",
     modalType: "disable",
     visibilityIcon: true,
     icon: usersIcons.activeCircle,

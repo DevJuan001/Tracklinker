@@ -10,6 +10,8 @@ export default function FilterSubcategoriesModal({ refetch, onClose }) {
       start_date: "",
       end_date: "",
       category_order: "",
+      status: "",
+      name_order: "",
     },
     refetch,
   );
@@ -34,6 +36,27 @@ export default function FilterSubcategoriesModal({ refetch, onClose }) {
           value: category.category_id,
           label: category.category_name,
         }))}
+      />
+      <SelectMenu
+        spanText={"Nombres"}
+        name={"name_order"}
+        onChange={handleChange}
+        value={form.name_order}
+        options={[
+          { value: "asc", label: "a - Z" },
+          { value: "desc", label: "Z - a" },
+        ]}
+      />
+
+      <SelectMenu
+        spanText={"Estado"}
+        value={form.status}
+        name={"status"}
+        onChange={handleChange}
+        options={[
+          { value: 1, label: "Deshabilitada" },
+          { value: 2, label: "Activa" },
+        ]}
       />
     </FilterModal>
   );

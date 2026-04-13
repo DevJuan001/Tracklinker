@@ -1,11 +1,11 @@
 import { apiRoutes } from "../../../config/apiRoutes";
 import { fetchWithAuth } from "../../../utils/fetchWithAuth";
 
-export async function deleteCategoryService(id) {
+export async function disableCategoryService(id) {
   const res = await fetchWithAuth(
-    `${apiRoutes.apiUrl}${apiRoutes.categories}/delete/${id}`,
+    `${apiRoutes.apiUrl}${apiRoutes.categories}/disable/${id}`,
     {
-      method: "DELETE",
+      method: "PUT",
     },
   );
 

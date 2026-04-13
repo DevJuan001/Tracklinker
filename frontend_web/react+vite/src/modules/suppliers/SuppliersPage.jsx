@@ -1,6 +1,8 @@
 // Hooks
-import { useModal } from "../../globals/hooks/useModal";
+import { useState } from "react";
 import { useSuppliers } from "./hooks/useSuppliers";
+import { useModal } from "../../globals/hooks/useModal";
+import { useSearch } from "../../globals/hooks/useSearch";
 // Iconos
 import { actionsIcons } from "../../assets/icons/actionsIcons";
 // Componentes
@@ -16,10 +18,13 @@ import DeleteSupplierModal from "./components/modals/DeleteSupplierModal";
 import MoreInfoSupplierModal from "./components/modals/MoreInfoSupplierModal";
 import EditSupplierInfoModal from "./components/modals/EditSupplierInfoModal";
 import ProfileModal from "../../globals/components/modals/profileModal/ProfileModal";
+import SearchBar from "../../globals/components/ui/SearchBar";
 
 export default function SuppliersPage() {
   const { modalType, isOpen, modalData, openModal, closeModal } = useModal();
   const { suppliers, loading, error, fetchSuppliers } = useSuppliers();
+  const [search, setSearch] = useState("");
+  const filteredSuppliers = useSearch(suppliers, search);
 
   return (
     <Layout
@@ -34,10 +39,12 @@ export default function SuppliersPage() {
         addButtonText={"Agregar Proveedor"}
         createOnClick={() => openModal(null, "add", fetchSuppliers)}
         filterOnClick={() => openModal(null, "filter", fetchSuppliers)}
-      />
+      >
+        <SearchBar value={search} onChange={setSearch} />
+      </TopSection>
       {/* Listado de proveedores */}
       <SuppliersList
-        suppliers={suppliers}
+        suppliers={filteredSuppliers}
         loading={loading}
         error={error}
         refetch={fetchSuppliers}

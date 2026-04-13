@@ -11,11 +11,15 @@ class SubcategoriesController:
         start_date: str = None,
         end_date: str = None,
         category_order: int = None,
+        status: int = None,
+        name_order: str = None,
     ):
         error, subcategories = SubcategoriesRepository.find_all_subcategories(
             start_date,
             end_date,
             category_order,
+            status,
+            name_order,
         )
 
         if error:
@@ -32,6 +36,16 @@ class SubcategoriesController:
             raise HTTPException(status_code=404, detail=error)
         return {
             "data": subcategory
+        }
+
+    @staticmethod
+    def get_categories():
+        error, categories = SubcategoriesRepository.find_categories()
+
+        if error:
+            raise HTTPException(status_code=404, detail=error)
+        return {
+            "data": categories
         }
 
     @staticmethod
@@ -58,8 +72,19 @@ class SubcategoriesController:
         }
 
     @staticmethod
-    def delete_subcategory(subcategory_id: int):
-        error, message = SubcategoriesRepository.delete_subcategory(
+    def disable_subcategory(subcategory_id: int):
+        error, message = SubcategoriesRepository.disable_subcategory(
+            subcategory_id)
+        if error:
+            raise HTTPException(status_code=400, detail=error)
+        return {
+            "success": True,
+            "message": message
+        }
+    
+    @staticmethod
+    def enable_subcategory(subcategory_id: int):
+        error, message = SubcategoriesRepository.enable_subcategory(
             subcategory_id)
         if error:
             raise HTTPException(status_code=400, detail=error)

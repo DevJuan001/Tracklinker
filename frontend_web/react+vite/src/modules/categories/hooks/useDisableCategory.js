@@ -1,17 +1,17 @@
 import { useState } from "react";
-import { deleteCategoryService } from "../services/deleteCategoryService";
+import { disableCategoryService } from "../services/disableCategoryService";
 
-export function useDeleteCategory(id) {
+export function useDisableCategory(id) {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   // Función que envía el ID al service y maneja la respuesta
-  async function handleDelete(setInnerModal) {
+  async function handleDisable(setInnerModal) {
     setLoading(true);
 
     try {
-      const response = await deleteCategoryService(id);
+      const response = await disableCategoryService(id);
       if (response.success) {
         setInnerModal("success");
       }
@@ -24,5 +24,5 @@ export function useDeleteCategory(id) {
     }
   }
 
-  return { data, loading, error, handleDelete };
+  return { data, loading, error, handleDisable };
 }

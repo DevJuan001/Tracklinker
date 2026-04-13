@@ -22,34 +22,32 @@ export default function AddProductModelModal({ isOpen, onClose }) {
   });
   return (
     <AddInnerModal isOpen={isOpen} onClose={onClose} title={"Agregar modelo"}>
-      <section className="flex flex-col items-center">
-        <form className="flex flex-col">
-          <SelectMenu
-            value={form.product_brand_id}
-            name="product_brand_id"
-            spanText={"Marca"}
-            onChange={handleChange}
-            options={brands.map((brand) => ({
-              value: brand.id,
-              label: brand.name,
-            }))}
-          />
-          <FormField
-            value={form.product_detail_model}
-            name="product_detail_model"
-            labelText={"Modelo"}
-            onChange={handleChange}
-            placeholder={"Impresora a color"}
-          />
-          <FormField
-            value={form.product_detail_description}
-            type="textarea"
-            labelText={"Descripción"}
-            name={"product_detail_description"}
-            onChange={handleChange}
-            placeholder={"Impresora multicolor "}
-          />
-        </form>
+      <section className="w-full flex flex-col items-center">
+        <SelectMenu
+          value={form.product_brand_id}
+          name="product_brand_id"
+          spanText={"Marca"}
+          onChange={handleChange}
+          options={brands.map((brand) => ({
+            value: brand.id,
+            label: brand.name,
+          }))}
+        />
+        <FormField
+          value={form.product_detail_model}
+          name="product_detail_model"
+          labelText={"Modelo"}
+          onChange={handleChange}
+          placeholder={"Impresora a color"}
+        />
+        <FormField
+          value={form.product_detail_description}
+          type="textarea"
+          labelText={"Descripción"}
+          name={"product_detail_description"}
+          onChange={handleChange}
+          placeholder={"Impresora multicolor "}
+        />
         <ConfirmCancelButtons
           confirmText={loading ? <Loader /> : "Crear"}
           confirmButtonOnClick={(e) => handleSubmit(e, setInnerModal)}
