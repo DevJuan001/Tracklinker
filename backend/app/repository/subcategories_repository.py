@@ -7,28 +7,60 @@ from app.utils.periods import period_map, daily_periods
 class SubcategoriesRepository:
     # Obtener todas las subcategorías
     @staticmethod
-    def find_all_subcategories():
+    def find_all_subcategories(
+        start_date: str = None,
+        end_date: str = None,
+        category_order: int = None,
+    ):
         connection = get_connection()
         cursor = connection.cursor(dictionary=True)
-        # Petición a la base de datos
 
         query = """
         SELECT
         c.category_id,
         c.category_name,
         s.subcategory_id,
-        s.subcategory_name
+        s.subcategory_name,
+        s.subcategory_date
         FROM SUBCATEGORIES AS s
         INNER JOIN CATEGORIES AS c 
-        ON s.category_id = c.category_id
+            ON s.category_id = c.category_id
         """
+        filters = []
+        values = []
+
+        if start_date:
+            filters.append("DATE(s.subcategory_date) >= %s")
+            values.append(start_date)
+
+        if end_date:
+            filters.append("DATE(s.subcategory_date) <= %s")
+            values.append(end_date)
+
+        if category_order:
+            filters.append("c.category_id = %s")
+            values.append(category_order)
+
+        if filters:
+            query += " WHERE " + " AND ".join(filters)
 
         try:
-            cursor.execute(query)
+            cursor.execute(query, values)
             result = cursor.fetchall()
-            return None, result
-        except Exception as e:
-            return f"❌ Error al ejecutar mla consulta: {e}", None
+
+            data = [
+                {
+                    "category_id": item["category_id"],
+                    "category_name": item["category_name"],
+                    "subcategory_id": item["subcategory_id"],
+                    "subcategory_name": item["subcategory_name"],
+                    "subcategory_date": date_formatter(item["subcategory_date"]),
+                }
+                for item in result
+            ]
+            return None, data
+        except Exception:
+            return f"Error al ejecutar la consulta", None
         finally:
             cursor.close()
             connection.close()
@@ -52,8 +84,8 @@ class SubcategoriesRepository:
             cursor.execute(query, (subcategory_id,))
             result = cursor.fetchone()
             return None, result
-        except Exception as e:
-            return f"❌ Error al ejecutar la consulta: {e}", None
+        except Exception:
+            return f"Error al ejecutar la consulta", None
         finally:
             cursor.close()
             connection.close()
@@ -77,8 +109,8 @@ class SubcategoriesRepository:
             ))
             connection.commit()
             return None, cursor.lastrowid
-        except Exception as e:
-            return f"❌ Error al ejecutar la consulta: {e}", None
+        except Exception:
+            return f"Error al ejecutar la consulta", None
         finally:
             cursor.close()
             connection.close()
@@ -116,8 +148,8 @@ class SubcategoriesRepository:
                 for item in result
             ]
             return None, cursor.rowcount, data
-        except Exception as e:
-            return f"❌ Error al ejecutar la consulta: {e}", None, None
+        except Exception:
+            return f"Error al ejecutar la consulta", None, None
         finally:
             cursor.close()
             connection.close()
@@ -135,8 +167,8 @@ class SubcategoriesRepository:
             cursor.execute(query, (subcategory_id,))
             connection.commit()
             return None, cursor.rowcount
-        except Exception as e:
-            return f"❌ Error al ejecutar la consulta: {e}", None
+        except Exception:
+            return f"Error al ejecutar la consulta", None
         finally:
             cursor.close()
             connection.close()
@@ -157,8 +189,8 @@ class SubcategoriesRepository:
             cursor.execute(query, (category_id,))
             results = cursor.fetchall()
             return None, results
-        except Exception as e:
-            return f"❌ Error al ejecutar la consulta: {e}", None
+        except Exception:
+            return f"Error al ejecutar la consulta", None
         finally:
             cursor.close()
             connection.close()
@@ -178,8 +210,8 @@ class SubcategoriesRepository:
             cursor.execute(query, (start_date, end_date))
             results = cursor.fetchall()
             return None, results
-        except Exception as e:
-            return f"❌ Error al ejecutar la consulta: {e}", None
+        except Exception:
+            return f"Error al ejecutar la consulta", None
         finally:
             cursor.close()
             connection.close()
@@ -199,12 +231,11 @@ class SubcategoriesRepository:
             cursor.execute(query, (start_date, end_date))
             results = cursor.fetchall()
             return None, results
-        except Exception as e:
-            return f"❌ Error al ejecutar la consulta: {e}", None
+        except Exception:
+            return f"Error al ejecutar la consulta", None
         finally:
             cursor.close()
             connection.close()
-
 
     @staticmethod
     def find_disabled_subcategories():
@@ -221,8 +252,8 @@ class SubcategoriesRepository:
             cursor.execute(query)
             results = cursor.fetchall()
             return None, results
-        except Exception as e:
-            return f"❌ Error al ejecutar la consulta: {e}", None
+        except Exception:
+            return f"Error al ejecutar la consulta", None
         finally:
             cursor.close()
             connection.close()
@@ -243,8 +274,8 @@ class SubcategoriesRepository:
             cursor.execute(query, (date,))
             results = cursor.fetchall()
             return None, results
-        except Exception as e:
-            return f"❌ Error al ejecutar la consulta: {e}", None
+        except Exception:
+            return f"Error al ejecutar la consulta", None
         finally:
             cursor.close()
             connection.close()
@@ -265,8 +296,8 @@ class SubcategoriesRepository:
             cursor.execute(query, (is_active,))
             results = cursor.fetchall()
             return None, results
-        except Exception as e:
-            return f"❌ Error al ejecutar la consulta: {e}", None
+        except Exception:
+            return f"Error al ejecutar la consulta", None
         finally:
             cursor.close()
             connection.close()
@@ -288,8 +319,8 @@ class SubcategoriesRepository:
             cursor.execute(query, (is_active, subcategory_id))
             connection.commit()
             return None, cursor.rowcount
-        except Exception as e:
-            return f"❌ Error al ejecutar la consulta: {e}", None
+        except Exception:
+            return f"Error al ejecutar la consulta", None
         finally:
             cursor.close()
             connection.close()
@@ -327,8 +358,8 @@ class SubcategoriesRepository:
                 for item in results
             ]
             return None, data
-        except Exception as e:
-            return f"Error al ejecutar la consulta: {e}", None
+        except Exception:
+            return f"Error al ejecutar la consulta", None
         finally:
             cursor.close()
             connection.close()
@@ -364,8 +395,8 @@ class SubcategoriesRepository:
                 for item in results
             ]
             return None, data
-        except Exception as e:
-            return f"Error al ejecutar la consulta: {e}", None
+        except Exception:
+            return f"Error al ejecutar la consulta", None
         finally:
             cursor.close()
             connection.close()
@@ -382,8 +413,8 @@ class SubcategoriesRepository:
             WHERE subcategory_date >= DATE_SUB(NOW(), INTERVAL 30 DAY)
             ) AS recent_subcategories,
             (SELECT COUNT(*) FROM SUBCATEGORIES) AS total_subcategories,
-            SUM(CASE WHEN subcategory_status = 0 THEN 1 ELSE 0 END) AS inactive_subcategories,
-            SUM(CASE WHEN subcategory_status = 1 THEN 1 ELSE 0 END) AS active_subcategories
+            SUM(CASE WHEN subcategory_status = 1 THEN 1 ELSE 0 END) AS inactive_subcategories,
+            SUM(CASE WHEN subcategory_status = 2 THEN 1 ELSE 0 END) AS active_subcategories
         FROM SUBCATEGORIES
         """
 
@@ -391,8 +422,8 @@ class SubcategoriesRepository:
             cursor.execute(query)
             results = cursor.fetchall()
             return None, results
-        except Exception as e:
-            return f"Error al ejecutar la consulta: {e}", None
+        except Exception:
+            return f"Error al ejecutar la consulta", None
         finally:
             cursor.close()
             connection.close()
@@ -429,8 +460,8 @@ class SubcategoriesRepository:
             cursor.execute(query)
             results = cursor.fetchall()
             return None, results
-        except Exception as e:
-            return f"Error al ejecutar la consulta: {e}", None
+        except Exception:
+            return f"Error al ejecutar la consulta", None
         finally:
             cursor.close()
             connection.close()
