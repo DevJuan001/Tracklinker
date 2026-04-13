@@ -57,9 +57,8 @@ export default function FilterUserModal({ refetch, onClose }) {
           onChange={handleChange}
           spanText={"Estado"}
           options={[
-            { value: "", label: "Seleccionar" },
-            { value: 0, label: "Deshabilitado" },
-            { value: 1, label: "Activo" },
+            { value: 1, label: "Deshabilitado" },
+            { value: 2, label: "Activo" },
           ]}
         />
       </div>
