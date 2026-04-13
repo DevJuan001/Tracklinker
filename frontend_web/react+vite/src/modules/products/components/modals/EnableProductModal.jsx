@@ -12,7 +12,7 @@ export default function EnableProductModal({ product, onClose, refetch }) {
   const [innerModal, setInnerModal] = useState(null);
   const { handleSubmit, loading } = useUpdateProductStatus({
     product_id: product.product_id,
-    product_status: 1,
+    product_status: 2,
   });
 
   return (

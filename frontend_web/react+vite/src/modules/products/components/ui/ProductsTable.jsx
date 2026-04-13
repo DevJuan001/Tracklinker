@@ -13,20 +13,20 @@ export default function ProductsTable({ products, openModal, refetch }) {
     </div>
   ) : (
     <section
-      className="max-h-[95%] max-w-full border rounded-3xl overflow-y-auto overflow-x-auto overflow-hidden
+      className="max-h-[95%] min-w-full border rounded-3xl overflow-y-auto overflow-x-auto overflow-hidden
       dark:border-[#303033]"
     >
       <table
-        className={`${noProducts ? "hidden" : "block"} min-w-full min-h-full border-gray-200 appearance-none border-collapse
-      dark:bg-black`}
+        className="min-h-full min-w-full max-w-full max-h-full border-gray-200 appearance-none border-collapse
+      dark:bg-black"
       >
         {/* Cabecera de la tabla */}
         <thead
-          className="sticky h-10 top-0 z-10
+          className="sticky h-10 min-w-full top-0 z-10
         dark:text-white dark:bg-black"
         >
           <tr
-            className="min-w-full min-h-full border-b bg-white border-gray-200 text-sm
+            className="border-b bg-white border-gray-200 text-sm
             dark:border-[#303033] dark:bg-[#1a1a1a]"
           >
             <th className="font-medium text-start pl-4 pt-1">Estado</th>
@@ -48,12 +48,12 @@ export default function ProductsTable({ products, openModal, refetch }) {
         </thead>
 
         {/* Contenido de la tabla */}
-        <tbody className="min-w-full min-h-full font-normal dark:text-gray-300">
+        <tbody className="w-full min-h-full font-normal dark:text-gray-300">
           {products.map((product) => (
             /* Productos */
             <tr
               key={product.product_serial}
-              className="relative text-base overflow-x-auto overflow-y-auto transition duration-500 text-[#45474d] dark:text-white
+              className="relative w-full text-base overflow-x-auto overflow-y-auto transition duration-500 text-[#45474d] dark:text-white
               hover:bg-[#e3e2e4] hover:shadow-md
               dark:hover:bg-[#2d2d30]"
             >

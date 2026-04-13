@@ -2,8 +2,6 @@
 import { useState } from "react";
 import { useCatalog } from "../../hooks/useCatalog";
 import { useEditProduct } from "../../hooks/useEditProduct";
-// Constants
-import { productStatusConfig } from "../../constants/productStatusConfig";
 // Components
 import Loader from "../../../../globals/components/ui/Loader";
 import FormField from "../../../../globals/components/ui/FormField";
@@ -19,8 +17,7 @@ export default function EditProductModal({
   onCloseModal,
 }) {
   const [innerModal, setInnerModal] = useState(null);
-  const { subcategories, brands, models, inputOrders, productStatus } =
-    useCatalog();
+  const { subcategories, brands, models, inputOrders } = useCatalog();
   const { form, loading, handleChange, handleSubmit } = useEditProduct({
     product_id: selectedProduct.product_id,
     input_order_id: selectedProduct.input_order_id || "",
@@ -98,10 +95,12 @@ export default function EditProductModal({
           spanText={"Estado"}
           name={"product_status"}
           id={"model"}
-          options={productStatus.map((status) => ({
-            value: status.id,
-            label: productStatusConfig[status.id]?.text,
-          }))}
+          options={[
+            { value: 1, label: "Deshabilitado" },
+            { value: 2, label: "Activo" },
+            { value: 3, label: "Vendido" },
+            { value: 4, label: "En garantía" },
+          ]}
         />
         {/* Botones */}
         <ConfirmCancelButtons
