@@ -6,10 +6,10 @@ export function useWarranties() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  async function fetchWarranties() {
+  async function fetchWarranties(filters) {
     try {
       setLoading(true);
-      const data = await getWarranties();
+      const data = await getWarranties(filters);
       setWarranties(data);
     } catch (error) {
       setError(error.message);
