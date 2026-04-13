@@ -10,6 +10,7 @@ export default function SubcategoriesList({
 }) {
   const noSubcategories = subcategories.length === 0 && !loading;
   const isFirstLoad = subcategories.length === 0 && loading;
+
   return (
     /* Contenedor de las subcategorías */
     <section className="max-h-[95%] max-w-full overflow-x-auto overflow-y-auto overflow-hidden">
