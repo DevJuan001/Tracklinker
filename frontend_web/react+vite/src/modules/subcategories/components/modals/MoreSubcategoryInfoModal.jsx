@@ -7,6 +7,9 @@ export default function MoreSubcategoryInfoModal({ subcategory }) {
       <p>
         <strong>Categoria a la que pertenece: </strong> {subcategory.category_name}
       </p>
+      <p>
+        <strong>Fecha de creación: </strong> {subcategory.subcategory_date}
+      </p>
     </section>
   );
 }
