@@ -1,5 +1,7 @@
 // Hooks
 import { useModal } from "../../globals/hooks/useModal";
+import { useState } from "react";
+import { useSearch } from "../../globals/hooks/useSearch";
 import { useSubcategories } from "./hooks/useSubcategories";
 // Iconos
 import { actionsIcons } from "../../assets/icons/actionsIcons";
@@ -16,11 +18,14 @@ import ProfileModal from "../../globals/components/modals/profileModal/ProfileMo
 import Layout from "../../globals/components/Layout/Layout";
 import TopSection from "../../globals/components/ui/TopSection";
 import SubcategoriesList from "./components/ui/SubcategoriesList";
+import SearchBar from "../../globals/components/ui/SearchBar";
 
 export default function SubcategoriesPage() {
   const { subcategories, loading, error, fetchSubcategories } =
     useSubcategories();
   const { modalType, isOpen, modalData, openModal, closeModal } = useModal();
+  const [search, setSearch] = useState("");
+  const filteredSubcategories = useSearch(subcategories, search);
 
   return (
     <Layout
@@ -35,10 +40,12 @@ export default function SubcategoriesPage() {
         addButtonText={"Agregar Subcategoria"}
         createOnClick={() => openModal(null, "add", fetchSubcategories)}
         filterOnClick={() => openModal(null, "filter", fetchSubcategories)}
-      />
+      >
+        <SearchBar value={search} onChange={setSearch} />
+      </TopSection>
       {/* Listado de las subcategorias */}
       <SubcategoriesList
-        subcategories={subcategories}
+        subcategories={filteredSubcategories}
         loading={loading}
         error={error}
         refetch={fetchSubcategories}
