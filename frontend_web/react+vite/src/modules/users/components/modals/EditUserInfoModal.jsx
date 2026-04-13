@@ -28,7 +28,7 @@ export default function EditUserInfoModal({ user, onClose }) {
 
   return (
     <section className="flex flex-col items-center">
-      <form action="" className="flex flex-col gap-2">
+      <form action="" className="w-full flex flex-col gap-2 px-20">
         <SelectMenu
           name={"rol_id"}
           value={form.rol_id}
