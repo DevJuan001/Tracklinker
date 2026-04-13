@@ -26,11 +26,16 @@ export default function SuppliersTable() {
             <th className="font-normal text-start pl-4">{supplier.phone}</th>
             <th className="font-normal text-start pl-4">{supplier.date}</th>
             <th className="font-normal text-start pl-4">
-              <span
-                className={`px-2 py-1 rounded-md ${userStatus[supplier.status]?.styles}`}
+              <div
+                className={`w-fit flex items-center px-2 py-1 gap-1 rounded-md ${userStatus[supplier.status]?.styles}`}
               >
-                {userStatus[supplier.status]?.text}
-              </span>
+                <img
+                  src={userStatus[supplier.status]?.icon}
+                  alt=""
+                  className="w-3 h-3"
+                />
+                <span>{userStatus[supplier.status]?.text}</span>
+              </div>
             </th>
           </tr>
         </tbody>
