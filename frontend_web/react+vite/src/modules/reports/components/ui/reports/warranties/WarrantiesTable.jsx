@@ -24,11 +24,16 @@ export default function WarrantiesTable() {
             </th>
             <th className="font-normal text-start pl-4">{warranty.date}</th>
             <th className="font-normal text-start pl-4">
-              <span
-                className={`px-2 py-1 rounded-md ${warrantyStatusConfig[warranty.status]?.styles}`}
+              <div
+                className={`w-fit flex items-center px-2 py-1 gap-1 rounded-md ${warrantyStatusConfig[warranty.status]?.styles}`}
               >
-                {warrantyStatusConfig[warranty.status]?.text}
-              </span>
+                <img
+                  src={warrantyStatusConfig[warranty.status]?.icon}
+                  alt=""
+                  className="w-3 h-3"
+                />  
+                <span>{warrantyStatusConfig[warranty.status]?.text}</span>
+              </div>
             </th>
           </tr>
         </tbody>

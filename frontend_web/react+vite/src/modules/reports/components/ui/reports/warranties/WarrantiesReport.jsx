@@ -1,6 +1,8 @@
 // Hooks
 import { useState } from "react";
 import { useWarrantiesData } from "../../../../hooks/warranties/useWarrantiesData";
+// Utils
+import { getDateRange } from "../../../../../../utils/getDateRange";
 // Components
 import KpisContainer from "../../KpisContainer";
 import ReportsContainer from "../../ReportsContainer";
@@ -14,6 +16,8 @@ import WarrantiesAreaChart from "./WarrantiesAreaChart";
 export default function WarrantiesReport({ setReport }) {
   const { warrantiesData } = useWarrantiesData();
   const [period, setPeriod] = useState("1a");
+  const { startDate, endDate } = getDateRange(period);
+
   return (
     <section className="w-full h-full flex flex-col gap-2 animate-blurUp">
       <ReportsTopSection
@@ -25,12 +29,12 @@ export default function WarrantiesReport({ setReport }) {
       {warrantiesData.map((item) => (
         <ReportsContainer
           reportsName={"Garantías"}
-          reportsDate={"16 De Marzo - 23 De Marzo 2025"}
+          reportsDate={`${startDate} - ${endDate}`}
         >
           {/* Cards o KPIs principales */}
           <KpisContainer
             firstKpiName={"Total"}
-            firstKpiValue={item.total_warranties} 
+            firstKpiValue={item.total_warranties}
             secondKpiName={"Sin Completar"}
             secondKpiValue={item.without_make_warranties}
             thirdKpiName={"En Proceso"}
