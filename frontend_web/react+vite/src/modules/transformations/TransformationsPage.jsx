@@ -1,5 +1,7 @@
 // Hooks
+import { useState } from "react";
 import { useModal } from "../../globals/hooks/useModal";
+import { useSearch } from "../../globals/hooks/useSearch";
 import { useTransformations } from "./hooks/useTransformations";
 // Iconos
 import { actionsIcons } from "../../assets/icons/actionsIcons";
@@ -17,12 +19,14 @@ import ProfileModal from "../../globals/components/modals/profileModal/ProfileMo
 import EnableTransformationModal from "./components/modals/EnableTransformationModal";
 import DisableTransformationModal from "./components/modals/DisableTransformationModal";
 import MoreInfoTransformationModal from "./components/modals/MoreInfoTransformationModal";
+import SearchBar from "../../globals/components/ui/SearchBar";
 
 export default function TransformationsPage() {
   const { transformations, fetchTransformations } = useTransformations();
-
   const { modalType, isOpen, modalData, refetch, openModal, closeModal } =
     useModal();
+  const [search, setSearch] = useState("");
+  const filteredOutputs = useSearch(transformations, search);
 
   return (
     <Layout
@@ -37,10 +41,12 @@ export default function TransformationsPage() {
         addButtonText="Agregar orden"
         createOnClick={() => openModal(null, "add", refetch)}
         filterOnClick={() => openModal(null, "filter")}
-      />
+      >
+        <SearchBar value={search} onChange={setSearch} />
+      </TopSection>
 
       <TransformationsTable
-        transformations={transformations}
+        transformations={filteredOutputs}
         openModal={openModal}
         refetch={fetchTransformations}
       />

@@ -27,7 +27,7 @@ export default function EditTransformationModal({
 
   return (
     <section className="flex flex-col items-center">
-      <form className="flex flex-col gap-1">
+      <form className="w-full  flex flex-col gap-1">
         <FormField
           value={form.product_transformation}
           labelText="Transformación"
