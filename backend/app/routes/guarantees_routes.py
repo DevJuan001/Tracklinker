@@ -13,8 +13,17 @@ router =APIRouter(
 
 # Endpoint para obtener todos las solicitudes de garantía 
 @router.get("/")
-def get_all_guarantiee(payload: dict= Depends(require_roles(["Admin"]))):
-    return GuaranteeController.get_all_guarantee()
+def get_all_guarantiee(
+    start_date: str = None,
+    end_date: str = None,
+    status: int = None,
+    payload: dict= Depends(require_roles(["Admin"]))
+):
+    return GuaranteeController.get_all_guarantee(
+        start_date,
+        end_date,
+        status,
+    )
 
 # Endpoint para ontener solicitud por mediante id
 @router.get("/{warranty_incidents_id}")
