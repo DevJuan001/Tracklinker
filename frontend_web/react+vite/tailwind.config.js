@@ -17,15 +17,51 @@ export default {
           "100%": { transform: "rotate(360deg)" },
         },
         modalFadeIn: {
-          "0%": { opacity: "0", transform: "scale(0.95)", filter: "blur(4px)" },
-          "100%": { opacity: "1", transform: "scale(1)", filter: "blur(0px)" },
+          "0%": {
+            opacity: "0",
+            transform: "translateY(6px) scale(0.98)",
+            filter: "blur(12px)",
+          },
+          "100%": {
+            opacity: "1",
+            transform: "translateY(0px) scale(1)",
+            filter: "blur(0px)",
+          },
         },
         modalFadeOut: {
-          "0%": { opacity: "1", transform: "scale(1)", filter: "blur(0px)" },
+          "0%": {
+            opacity: "1",
+            transform: "translateY(0px) scale(1)",
+            filter: "blur(0px)",
+          },
           "100%": {
             opacity: "0",
-            transform: "scale(0.95)",
-            filter: "blur(4px)",
+            transform: "translateY(6px) scale(0.98)",
+            filter: "blur(12px)",
+          },
+        },
+        fade: {
+          "0%": { opacity: "0" },
+          "100%": { opacity: "1" },
+        },
+        blurIn: {
+          "0%": {
+            opacity: "0",
+            filter: "blur(12px)",
+          },
+          "100%": {
+            opacity: "1",
+            filter: "blur(0px)",
+          },
+        },
+        blurOut: {
+          "0%": {
+            opacity: "1",
+            filter: "blur(0px)",
+          },
+          "100%": {
+            opacity: "0",
+            filter: "blur(30px)",
           },
         },
         iconFill: {
@@ -51,11 +87,14 @@ export default {
         },
       },
       animation: {
+        fade: "fade 0.3s ease-out forwards",
+        blurIn: "blurIn 0.3s ease-out forwards",
+        blurOut: "blurOut 0.3s ease-in forwards",
         rotation: "rotation 1s linear infinite",
         iconFill: "iconFill 0.3s cubic-bezier(.48, 0, 0, 1)",
         clickEffect: "clickEffect 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)",
-        modalFadeIn: "modalFadeIn 0.3s ease-out forwards",
-        modalFadeOut: "modalFadeOut 0.3s ease-out forwards",
+        modalFadeIn: "modalFadeIn 0.3s cubic-bezier(.56,.27,0,1) forwards",
+        modalFadeOut: "modalFadeOut 0.3s cubic-bezier(.56,.27,0,1) forwards",
         blurUp: "blurUp 0.3s ease-in forwards",
       },
     },
