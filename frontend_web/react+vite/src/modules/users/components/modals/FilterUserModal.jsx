@@ -2,9 +2,11 @@ import { useRoles } from "../../hooks/useRoles";
 import { useFilterUsers } from "../../hooks/useFilterUsers";
 import SelectMenu from "../../../../globals/components/modals/SelectMenu";
 import FilterModal from "../../../../globals/components/modals/FilterModal";
+import { useCities } from "../../hooks/useCities";
 
 export default function FilterUserModal({ refetch, onClose }) {
   const { roles } = useRoles();
+  const { cities } = useCities();
   const { form, handleChange, handleApply } = useFilterUsers(
     {
       role_order: "",
@@ -48,6 +50,17 @@ export default function FilterUserModal({ refetch, onClose }) {
           options={roles.map((role) => ({
             value: role.id,
             label: role.name,
+          }))}
+        />
+
+        <SelectMenu
+          name={"city"}
+          value={form.city}
+          onChange={handleChange}
+          spanText={"Ciudad"}
+          options={cities.map((city) => ({
+            value: city.id,
+            label: city.name,
           }))}
         />
 
