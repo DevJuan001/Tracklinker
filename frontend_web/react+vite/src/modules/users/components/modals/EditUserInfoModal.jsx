@@ -10,10 +10,12 @@ import { useEditUser } from "../../hooks/useEditUser";
 // Modales
 import ErrorModal from "../../../../globals/components/modals/ErrorModal";
 import SuccessModal from "../../../../globals/components/modals/SuccessModal";
+import { useCities } from "../../hooks/useCities";
 
 export default function EditUserInfoModal({ user, onClose }) {
   const [innerModal, setInnerModal] = useState(null);
   const { roles } = useRoles();
+  const { cities } = useCities();
   const { handleChange, handleSubmit, loading, form } = useEditUser(user.id, {
     rol_id: user.rol_id || "",
     name: user.name || "",
@@ -28,7 +30,7 @@ export default function EditUserInfoModal({ user, onClose }) {
 
   return (
     <section className="flex flex-col items-center">
-      <form action="" className="w-full flex flex-col gap-2">
+      <form action="" className="w-full flex flex-col gap-4">
         <SelectMenu
           name={"rol_id"}
           value={form.rol_id}
@@ -64,6 +66,17 @@ export default function EditUserInfoModal({ user, onClose }) {
           onChange={handleChange}
           autoComplete="family-name"
         />
+        <SelectMenu
+          value={form.city}
+          name={"city"}
+          spanText={"Ciudad"}
+          onChange={handleChange}
+          options={cities.map((city) => ({
+            value: city.id,
+            label: city.name,
+          }))}
+        />
+
         <FormField
           name={"phone"}
           value={form.phone}
