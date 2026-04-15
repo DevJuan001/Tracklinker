@@ -174,6 +174,32 @@ class UserRepository:
             cursor.close()
             connection.close()
 
+
+    # Obtener todas las ciudades
+    @staticmethod
+    def find_all_cities():
+        connection = get_connection()
+        cursor = connection.cursor(dictionary=True)
+
+        # Petición a la base de datos
+        query = """
+        SELECT
+            city_id as id,
+            city_name as name
+        FROM CITIES
+        """
+
+        try:
+            cursor.execute(query)
+            result = cursor.fetchall()
+
+            return None, result
+        except Exception:
+            return f"Error al ejecutar la consulta", None
+        finally:
+            cursor.close()
+            connection.close()
+
     # Crear un usuario
     @staticmethod
     def create(user_data: User, temporal_password: str):
@@ -264,7 +290,7 @@ class UserRepository:
             user_phone = %s,
             user_city = %s,
             user_address = %s,
-            user_status= %s
+            user_status = %s
         WHERE user_id = %s"""
 
         try:
@@ -274,8 +300,8 @@ class UserRepository:
                 data["second_surname"],
                 data["email"],
                 data["phone"],
-                data["address"],
                 data["city"],
+                data["address"],
                 data["status"],
                 user_id
             ))
@@ -577,8 +603,8 @@ class UserRepository:
         query = """
         SELECT
             COUNT(CASE WHEN user_date >= DATE_SUB(NOW(), INTERVAL 30 DAY) THEN 1 END) as recent_users,
-            COUNT(CASE WHEN user_status = 1 THEN 1 END) as active_users,
-            COUNT(CASE WHEN user_status = 0 THEN 1 END) as inactive_users,
+            COUNT(CASE WHEN user_status = 2 THEN 1 END) as active_users,
+            COUNT(CASE WHEN user_status = 1 THEN 1 END) as inactive_users,
             COUNT(user_id) as total_users
         FROM USERS
         """
