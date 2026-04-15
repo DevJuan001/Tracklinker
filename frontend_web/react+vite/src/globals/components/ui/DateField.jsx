@@ -11,9 +11,10 @@ export default function DateField({
 }) {
   return (
     <div
+      tabIndex={0}
       onClick={onClick}
-      className="relative w-full h-14 flex items-center px-4 rounded-lg border border-[#a1a1a131] outline-[#00000028] bg-[#e5e5e527] text-center cursor-pointer
-    dark:border-[#ffffff15] dark:bg-[#ffffff1a] text-sm dark:text-white"
+      className="relative w-full h-14 flex items-center px-4 rounded-lg border border-[#a1a1a154] outline-[#00000028] text-center cursor-pointer
+    dark:border-[#28282b] text-sm dark:text-white focus:shadow-[0_0_2px_1px_#e5e7eb]"
     >
       <div className="w-full max-w-32 flex flex-col items-start">
         <span className="text-xs text-[#7E7777]">{spanText}</span>

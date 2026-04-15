@@ -29,13 +29,9 @@ export default function UsersList({ users, loading, refetch, openModal }) {
               user={user}
               openModal={openModal}
               refetch={refetch}
-              moreInfoOnClick={(e) => {
-                e.stopPropagation();
-                openModal(user, "info");
-              }}
               editButtonOnClick={(e) => {
                 e.stopPropagation();
-                openModal(user, "edit", refetch);
+                openModal(user, "edit", refetch, e.currentTarget);
               }}
             />
           ))

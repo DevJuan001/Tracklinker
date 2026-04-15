@@ -1,12 +1,13 @@
+// Hooks
+import { useState } from "react";
+import { useRoles } from "../../hooks/useRoles";
+import { useCities } from "../../hooks/useCities";
+import { useCreateUser } from "../../hooks/useCreateUser";
 // Componentes
 import Loader from "../../../../globals/components/ui/Loader";
 import FormField from "../../../../globals/components/ui/FormField";
 import SelectMenu from "../../../../globals/components/modals/SelectMenu";
 import ConfirmCancelButtons from "../../../../globals/components/modals/ConfirmCancelButtons";
-// Hooks
-import { useState } from "react";
-import { useRoles } from "../../hooks/useRoles";
-import { useCreateUser } from "../../hooks/useCreateUser";
 // Modales
 import ErrorModal from "../../../../globals/components/modals/ErrorModal";
 import SuccessModal from "../../../../globals/components/modals/SuccessModal";
@@ -15,6 +16,7 @@ export default function AddUserModal({ onClose }) {
   // Estado para las modales se abren encima de esta
   const [innerModal, setInnerModal] = useState(null);
   const { roles } = useRoles();
+  const { cities } = useCities();
   const { form, loading, handleSubmit, handleChange } = useCreateUser({
     rol_id: "",
     name: "",
@@ -29,10 +31,7 @@ export default function AddUserModal({ onClose }) {
   return (
     <section className="flex flex-col items-center">
       {/* Formulario para la informacion del nuevo usuario */}
-      <form
-        action=""
-        className="w-full flex flex-col gap-2"
-      >
+      <form action="" className="w-full flex flex-col gap-4">
         {/* Menú de roles */}
         <SelectMenu
           value={form.rol_id}
@@ -76,16 +75,14 @@ export default function AddUserModal({ onClose }) {
           autoComplete="name"
         />
 
-        <FormField
+        <SelectMenu
+          spanText={"Ciudad"}
           value={form.city}
-          labelText={"Ciudad"}
-          placeholder={"Bogotá"}
-          id={"city"}
-          name={"city"}
           onChange={handleChange}
-          autoComplete="address-level2"
+          name={"city"}
+          options={cities.map((city) => ({ value: city.id, label: city.name }))}
         />
-
+        
         <FormField
           value={form.phone}
           labelText={"Número"}

@@ -10,26 +10,36 @@ export default function FormField({
   children,
 }) {
   return (
-    <div className="flex w-full flex-col items-center">
-      <label htmlFor={id} className="self-start text-sm dark:text-white">
+    <div className="relative w-full">
+      <input
+        name={name}
+        onChange={onChange}
+        value={value}
+        type={type}
+        id={id}
+        autoComplete={autoComplete}
+        className="
+          peer w-full h-16 px-4 pt-7 pb-2 rounded-xl outline-none
+          bg-transparent border
+          transition-all duration-200
+          dark:border-[#28282b] dark:focus:focus:shadow-[0_0_4px_2px_#ffffff33] dark:text-[#E4E2E5]
+          focus:shadow-[0_0_3px_2px_#e5e7eb]
+        "
+      />
+      <label
+        htmlFor={id}
+        className="
+        absolute left-3.5 top-5
+        -translate-y-1/2
+        text-xs text-[#7E777E]
+        pointer-events-none
+        transition-all duration-200
+        px-1 bg-white dark:bg-black dark:text-[#b4aab4]
+        "
+      >
         {labelText}
       </label>
-      <div
-        className="flex w-full h-14 rounded-xl outline-none border bg-[#e5e5e527] placeholder:text-[#8a8a8a] 
-      dark:bg-[#ffffff10] dark:border-[#ffffff15]"
-      >
-        <input
-          name={name}
-          onChange={onChange}
-          value={value}
-          type={type}
-          placeholder={placeholder}
-          id={id}
-          className="w-full px-6 py-3 text-sm rounded-xl outline-none bg-transparent dark:bg-[#ffffff10] dark:border-[#ffffff15] dark:text-white"
-          autoComplete={autoComplete}
-        />
-        {children}
-      </div>
+      {children}
     </div>
   );
 }

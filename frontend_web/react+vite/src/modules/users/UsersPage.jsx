@@ -8,7 +8,6 @@ import { usersIcons } from "../../assets/icons/usersIcons";
 // Modales
 import Modal from "../../globals/components/modals/Modal";
 import AddUserModal from "./components/modals/AddUserModal";
-import MoreInfoModal from "./components/modals/MoreInfoModal";
 import HelpModal from "../../globals/components/modals/HelpModal";
 import FilterUserModal from "./components/modals/FilterUserModal";
 import DisableUserModal from "./components/modals/DisableUserModal";
@@ -23,24 +22,27 @@ import EnableUserModal from "./components/modals/EnableUserModal";
 
 export default function UsersPage() {
   // Traer todos los datos o states de sus hooks
-  const { modalType, isOpen, modalData, openModal, closeModal } = useModal();
+  const { modalType, isOpen, modalData, triggerRef, openModal, closeModal } =
+    useModal();
   const { users, loading, error, fetchUsers } = useUsers();
   const [search, setSearch] = useState("");
   const filteredUsers = useSearch(users, search);
 
   return (
     <Layout
-      avatarOnClick={() => openModal(null, "user")}
-      helpOnClick={() => {
-        openModal(null, "help");
+      avatarOnClick={(e) => openModal(null, "user", null, e.currentTarget)}
+      helpOnClick={(e) => {
+        openModal(null, "help", null, e.currentTarget);
       }}
     >
       <TopSection
         sectionName={"Usuarios"}
         addButtonIcon={usersIcons.addUserIcon}
         addButtonText={"Agregar Usuario"}
-        createOnClick={() => openModal(null, "add", fetchUsers)}
-        filterOnClick={() => openModal(null, "filter")}
+        createOnClick={(e) =>
+          openModal(null, "add", fetchUsers, e.currentTarget)
+        }
+        filterOnClick={(e) => openModal(null, "filter", null, e.currentTarget)}
       >
         <SearchBar value={search} onChange={setSearch} />
       </TopSection>
@@ -64,19 +66,20 @@ export default function UsersPage() {
                 ? "Filtrar"
                 : modalType === "add"
                   ? "Agregar Usuario"
-                  : modalType === "info"
-                    ? "Información del usuario"
-                    : modalType === "edit"
-                      ? "Editar usuario"
-                      : modalType === "disable"
-                        ? "Deshabilitar usuario"
-                        : modalType === "enable"
-                          ? "Habilitar usuario"
-                          : "Ayuda"
+                  : modalType === "edit"
+                    ? "Editar usuario"
+                    : modalType === "disable"
+                      ? "Deshabilitar usuario"
+                      : modalType === "enable"
+                        ? "Habilitar usuario"
+                        : "Ayuda"
           }
+          location={modalType === "edit" ? "center" : "anchored"}
           type={modalType}
           isOpen={isOpen}
           onClose={() => closeModal()}
+          icon={usersIcons.addUserIcon}
+          triggerRef={triggerRef}
         >
           {modalType === "user" && <ProfileModal />}
           {modalType === "filter" && (
@@ -90,8 +93,6 @@ export default function UsersPage() {
           {modalType === "add" && (
             <AddUserModal onClose={() => closeModal()} openModal={openModal} />
           )}
-          {/* Modal para mas información del usuario */}
-          {modalType === "info" && <MoreInfoModal user={modalData} />}
 
           {/* Modal para editar el usuario */}
           {modalType === "edit" && (
