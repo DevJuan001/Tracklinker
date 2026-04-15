@@ -8,7 +8,6 @@ export default function UserItem({
   openModal,
   refetch,
   editButtonOnClick,
-  moreInfoOnClick,
 }) {
   return (
     <li
@@ -16,7 +15,7 @@ export default function UserItem({
       hover:bg-[#96929231]
       dark:bg-[#0f0f11] dark:hover:bg-[#212125]"
       key={user.id}
-      onClick={moreInfoOnClick}
+      onClick={editButtonOnClick}
     >
       {/* Datos del Usuario */}
       <article>
@@ -53,14 +52,22 @@ export default function UserItem({
         editButtonOnClick={editButtonOnClick}
         deleteButtonOnClick={(e) => {
           e.stopPropagation();
-          openModal(user, userStatus[user.status]?.modalType, refetch);
+          openModal(
+            user,
+            userStatus[user.status]?.modalType,
+            refetch,
+            e.currentTarget,
+          );
         }}
         visibilityIcon={userStatus[user.status]?.visibilityIcon}
-        moreInfoOnClick={moreInfoOnClick}
       >
         {/* Botón de más información del usuario */}
-        <button onClick={moreInfoOnClick}>
-          <img src={actionsIcons.moreInfoIcon} alt="" className="transition-all duration-300 hover:scale-125" />
+        <button onClick={editButtonOnClick}>
+          <img
+            src={actionsIcons.moreInfoIcon}
+            alt=""
+            className="hover:scale-125"
+          />
         </button>
       </ActionButtons>
     </li>
