@@ -57,6 +57,16 @@ class UserController:
            "data": user
         }
     
+
+    @staticmethod
+    def get_all_cities():
+        error, cities = UserRepository.find_all_cities()
+        if error:
+            raise HTTPException(status_code=404, detail=error)
+        return {
+           "data": cities
+        }
+    
     
     @staticmethod
     async def create_user(user_data: User):
