@@ -1,5 +1,9 @@
-import { useState } from "react";
+import { useRef } from "react";
+import { gsap } from "gsap";
+import { CustomEase } from "gsap/CustomEase";
 import { modalIcons } from "../../../assets/icons/modalIcons";
+import { asideIcons } from "../../../assets/icons/asideIcons";
+import { useFlipModal } from "../../hooks/useFlipModal";
 
 export default function Modal({
   isOpen,
@@ -7,83 +11,82 @@ export default function Modal({
   children,
   onClose,
   type,
+  location = "anchored",
+  triggerRef,
   z_index = "50",
 }) {
-  const [closing, setClosing] = useState(false);
+  const modalRef = useRef();
+  const contentRef = useRef();
+  const WIDTH = 500;
 
-  const visible = isOpen || closing;
+  useFlipModal({
+    isOpen,
+    modalRef,
+    contentRef,
+    triggerRef,
+    location,
+    WIDTH,
+  });
 
-  // Validación de si la modal no está visible
-  if (!visible) return null;
-
-  // Manejador para cuando la modal cierre
   const handleClose = () => {
-    setClosing(true);
-    setTimeout(() => {
-      setClosing(false);
-      onClose();
-    }, 200);
+    const rect = triggerRef?.rect;
+
+    gsap.to(contentRef.current.children, { opacity: 0, y: 10, duration: 0.2 });
+    gsap.to(modalRef.current, {
+      top: rect?.top || "50%",
+      left: rect?.left || "50%",
+      width: rect?.width || 0,
+      height: rect?.height || 0,
+      opacity: rect ? 1 : 0,
+      duration: 0.35,
+      ease: "easeCustom",
+      overflow: "hidden",
+      onComplete: onClose,
+    });
   };
 
+  if (!isOpen) return null;
+
   return (
-    /* Container de la modal */
     <section
       style={{ zIndex: z_index }}
-      className={`fixed inset-0 bg-[#00000009] dark:bg-[#0000004f]
-        ${
-          type === "filter"
-            ? `flex justify-end items-start pt-3 pr-2 bg-[#00000013] 
-              md:pr-[220px] xl:pr-[175px] 2xl:pr-[240px]`
-            : type === "add"
-              ? `flex items-center justify-center`
-              : `flex items-center justify-center`
-        }
-      `}
+      className="fixed inset-0 bg-[#0000001a] dark:bg-[#0000001a]"
       onClick={handleClose}
     >
-      {/* Card blanca o modal */}
-      {/* stopPropagation sirve para que al momento de seleccionar la modal no la cierre */}
       <section
-        className={`relative bg-white rounded-[32px] shadow-lg w-[90%] p-7 animate-blur
-            dark:bg-black dark:shadow-[0px_0px_0px_1px_#101012]
-            ${closing ? "animate-modalFadeOut" : "animate-modalFadeIn"}
-            ${
-              type === "filter"
-                ? "max-w-[400px]"
-                : type === "user"
-                  ? "max-w-2xl"
-                  : type === "add"
-                    ? `w-full h-full rounded-none 
-                    sm:max-w-[550px] sm:h-fit sm:rounded-[32px]`
-                    : type === "innerModal"
-                      ? "w-full"
-                      : type === "moreInfo"
-                        ? "max-w-xl h-fit"
-                        : "max-w-xl"
-            }
-        `}
+        ref={modalRef}
+        className={`bg-white rounded-[32px] shadow-lg p-7 dark:bg-black ${type === "filter" ? "max-w-md" : ""}`}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Cabecera de la modal donde esta el titúlo y el icono para cerrarla */}
-        <header className="flex justify-between items-center mb-4">
-          <span className="font-medium dark:text-white">{title}</span>
-          {/* Icono "x" para cerrar la modal */}
-          <button
-            onClick={handleClose}
-            className="p-1.5 rounded-3xl transition
-            hover:bg-[#efedf0]
-            dark:hover:bg-[#c5c6ce27]"
-          >
-            <img
-              src={modalIcons.closeIcon}
-              alt=""
-              className="invert brightness-200 transition duration-300
-              dark:brightness-0 dark:hover:bg-transparent"
-            />
-          </button>
-        </header>
-        {/* Contenido principal de la modal o cuerpo de la modal */}
-        <div>{children}</div>
+        <div ref={contentRef}>
+          <header className="flex justify-between items-center mb-4">
+            {(type === "filter" || type === "user") && (
+              <span className="font-medium dark:text-[#e4e2e5]">{title}</span>
+            )}
+
+            <button onClick={handleClose}>
+              <img src={modalIcons.closeIcon} className="dark:invert" />
+            </button>
+          </header>
+
+          <div className="flex flex-col gap-1">
+            {type !== "filter" &&
+              type !== "user" &&
+              type !== "disable" &&
+              type !== "enable" && (
+                <div className="flex flex-col mt-2">
+                  <div className="w-10 h-10 flex items-center justify-center bg-[#E4E2E5] rounded-full dark:bg-[#28282b]">
+                    <asideIcons.usersIcon className="w-6 h-6 fill-black dark:fill-white" />
+                  </div>
+                  <span className="text-[45px] font-medium dark:text-[#e4e2e5]">
+                    {title}
+                  </span>
+                </div>
+              )}
+
+            {children}
+          </div>
+        </div>
       </section>
     </section>
   );
