@@ -13,6 +13,11 @@ router = APIRouter(
 def get_all_roles():
     return UserController.get_all_roles()
 
+#Endpoint para obtener todas las ciudades existentes
+@router.get("/cities")
+def get_all_cities():
+    return UserController.get_all_cities()
+
 # Endpoint para obtener todos los usuarios
 @router.get("/")
 def get_all_users(

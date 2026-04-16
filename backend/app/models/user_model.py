@@ -9,7 +9,7 @@ class User(BaseModel):
     first_surname: str
     second_surname: str
     address: str
-    city: str
+    city: int
     email: EmailStr
     phone: int
     date: Optional[datetime] = None
@@ -19,7 +19,7 @@ class UpdateUser(BaseModel):
     first_surname: str
     second_surname: str
     address: str
-    city: str
+    city: int
     email: EmailStr
     phone: int
     status: int
