@@ -14,6 +14,14 @@ CREATE TABLE ROLES (
 ENGINE = InnoDB;
 
 
+CREATE TABLE CITIES (
+  city_id INT NOT NULL AUTO_INCREMENT COMMENT 'Identificador autgenerado para cada rol',
+  city_name TEXT NOT NULL COMMENT 'Nombre de cada ciudad',
+  PRIMARY KEY (city_id),
+  UNIQUE INDEX city_id_UNIQUE (city_id ASC)
+)
+ENGINE = InnoDB;
+
 -- -----------------------------------------------------
 -- Table USERS
 -- -----------------------------------------------------
@@ -27,7 +35,7 @@ CREATE TABLE USERS (
   user_email VARCHAR(255) NOT NULL COMMENT 'Correo electrónico del usuario (VARCHAR, Not null)',
   user_address VARCHAR(255) NOT NULL COMMENT 'Dirección del usuario (VARCHAR, Not null)',
   user_password VARCHAR(255) NOT NULL COMMENT 'Contrasena del usuario, se debe almacenar hasheada para mayor seguridad (VARCHAR, Not null)',
-  user_city VARCHAR(255) NOT NULL COMMENT 'Ciudad en la que se encuentra el usuario',
+  user_city INT NOT NULL COMMENT 'Ciudad en la que se encuentra el usuario',
   user_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Fecha de creación del usuario (DATE, Not null)',
   user_status INT NOT NULL DEFAULT 2 COMMENT "Estado en el que se encuentra el usuario 1 = deshabilitado, 2 = activo",
   PRIMARY KEY (user_id),
@@ -36,6 +44,11 @@ CREATE TABLE USERS (
   CONSTRAINT fk_rol_user
     FOREIGN KEY (rol_id)
     REFERENCES ROLES (rol_id)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT fk_city_user
+    FOREIGN KEY (user_city)
+    REFERENCES CITIES (city_id)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
