@@ -165,7 +165,7 @@ class AuthController:
             raise HTTPException(
                 status_code=400, detail="Las contraseñas no coinciden")
 
-        error, user = UserRepository.find_by_id(int(payload["user_id"]))
+        error, user = UserRepository.find_user_password_by_id(int(payload["user_id"]))
 
         # Validación de lo que retorna la función find_by_email
         if not user or error:
