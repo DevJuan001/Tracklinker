@@ -10,12 +10,14 @@ export default function ConfirmCancelButtons({
   cancelText = "Cancelar",
   cancelButtonWidth,
   cancelButtonOnClick,
+  confirmBtnRef,
 }) {
   return (
     <section
       className={`flex ${flexDirection} items-center self-${itemsPosition} pt-5 gap-2`}
     >
       <button
+        ref={confirmBtnRef}
         onClick={confirmButtonOnClick}
         className={`h-11 flex items-center px-6 py-2.5 gap-2 font-medium text-sm bg-${confirmBgColor} text-white  rounded-2xl transition duration-300
             hover:text-gray-300
