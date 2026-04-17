@@ -18,7 +18,7 @@ export default function SuccessModal({
       type="innerModal"
       triggerRef={triggerRef}
     >
-      <section className="flex flex-col items-center gap-1 animate-blurUp">
+      <section className="flex flex-col items-center gap-1">
         <div className="flex flex-col items-center gap-3">
           <div className="w-20 h-20 flex items-center justify-center bg-green-100 rounded-full dark:bg-green-950">
             <img src={modalIcons.confirmIcon} alt="" className="w-10" />
