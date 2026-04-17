@@ -9,7 +9,7 @@ import { asideIcons } from "../../../../assets/icons/asideIcons";
 export default function GeneralContent({ user, setInnerModal }) {
   const navigate = useNavigate();
   return (
-    <section className="flex flex-col w-full pl-3 pb-10 gap-7 animate-blurUp dark:text-white">
+    <section className="flex flex-col w-full pb-10 gap-7 animate-blurUp dark:text-white">
       {/* Información general del usuario */}
       <section className="flex flex-col">
         <span className="font-medium text-sm pl-1">Perfil</span>
