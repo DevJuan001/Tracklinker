@@ -102,113 +102,120 @@ export const useFlipModal = ({
     const content = contentRef.current;
     const element = triggerRef.element;
 
-    // Eliminamos las animaciones previas
-    gsap.killTweensOf([modal, content, element]);
+    const raf = requestAnimationFrame(() => {
+      // Eliminamos las animaciones previas
+      gsap.killTweensOf([modal, content, element]);
 
-    const triggerStyles = window.getComputedStyle(element);
-    const initialBg = triggerStyles.backgroundColor;
+      const triggerStyles = window.getComputedStyle(element);
+      const initialBg = triggerStyles.backgroundColor;
 
-    // Estado inicial del contenido interno
-    gsap.set(content, { filter: "blur(12px)", opacity: 0.3, scale: 0.95 });
+      gsap.set(modal, { opacity: 0, visibility: "hidden" });
 
-    element.dataset.flipId = "modal-flip";
-    modal.dataset.flipId = "modal-flip";
+      // Estado inicial del contenido interno
+      gsap.set(content, { filter: "blur(12px)", opacity: 0.3, scale: 0.95 });
 
-    const state = Flip.getState(element);
-    element.style.visibility = "hidden";
+      element.dataset.flipId = "modal-flip";
+      modal.dataset.flipId = "modal-flip";
 
-    // Clon para medir la altura final (mantiene el componente fluido)
-    const clone = modal.cloneNode(true);
-    Object.assign(clone.style, {
-      position: "fixed",
-      visibility: "hidden",
-      width: `${WIDTH}px`,
-      height: "auto",
-    });
+      const state = Flip.getState(element);
+      element.style.visibility = "hidden";
 
-    document.body.appendChild(clone);
-    const fullHeight = clone.offsetHeight;
-    const finalBg = window.getComputedStyle(clone).backgroundColor;
-    clone.remove();
+      // Clon para medir la altura final (mantiene el componente fluido)
+      const clone = modal.cloneNode(true);
+      Object.assign(clone.style, {
+        position: "fixed",
+        visibility: "hidden",
+        width: `${WIDTH}px`,
+        height: "auto",
+      });
 
-    const vw = window.innerWidth;
-    const vh = window.innerHeight;
+      document.body.appendChild(clone);
+      const fullHeight = clone.offsetHeight;
+      const finalBg = window.getComputedStyle(clone).backgroundColor;
+      clone.remove();
 
-    let finalLeft = (vw - WIDTH) / 2;
-    let finalTop = (vh - fullHeight) / 2;
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
 
-    if (location !== "center" && triggerRef?.rect) {
-      finalLeft = Math.min(triggerRef.rect.left, vw - WIDTH - 20);
-      finalTop = Math.min(triggerRef.rect.top, vh - fullHeight - 20);
-    }
+      let finalLeft = (vw - WIDTH) / 2;
+      let finalTop = (vh - fullHeight) / 2;
 
-    // Calculamos qué tan cerca está de los bordes para ajustar el origen
-    const isAtRight = finalLeft + WIDTH > vw - 50;
-    const isAtBottom = finalTop + fullHeight > vh - 50;
-    const isAtLeft = finalLeft < 50;
-    const isAtTop = finalTop < 50;
+      if (location !== "center" && triggerRef?.rect) {
+        finalLeft = Math.min(triggerRef.rect.left, vw - WIDTH - 20);
+        finalTop = Math.min(triggerRef.rect.top, vh - fullHeight - 20);
+      }
 
-    let originX = "center";
-    let originY = "center";
+      // Calculamos qué tan cerca está de los bordes para ajustar el origen
+      const isAtRight = finalLeft + WIDTH > vw - 50;
+      const isAtBottom = finalTop + fullHeight > vh - 50;
+      const isAtLeft = finalLeft < 50;
+      const isAtTop = finalTop < 50;
 
-    if (isAtLeft) originX = "left";
-    else if (isAtRight) originX = "right";
+      let originX = "center";
+      let originY = "center";
 
-    if (isAtTop) originY = "top";
-    else if (isAtBottom) originY = "bottom";
+      if (isAtLeft) originX = "left";
+      else if (isAtRight) originX = "right";
 
-    // Ocultamos el botón original suavemente
-    gsap.set(element, { opacity: 0 });
+      if (isAtTop) originY = "top";
+      else if (isAtBottom) originY = "bottom";
 
-    // Preparamos la modal para el Flip
-    gsap.set(modal, {
-      position: "fixed",
-      top: finalTop,
-      left: finalLeft,
-      width: WIDTH,
-      height: fullHeight,
-      borderRadius: "32px",
-      backgroundColor: initialBg,
-      overflow: "hidden",
-      transformOrigin: `${originX} ${originY}`,
-    });
+      // Ocultamos el botón original suavemente
+      gsap.set(element, { opacity: 0 });
 
-    const tl = gsap.timeline();
+      // Preparamos la modal para el Flip
+      gsap.set(modal, {
+        visibility: "visible",
+        opacity: 1,
+        position: "fixed",
+        top: finalTop,
+        left: finalLeft,
+        width: WIDTH,
+        height: fullHeight,
+        borderRadius: "32px",
+        backgroundColor: initialBg,
+        overflow: "hidden",
+        transformOrigin: `${originX} ${originY}`,
+      });
 
-    tl.add(
-      Flip.from(state, {
-        targets: modal,
-        duration: 0.7,
-        ease: "expo.out",
-        absolute: true,
-        scale: true,
-        props: "borderRadius",
-        onComplete: () => {
-          gsap.set(modal, { overflow: "visible", backgroundColor: "" });
-        },
-        onInterrupt: () => {
-          gsap.set(element, { opacity: 1, visibility: "visible" });
-        },
-      }),
-    )
-      .to(
-        modal,
-        { backgroundColor: finalBg, duration: 0.01, ease: "none" },
-        "<",
+      const tl = gsap.timeline();
+
+      tl.add(
+        Flip.from(state, {
+          targets: modal,
+          duration: 0.88,
+          ease: "expo.out",
+          absolute: true,
+          scale: true,
+          props: "borderRadius",
+          onComplete: () => {
+            gsap.set(modal, { overflow: "visible", opacity: 1 });
+          },
+          onInterrupt: () => {
+            gsap.set(element, { opacity: 1, visibility: "visible" });
+          },
+        }),
       )
-      .to(
-        content,
-        {
-          filter: "blur(0px)",
-          opacity: 1,
-          scale: 1,
-          duration: 0.4,
-          ease: "power2.out",
-        },
-        "<0.05",
-      );
+        .to(
+          modal,
+          { backgroundColor: finalBg, duration: 0.05, ease: "none" },
+          "<",
+        )
+        .to(
+          content,
+          {
+            filter: "blur(0px)",
+            opacity: 1,
+            scale: 1,
+            duration: 0.4,
+            ease: "power2.out",
+          },
+          "<0.05",
+        );
+    });
 
     return () => {
+      cancelAnimationFrame(raf);
       if (element) {
         gsap.set(element, { opacity: 1, visibility: "visible" });
         delete element.dataset.flipId;

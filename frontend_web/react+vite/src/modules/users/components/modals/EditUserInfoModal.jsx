@@ -1,12 +1,12 @@
+// Hooks
+import { useRef, useState } from "react";
+import { useRoles } from "../../hooks/useRoles";
+import { useEditUser } from "../../hooks/useEditUser";
 // Componentes
 import Loader from "../../../../globals/components/ui/Loader";
 import FormField from "../../../../globals/components/ui/FormField";
 import SelectMenu from "../../../../globals/components/modals/SelectMenu";
 import ConfirmCancelButtons from "../../../../globals/components/modals/ConfirmCancelButtons";
-// Hooks
-import { useState } from "react";
-import { useRoles } from "../../hooks/useRoles";
-import { useEditUser } from "../../hooks/useEditUser";
 // Modales
 import ErrorModal from "../../../../globals/components/modals/ErrorModal";
 import SuccessModal from "../../../../globals/components/modals/SuccessModal";
@@ -14,6 +14,8 @@ import { useCities } from "../../hooks/useCities";
 
 export default function EditUserInfoModal({ user, onClose }) {
   const [innerModal, setInnerModal] = useState(null);
+  const containerRef = useRef();
+  const confirmBtnRef = useRef();
   const { roles } = useRoles();
   const { cities } = useCities();
   const { handleChange, handleSubmit, loading, form } = useEditUser(user.id, {
@@ -29,8 +31,8 @@ export default function EditUserInfoModal({ user, onClose }) {
   });
 
   return (
-    <section className="flex flex-col items-center">
-      <form action="" className="w-full flex flex-col gap-4">
+    <section ref={containerRef} className="flex flex-col items-center">
+      <form action="" className="w-full flex flex-col gap-2.5">
         <SelectMenu
           name={"rol_id"}
           value={form.rol_id}
@@ -116,6 +118,7 @@ export default function EditUserInfoModal({ user, onClose }) {
 
       {/* Botones */}
       <ConfirmCancelButtons
+        confirmBtnRef={confirmBtnRef}
         confirmText={loading ? <Loader /> : "Confirmar"}
         cancelText={"Cancelar"}
         confirmButtonOnClick={(e) => handleSubmit(e, setInnerModal)}
@@ -125,6 +128,10 @@ export default function EditUserInfoModal({ user, onClose }) {
       {/* Modales Internas */}
       {innerModal === "success" && (
         <SuccessModal
+          triggerRef={{
+            element: confirmBtnRef.current,
+            rect: null,
+          }}
           isOpen={true}
           confirmTitle={"Información editada con éxito!"}
           confirmText={
@@ -139,6 +146,10 @@ export default function EditUserInfoModal({ user, onClose }) {
       )}
       {innerModal === "error" && (
         <ErrorModal
+          triggerRef={{
+            element: containerRef.current,
+            rect: null,
+          }}
           isOpen={true}
           errorTitle="¡No se pudo completar el registro!"
           errorText="Verfica que todos los campos esten completos y que el correo electronico es el correcto"

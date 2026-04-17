@@ -32,8 +32,6 @@ export default function Modal({
     location,
   });
 
-  if (!isOpen) return null;
-
   const enhancedChildren = React.Children.map(children, (child) => {
     if (React.isValidElement(child)) {
       return React.cloneElement(child, { onClose: closeModal });
@@ -52,6 +50,7 @@ export default function Modal({
         style={{
           willChange: "top, left, width, height, border-radius",
           transformOrigin: "center center",
+          visibility: "hidden",
         }}
         ref={modalRef}
         className={`bg-white rounded-[32px] shadow-lg p-7 dark:bg-black 
@@ -72,11 +71,11 @@ export default function Modal({
 
             <button
               onClick={closeModal}
-              className="w-10 h-10 flex items-center justify-center dark:hover:bg-[#28282bbd] rounded-full"
+              className="w-10 h-10 flex items-center justify-center hover:bg-[#49454f21] dark:hover:bg-[#28282bbd] rounded-full"
             >
               <img
                 src={modalIcons.closeIcon}
-                className="w-6 h-6 dark:invert dark:brightness-50"
+                className="w-6 h-6 brightness-0 dark:invert dark:brightness-50"
               />
             </button>
           </header>

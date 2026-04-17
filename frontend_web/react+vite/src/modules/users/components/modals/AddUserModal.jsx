@@ -1,5 +1,5 @@
 // Hooks
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useRoles } from "../../hooks/useRoles";
 import { useCities } from "../../hooks/useCities";
 import { useCreateUser } from "../../hooks/useCreateUser";
@@ -17,6 +17,7 @@ export default function AddUserModal({ onClose }) {
   const [innerModal, setInnerModal] = useState(null);
   const { roles } = useRoles();
   const { cities } = useCities();
+  const containerRef = useRef(null);
   const { form, loading, handleSubmit, handleChange } = useCreateUser({
     rol_id: "",
     name: "",
@@ -29,9 +30,9 @@ export default function AddUserModal({ onClose }) {
   });
 
   return (
-    <section className="flex flex-col items-center">
+    <section ref={containerRef} className="flex flex-col items-center">
       {/* Formulario para la informacion del nuevo usuario */}
-      <form action="" className="w-full flex flex-col gap-4">
+      <form action="" className="w-full flex flex-col gap-2.5">
         {/* Menú de roles */}
         <SelectMenu
           value={form.rol_id}
@@ -82,7 +83,7 @@ export default function AddUserModal({ onClose }) {
           name={"city"}
           options={cities.map((city) => ({ value: city.id, label: city.name }))}
         />
-        
+
         <FormField
           value={form.phone}
           labelText={"Número"}
@@ -125,6 +126,10 @@ export default function AddUserModal({ onClose }) {
       {/* Modales Internas */}
       {innerModal === "success" && (
         <SuccessModal
+          triggerRef={{
+            element: containerRef.current,
+            rect: null,
+          }}
           isOpen={true}
           confirmTitle={"Usuario creado con éxito!"}
           confirmText={
@@ -132,13 +137,17 @@ export default function AddUserModal({ onClose }) {
           }
           confirmButtonText={"Volver a la pagina"}
           onClose={() => {
-            setInnerModal(null);
             onClose();
+            setInnerModal(null);
           }}
         />
       )}
       {innerModal === "error" && (
         <ErrorModal
+          triggerRef={{
+            element: containerRef.current,
+            rect: null,
+          }}
           isOpen={true}
           errorTitle="No se puedo completar el registro!"
           errorText="Verfica que todos los campos esten completos y que el correo electronico no este registrado"
