@@ -6,11 +6,18 @@ export default function SuccessModal({
   isOpen,
   onClose,
   confirmTitle,
+  triggerRef,
   confirmText,
   confirmButtonText,
 }) {
   return (
-    <Modal z_index="250" isOpen={isOpen} onClose={onClose}>
+    <Modal
+      z_index="250"
+      isOpen={isOpen}
+      onClose={onClose}
+      type="innerModal"
+      triggerRef={triggerRef}
+    >
       <section className="flex flex-col items-center gap-1 animate-blurUp">
         <div className="flex flex-col items-center gap-3">
           <div className="w-20 h-20 flex items-center justify-center bg-green-100 rounded-full dark:bg-green-950">
