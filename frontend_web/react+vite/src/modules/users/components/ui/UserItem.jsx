@@ -60,16 +60,7 @@ export default function UserItem({
           );
         }}
         visibilityIcon={userStatus[user.status]?.visibilityIcon}
-      >
-        {/* Botón de más información del usuario */}
-        <button onClick={editButtonOnClick}>
-          <img
-            src={actionsIcons.moreInfoIcon}
-            alt=""
-            className="hover:scale-125"
-          />
-        </button>
-      </ActionButtons>
+      />
     </li>
   );
 }
