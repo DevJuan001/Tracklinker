@@ -14,8 +14,9 @@ export const useFlipModal = ({
   overlayRef,
   onClose,
   location,
-  WIDTH,
 }) => {
+  const WIDTH = 500;
+
   const closeModal = useCallback(
     (e) => {
       if (e) {
@@ -37,57 +38,45 @@ export const useFlipModal = ({
       gsap.killTweensOf([modal, content, overlay]);
 
       // Recalculamos coordenadas y estilos exactos del botón
-      const currentRect = element.getBoundingClientRect();
+      const currentRect = triggerRef.rect || element.getBoundingClientRect();
       const triggerStyles = window.getComputedStyle(element);
 
-      const vw = window.innerWidth;
-      const vh = window.innerHeight;
-
-      // Determinamos si el botón está en bordes para que el cierre no sea brusco
-      const originX =
-        currentRect.left < 100
-          ? "left"
-          : currentRect.left > vw - 100
-            ? "right"
-            : "center";
-      const originY =
-        currentRect.top < 100
-          ? "top"
-          : currentRect.top > vh - 100
-            ? "bottom"
-            : "center";
+      // Detectamos si el botón es transparente o tiene un fondo
+      const isTransparent =
+        triggerStyles.backgroundColor === "transparent" ||
+        triggerStyles.backgroundColor === "rgba(0, 0, 0, 0)" ||
+        triggerStyles.backgroundColor.split(",")[3]?.trim() === "0)";
 
       const tl = gsap.timeline({
-        onComplete: () => {
-          gsap.set(element, { opacity: 1, visibility: "visible" });
-          onClose();
-        },
+        onComplete: onClose,
       });
 
       gsap.set(modal, {
         overflow: "hidden",
-        transformOrigin: `${originX} ${originY}`,
       });
 
       tl.to(content, {
         opacity: 0,
-        filter: "blur(8px)",
-        scale: 0.9,
-        duration: 0.15,
+        duration: 0.1,
         ease: "power2.in",
       });
 
       tl.to(
         modal,
         {
-          top: currentRect.top,
-          left: currentRect.left,
-          width: currentRect.width,
-          height: currentRect.height,
+          top: Math.round(currentRect.top),
+          left: Math.round(currentRect.left),
+          width: Math.round(currentRect.width),
+          height: Math.round(currentRect.height),
+          minWidth: 0,
+          maxWidth: "none",
+          minHeight: 0,
+          maxHeight: "none",
           borderRadius: triggerStyles.borderRadius,
           backgroundColor: triggerStyles.backgroundColor,
-          duration: 0.35,
-          ease: "expo.out",
+          opacity: isTransparent ? 0 : 1,
+          duration: 0.3,
+          ease: "power3.inOut",
         },
         "-=0.1",
       );
