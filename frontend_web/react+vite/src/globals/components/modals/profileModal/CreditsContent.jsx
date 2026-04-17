@@ -2,7 +2,7 @@ import { modalIcons } from "../../../../assets/icons/modalIcons";
 
 export default function CreditsContent() {
   return (
-    <section className="flex flex-col w-full pl-3 pb-10 gap-7 animate-blurUp dark:text-white">
+    <section className="flex flex-col w-full pb-10 gap-7 animate-blurUp dark:text-white">
       {/* Creditos */}
       <section className="flex flex-col gap-2">
         <div className="flex items-center justify-between">
