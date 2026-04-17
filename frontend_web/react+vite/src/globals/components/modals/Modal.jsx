@@ -71,11 +71,11 @@ export default function Modal({
 
             <button
               onClick={closeModal}
-              className="w-10 h-10 flex items-center justify-center dark:hover:bg-[#28282bbd] rounded-full"
+              className="w-10 h-10 flex items-center justify-center hover:bg-[#49454f21] dark:hover:bg-[#28282bbd] rounded-full"
             >
               <img
                 src={modalIcons.closeIcon}
-                className="w-6 h-6 dark:invert dark:brightness-50"
+                className="w-6 h-6 brightness-0 dark:invert dark:brightness-50"
               />
             </button>
           </header>
