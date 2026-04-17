@@ -65,7 +65,7 @@ export default function UsersPage() {
               : modalType === "filter"
                 ? "Filtrar"
                 : modalType === "add"
-                  ? "Agregar Usuario"
+                  ? "Agregar usuario"
                   : modalType === "edit"
                     ? "Editar usuario"
                     : modalType === "disable"
@@ -78,7 +78,6 @@ export default function UsersPage() {
           type={modalType}
           isOpen={isOpen}
           onClose={() => closeModal()}
-          icon={usersIcons.addUserIcon}
           triggerRef={triggerRef}
         >
           {modalType === "user" && <ProfileModal />}
