@@ -1,5 +1,4 @@
 import { useRef } from "react";
-import { CustomEase } from "gsap/CustomEase";
 import { modalIcons } from "../../../assets/icons/modalIcons";
 import { asideIcons } from "../../../assets/icons/asideIcons";
 import { useFlipModal } from "../../hooks/useFlipModal";
