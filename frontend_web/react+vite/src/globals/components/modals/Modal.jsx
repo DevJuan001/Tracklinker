@@ -32,8 +32,6 @@ export default function Modal({
     location,
   });
 
-  if (!isOpen) return null;
-
   const enhancedChildren = React.Children.map(children, (child) => {
     if (React.isValidElement(child)) {
       return React.cloneElement(child, { onClose: closeModal });
@@ -52,6 +50,7 @@ export default function Modal({
         style={{
           willChange: "top, left, width, height, border-radius",
           transformOrigin: "center center",
+          visibility: "hidden",
         }}
         ref={modalRef}
         className={`bg-white rounded-[32px] shadow-lg p-7 dark:bg-black 
