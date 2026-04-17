@@ -54,7 +54,6 @@ class UserRepository:
             filters.append("DATE(u.user_date) <= %s")
             values.append(end_date)
 
-
         if name_order == "asc":
             query += " ORDER BY u.user_name ASC"
         elif name_order == "desc":
@@ -63,7 +62,7 @@ class UserRepository:
         if status:
             filters.append("u.user_status = %s")
             values.append(status)
-        
+
         if filters:
             query += " WHERE " + " AND ".join(filters)
 
@@ -103,6 +102,7 @@ class UserRepository:
         # Petición a la base de datos
         query = """
         SELECT
+            rol_name,
             user_name,
             user_first_surname,
             user_second_surname,
@@ -111,7 +111,9 @@ class UserRepository:
             user_email,
             user_address,
             user_city
-        FROM USERS
+        FROM USERS as u
+        INNER JOIN ROLES as r
+            ON u.rol_id = r.rol_id
         WHERE user_id = %s
         """
 
@@ -124,6 +126,7 @@ class UserRepository:
 
             data = [
                 {
+                    "role": item["rol_name"],
                     "name": item["user_name"],
                     "first_surname": item["user_first_surname"],
                     "second_surname": item["user_second_surname"],
@@ -136,6 +139,33 @@ class UserRepository:
                 for item in result
             ]
             return None, data
+        except Exception as e:
+            return f"Error al ejecutar la consulta: {e}", None
+        finally:
+            cursor.close()
+            connection.close()
+
+    @staticmethod
+    def find_user_password_by_id(user_id: int):
+        connection = get_connection()
+        cursor = connection.cursor(dictionary=True)
+
+        # Petición a la base de datos
+        query = """
+        SELECT
+            user_password
+        FROM USERS
+        WHERE user_id = %s
+        """
+
+        try:
+            cursor.execute(query, (user_id,))
+            result = cursor.fetchall()
+
+            if not result:
+                return "Usuario no encontrado", None
+
+            return None, result
         except Exception as e:
             return f"Error al ejecutar la consulta: {e}", None
         finally:
@@ -174,8 +204,8 @@ class UserRepository:
             cursor.close()
             connection.close()
 
-
     # Obtener todas las ciudades
+
     @staticmethod
     def find_all_cities():
         connection = get_connection()
