@@ -20,7 +20,7 @@ export default function FilterModal({
   const finishInputRef = useRef(null);
 
   return (
-    <section className="w-full flex flex-col gap-2 px-1 font-dmsans">
+    <section className="w-full flex flex-col gap-2 font-dmsans">
       <div className="flex flex-col gap-1">
         {/* Inputs para seleccionar las fechas */}
         <span className="text-sm dark:text-white">Fecha de {fieldName}</span>

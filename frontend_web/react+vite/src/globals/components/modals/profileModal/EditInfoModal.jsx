@@ -28,6 +28,7 @@ export default function EditInfoModal({ isOpen, onClose, user }) {
       title={"Editar información"}
       isOpen={isOpen}
       onClose={onClose}
+      location="center"
     >
       <section className="flex flex-col items-center gap-1 animate-blurUp">
         <FormField

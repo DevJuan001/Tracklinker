@@ -6,14 +6,16 @@ export default function AppearanceContent() {
   return (
     <section className="flex flex-col w-full pb-10 gap-7 animate-blurUp dark:text-white">
       {/* Opciones de apariencia */}
-      <section className="flex flex-col gap-2">
+      <section className="flex flex-col gap-2 w-full">
         <span className="font-medium text-sm pl-1">Apariencia</span>
-        <section className="flex gap-2">
+        <section className="flex gap-2 w-full">
           {/* Sistema */}
           <button
             onClick={() => setTheme("system")}
             className={`flex flex-col items-start gap-1.5 py-2.5 pl-3 pr-20 border rounded-xl focus:outline focus:outline-2
-              dark:bg-[#2020226c] dark:border-[#f0efed5b]`}
+            dark:bg-[#2020226c] dark:border-[#f0efed5b]
+            md:pr-[75px]
+            `}
           >
             <div className="flex items-center">
               <img
@@ -27,13 +29,15 @@ export default function AppearanceContent() {
                 className="h-5 dark:border dark:border-gray-800 rounded-full"
               />
             </div>
-            <span className="font-medium text-sm">Sistema</span>
+            <span className="font-medium text-xs md:text-sm">Sistema</span>
           </button>
           {/* Claro */}
           <button
             onClick={() => setTheme("light")}
             className={`flex flex-col items-start gap-2 py-2.5 pl-3 pr-20 border rounded-xl focus:outline focus:outline-2
-              dark:bg-[#2020226c] dark:border-[#f0efed5b]`}
+            dark:bg-[#2020226c] dark:border-[#f0efed5b]
+            md:pr-[75px]
+            `}
           >
             <img
               src={modalIcons.whiteCircle}
@@ -46,7 +50,9 @@ export default function AppearanceContent() {
           <button
             onClick={() => setTheme("dark")}
             className={`flex flex-col items-start gap-2 py-2.5 pl-3 pr-20 border rounded-xl focus:outline focus:outline-1.5 
-              dark:bg-[#2020226c] dark:border-[#f0efed5b]`}
+              dark:bg-[#2020226c] dark:border-[#f0efed5b]
+              md:pr-[75px]
+              `}
           >
             <img
               src={modalIcons.blackCircle}

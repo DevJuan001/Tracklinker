@@ -9,6 +9,7 @@ function App() {
       <BrowserRouter>
         <AppRouter />
       </BrowserRouter>
+      <div id="modal-root"></div>
     </div>
   );
 }
