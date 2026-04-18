@@ -29,7 +29,7 @@ export default function SelectMenu({
           tabIndex={0}
           onClick={() => setOpen(!open)}
           className="relative w-full h-16 pr-2 pt-2 flex items-center border border-[#a1a1a131] 
-          rounded-2xl cursor-pointer text-sm transition-all duration-300 focus:shadow-[0_0_2px_1px_#e5e7eb]
+          rounded-2xl cursor-pointer text-sm transition-all duration-300 focus-within:shadow-[0_0_3px_2px_#e5e7eb]
           dark:border-[#28282b] dark:text-[#E4E2E5] dark:focus:focus:shadow-[0_0_4px_2px_#ffffff33]"
         >
           <div className="absolute top-2 left-3 px-1">
