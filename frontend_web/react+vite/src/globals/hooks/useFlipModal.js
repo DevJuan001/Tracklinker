@@ -15,7 +15,127 @@ export const useFlipModal = ({
   onClose,
   location,
 }) => {
-  const WIDTH = 500;
+  useEffect(() => {
+    if (!isOpen || !modalRef.current || !triggerRef?.element) return;
+
+    const modal = modalRef.current;
+    const content = contentRef.current;
+    const element = triggerRef.element;
+    const overlay = overlayRef?.current;
+
+    let cancelled = false;
+
+    const raf = requestAnimationFrame(() => {
+      if (cancelled) return;
+      gsap.killTweensOf([modal, content, element, overlay]);
+
+      // 1. MEDIR dimensiones finales reales del modal tal como React las colocó en el DOM
+      // (con sus clases y media-queries aplicadas antes de que las alteremos)
+      const fullWidth = modal.offsetWidth;
+      const fullHeight = modal.offsetHeight;
+      const finalBg = window.getComputedStyle(modal).backgroundColor;
+
+      // 2. AHORA SÍ aplicamos las anulaciones físicas necesarias para que GSAP pueda encogerlo/estirarlo
+      modal.style.setProperty("min-height", "0px", "important");
+      modal.style.setProperty("min-width", "0px", "important");
+
+      // Limpiamos todos los estilos del contenido de la modal para que Flip pueda calcular correctamente su posición y tamaño
+      gsap.set(content, {
+        clearProps: "position,top,left,width,height,boxSizing",
+      });
+
+      // emparejamiento padre para que Flip reconozca que la Modal y el Botón son "el mismo"
+      element.dataset.flipId = "modal-morph";
+      modal.dataset.flipId = "modal-morph";
+
+      // "Shared Elements": localizamos dinámicamente gemelos dentro de los botones y modales
+      const triggerShared = Array.from(
+        element.querySelectorAll("[data-flip-id]"),
+      );
+      const modalShared = Array.from(
+        modal.querySelectorAll("[data-flip-id]"),
+      ).filter((n) => n !== modal);
+
+      const state = Flip.getState([element, ...triggerShared], {
+        props: "borderRadius,backgroundColor,color,padding",
+      });
+
+      element.style.setProperty("opacity", "0", "important");
+      element.style.setProperty("visibility", "hidden", "important");
+
+      const triggerStyles = window.getComputedStyle(element);
+
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+
+      let finalLeft = Math.round((vw - fullWidth) / 2);
+      let finalTop = Math.round((vh - fullHeight) / 2);
+
+      if (location !== "center" && triggerRef?.rect) {
+        finalLeft = Math.round(
+          Math.min(triggerRef.rect.left, vw - fullWidth - 20),
+        );
+        finalTop = Math.round(
+          Math.min(triggerRef.rect.top, vh - fullHeight - 20),
+        );
+      }
+
+      finalLeft = Math.max(20, finalLeft);
+      finalTop = Math.max(20, finalTop);
+
+      gsap.set(modal, {
+        visibility: "visible",
+        opacity: 1,
+        position: "fixed",
+        top: finalTop,
+        left: finalLeft,
+        width: fullWidth,
+        height: fullHeight,
+        margin: 0,
+        backgroundColor: finalBg,
+        borderRadius: "32px",
+        overflow: "hidden",
+        clearProps: "transform,x,y,scale,xPercent,yPercent",
+      });
+
+      const tl = gsap.timeline();
+
+      tl.add(
+        Flip.from(state, {
+          targets: [modal, ...modalShared],
+          nested: true,
+          duration: 0.38,
+          ease: "expo.out",
+          props: "borderRadius,backgroundColor,color,padding",
+          onComplete: () => {
+            if (cancelled) return;
+            modal.style.removeProperty("min-height");
+            modal.style.removeProperty("min-width");
+            gsap.set(modal, {
+              overflow: "visible",
+              clearProps: "backgroundColor,color,padding",
+            });
+            element.style.setProperty("opacity", "0", "important");
+            element.style.setProperty("visibility", "hidden", "important");
+          },
+        }),
+      );
+    });
+
+    return () => {
+      cancelled = true;
+      cancelAnimationFrame(raf);
+      if (element) {
+        element.style.removeProperty("opacity");
+        element.style.removeProperty("visibility");
+        gsap.set(element, {
+          opacity: 1,
+          visibility: "visible",
+          clearProps: "opacity,visibility",
+        });
+      }
+    };
+  }, [isOpen, triggerRef, location, modalRef, contentRef, overlayRef]);
 
   const closeModal = useCallback(
     (e) => {
@@ -34,193 +154,129 @@ export const useFlipModal = ({
         return;
       }
 
-      // Eliminamos las animaciones previas
-      gsap.killTweensOf([modal, content, overlay]);
+      // Matamos TODO — incluyendo tweens de apertura a medias
+      gsap.killTweensOf([modal, content, overlay, element]);
+      gsap.globalTimeline
+        .getChildren(true, true, true)
+        .forEach((t) => t.kill());
 
-      // Recalculamos coordenadas y estilos exactos del botón
-      const currentRect = triggerRef.rect || element.getBoundingClientRect();
+      // Limpiamos !important inline que pudo dejar la apertura
+      element.style.removeProperty("opacity");
+      element.style.removeProperty("visibility");
+
+      const buttonChildren = Array.from(element.children);
+
+      // Botón oculto — sus hijos listos para el reveal
+      gsap.set(element, { opacity: 0, visibility: "hidden" });
+      gsap.set(buttonChildren, { clearProps: "filter,y,opacity" });
+      gsap.set(buttonChildren, { filter: "blur(8px)", y: 8, opacity: 0 });
+
+      // ← sin ningún gsap.set que lo revierta aquí
+
+      gsap.set(modal, { overflow: "hidden" });
+
+      const contentRect = content.getBoundingClientRect();
+      gsap.set(content, {
+        position: "absolute",
+        top: content.offsetTop,
+        left: content.offsetLeft,
+        width: contentRect.width,
+        height: contentRect.height,
+        boxSizing: "border-box",
+      });
+
+      const modalShared = Array.from(
+        modal.querySelectorAll("[data-flip-id]"),
+      ).filter((n) => n !== modal);
+
+      const state = Flip.getState([modal, ...modalShared], {
+        props: "backgroundColor,color,padding",
+      });
+
+      const triggerRect = element.getBoundingClientRect();
       const triggerStyles = window.getComputedStyle(element);
 
-      // Detectamos si el botón es transparente o tiene un fondo
-      const isTransparent =
-        triggerStyles.backgroundColor === "transparent" ||
-        triggerStyles.backgroundColor === "rgba(0, 0, 0, 0)" ||
-        triggerStyles.backgroundColor.split(",")[3]?.trim() === "0)";
-
-      const tl = gsap.timeline({
-        onComplete: onClose,
-      });
+      gsap.set(modal, { clearProps: "transform,x,y,scale,xPercent,yPercent" });
+      modal.style.setProperty("min-height", "0px", "important");
+      modal.style.setProperty("min-width", "0px", "important");
 
       gsap.set(modal, {
+        position: "fixed",
+        top: triggerRect.top,
+        left: triggerRect.left,
+        width: triggerRect.width,
+        height: triggerRect.height,
+        padding: triggerStyles.padding,
+        backgroundColor: triggerStyles.backgroundColor,
+        color: triggerStyles.color,
         overflow: "hidden",
+        margin: 0,
       });
 
-      tl.to(content, {
-        opacity: 0,
-        duration: 0.1,
-        ease: "power2.in",
-      });
+      function cleanup() {
+        modal.style.removeProperty("min-height");
+        modal.style.removeProperty("min-width");
+        gsap.set(element, {
+          opacity: 1,
+          visibility: "visible",
+          clearProps: "opacity,visibility",
+        });
+        gsap.set(buttonChildren, { clearProps: "filter,y,opacity" });
+        onClose();
+      }
+
+      const tl = gsap.timeline({ onComplete: cleanup, onInterrupt: cleanup });
+
+      if (overlay) {
+        tl.to(overlay, { backgroundColor: "rgba(0,0,0,0)", duration: 0.15 }, 0);
+      }
+
+      tl.to(
+        content,
+        { filter: "blur(12px)", duration: 0.12, ease: "power2.in" },
+        0,
+      );
+
+      tl.add(
+        Flip.from(state, {
+          targets: [modal, ...modalShared],
+          nested: true,
+          duration: 0.18,
+          ease: "power4.in",
+          props: "backgroundColor,color,padding",
+        }),
+        0,
+      );
 
       tl.to(
         modal,
         {
-          top: Math.round(currentRect.top),
-          left: Math.round(currentRect.left),
-          xPercent: 0,
-          width: Math.round(currentRect.width),
-          height: Math.round(currentRect.height),
-          minWidth: 0,
-          maxWidth: "none",
-          minHeight: 0,
-          maxHeight: "none",
           borderRadius: triggerStyles.borderRadius,
-          backgroundColor: triggerStyles.backgroundColor,
-          opacity: isTransparent ? 0 : 1,
-          duration: 0.25,
-          ease: "power3.inOut",
+          duration: 0.14,
+          ease: "power2.inOut",
         },
-        "-=0.1",
+        0.04,
       );
 
-      if (overlay) {
-        tl.to(
-          overlay,
-          {
-            backgroundColor: "rgba(0, 0, 0, 0)",
-            duration: 0.3,
-          },
-          "<",
-        );
-      }
+      tl.to(modal, { opacity: 0, duration: 0.04, ease: "none" }, 0.16);
+
+      tl.set(element, { opacity: 1, visibility: "visible" }, 0.2);
+
+      tl.to(
+        buttonChildren,
+        {
+          filter: "blur(0px)",
+          y: 0,
+          opacity: 1,
+          duration: 0.15,
+          ease: "power2.out",
+          stagger: 0.02,
+        },
+        0.17,
+      );
     },
     [onClose, triggerRef, modalRef, contentRef, overlayRef],
   );
-
-  useEffect(() => {
-    if (!isOpen || !modalRef.current || !triggerRef?.element) return;
-
-    const modal = modalRef.current;
-    const content = contentRef.current;
-    const element = triggerRef.element;
-
-    const sharedEls = Array.from(element.querySelectorAll("[data-flip-id]"));
-
-    const raf = requestAnimationFrame(() => {
-      gsap.killTweensOf([modal, content, element]);
-
-      const triggerStyles = window.getComputedStyle(element);
-      const initialBg = triggerStyles.backgroundColor;
-
-      gsap.set(modal, { opacity: 0, visibility: "hidden" });
-      gsap.set(content, { filter: "blur(12px)", opacity: 0.3, scale: 0.95 });
-
-      element.dataset.flipId = "modal-flip";
-      modal.dataset.flipId = "modal-flip";
-
-      const state = Flip.getState([element, ...sharedEls], {
-        props: "fontSize,color",
-      });
-
-      element.style.visibility = "hidden";
-
-      const clone = modal.cloneNode(true);
-      Object.assign(clone.style, {
-        position: "fixed",
-        visibility: "hidden",
-        width: `${WIDTH}px`,
-        height: "auto",
-      });
-
-      document.body.appendChild(clone);
-      const fullHeight = clone.offsetHeight;
-      const finalBg = window.getComputedStyle(clone).backgroundColor;
-      clone.remove();
-
-      const vw = window.innerWidth;
-      const vh = window.innerHeight;
-
-      let finalLeft = (vw - WIDTH) / 2;
-      let finalTop = (vh - fullHeight) / 2;
-
-      if (location !== "center" && triggerRef?.rect) {
-        finalLeft = Math.min(triggerRef.rect.left, vw - WIDTH - 20);
-        finalTop = Math.min(triggerRef.rect.top, vh - fullHeight - 20);
-      }
-
-      const isAtRight = finalLeft + WIDTH > vw - 50;
-      const isAtBottom = finalTop + fullHeight > vh - 50;
-      const isAtLeft = finalLeft < 50;
-      const isAtTop = finalTop < 50;
-
-      let originX = "center";
-      let originY = "center";
-
-      if (isAtLeft) originX = "left";
-      else if (isAtRight) originX = "right";
-
-      if (isAtTop) originY = "top";
-      else if (isAtBottom) originY = "bottom";
-
-      gsap.set(element, { opacity: 0 });
-
-      gsap.set(modal, {
-        visibility: "visible",
-        opacity: 1,
-        position: "fixed",
-        top: finalTop,
-        left: location === "center" ? vw / 2 : finalLeft,
-        xPercent: location === "center" ? -50 : 0,
-        width: WIDTH,
-        height: fullHeight,
-        borderRadius: "32px",
-        backgroundColor: initialBg,
-        overflow: "hidden",
-        transformOrigin: `${originX} ${originY}`,
-      });
-
-      const tl = gsap.timeline();
-
-      tl.add(
-        Flip.from(state, {
-          targets: modal,
-          duration: 1,
-          ease: "expo.out",
-          absolute: true,
-          scale: true,
-          props: "borderRadius,fontSize,color",
-          onComplete: () => {
-            gsap.set(modal, { overflow: "visible", opacity: 1 });
-          },
-          onInterrupt: () => {
-            gsap.set(element, { opacity: 1, visibility: "visible" });
-          },
-        }),
-      )
-        .to(
-          modal,
-          { backgroundColor: finalBg, duration: 0.05, ease: "none" },
-          "<",
-        )
-        .to(
-          content,
-          {
-            filter: "blur(0px)",
-            opacity: 1,
-            scale: 1,
-            duration: 0.4,
-            ease: "power2.out",
-          },
-          "<0.05",
-        );
-    });
-
-    return () => {
-      cancelAnimationFrame(raf);
-      if (element) {
-        gsap.set(element, { opacity: 1, visibility: "visible" });
-      }
-    };
-  }, [isOpen, triggerRef, location, modalRef, contentRef, WIDTH]);
 
   return { closeModal };
 };
