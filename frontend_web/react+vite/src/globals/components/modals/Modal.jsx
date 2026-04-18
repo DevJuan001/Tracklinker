@@ -40,50 +40,54 @@ export default function Modal({
   });
 
   return createPortal(
-    <section
-      ref={overlayRef}
-      style={{ zIndex: z_index }}
-      className="fixed inset-0 bg-[#0000001a] dark:bg-[#0000001a]"
-      onClick={closeModal}
-    >
+    <div>
       <section
-        style={{
-          willChange: "top, left, width, height, border-radius",
-          transformOrigin: "center center",
-          visibility: "hidden",
-        }}
-        ref={modalRef}
-        className={`bg-white rounded-[32px] shadow-lg p-7 dark:bg-black 
-        ${
-          type === "user"
-            ? "max-w-full min-h-screen md:min-w-[650px] md:max-w-[650px] md:min-h-[550px] md:max-h-[550px]"
-            : type === "help"
-              ? "md:min-w-[600px]"
-              : ""
-        }`}
-        onClick={(e) => e.stopPropagation()}
+        ref={overlayRef}
+        style={{ zIndex: z_index }}
+        className="fixed inset-0 bg-[#0000001a] dark:bg-[#0000001a]"
+        onClick={closeModal}
       >
-        <header className="flex justify-between items-center mb-2">
-          <span
-            data-flip-id="modal-title"
-            className="min-w-36 font-medium text-lg dark:text-[#e4e2e5]"
-          >
-            {title}
-          </span>
+        <section
+          style={{
+            visibility: "hidden",
+          }}
+          ref={modalRef}
+          className={`bg-white rounded-[32px] shadow-lg p-7 dark:bg-black 
+          ${
+            type === "user"
+              ? "max-w-full min-h-screen md:min-w-[650px] md:max-w-[650px] md:min-h-[550px] md:max-h-[550px]"
+              : type === "help"
+                ? "md:max-w-[600px]"
+                : type === "filter"
+                  ? "min-w-[450px] max-w-[450px]"
+                  : "min-w-[500px] max-w-[500px]"
+          }`}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div ref={contentRef}>
+            <header className="flex justify-between items-center mb-2">
+              <span
+                data-flip-id="modal-title"
+                className="min-w-40 font-medium text-lg dark:text-[#e4e2e5]"
+              >
+                {title}
+              </span>
+              <button
+                onClick={closeModal}
+                className="w-10 h-10 self-end flex items-center justify-center hover:bg-[#49454f21] dark:hover:bg-[#28282bbd] rounded-full"
+              >
+                <img
+                  src={modalIcons.closeIcon}
+                  className="w-6 h-6 brightness-0 dark:invert dark:brightness-50"
+                />
+              </button>
+            </header>
 
-          <button
-            onClick={closeModal}
-            className="w-10 h-10 flex items-center justify-center hover:bg-[#49454f21] dark:hover:bg-[#28282bbd] rounded-full"
-          >
-            <img
-              src={modalIcons.closeIcon}
-              className="w-6 h-6 brightness-0 dark:invert dark:brightness-50"
-            />
-          </button>
-        </header>
-        <div ref={contentRef}>{enhancedChildren}</div>
+            {enhancedChildren}
+          </div>
+        </section>
       </section>
-    </section>,
+    </div>,
     document.getElementById("modal-root"),
   );
 }
