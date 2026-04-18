@@ -49,10 +49,20 @@ export default function Calendar({ onClose, value, onChange, triggerRef }) {
   useEffect(() => {
     if (triggerRef?.current) {
       const rect = triggerRef.current.getBoundingClientRect();
+      const calendarWidth = 400;
+      const padding = 20;
+
+      const wouldOverflowRight = rect.left + calendarWidth > window.innerWidth;
+
+      let finalLeft = rect.left;
+
+      if (wouldOverflowRight) {
+        finalLeft = window.innerWidth - calendarWidth - padding;
+      }
+
       setCoords({
-        top: rect.bottom - 60,
-        left: rect.left,
-        width: rect.width,
+        top: rect.bottom + window.scrollY + 8,
+        left: Math.max(padding, finalLeft),
       });
     }
   }, [triggerRef]);
@@ -64,8 +74,12 @@ export default function Calendar({ onClose, value, onChange, triggerRef }) {
     >
       {coords && (
         <div
-          style={{ top: coords.top, right: coords.right }}
-          className="fixed min-w-[400px] max-w-[600px] mt-14 p-2 bg-white border border-[#a1a1a131] rounded-[32px] cursor-default overflow-hidden z-[600]
+          style={{
+            position: "absolute",
+            top: coords.top + 5,
+            left: coords.left,
+          }}
+          className="min-w-[400px] max-w-[600px] p-2 bg-white border border-[#a1a1a131] rounded-[32px] cursor-default overflow-hidden z-[600]
         dark:border-[#ffffff15] dark:bg-black"
           onClick={(e) => e.stopPropagation()}
         >
@@ -128,7 +142,7 @@ export default function Calendar({ onClose, value, onChange, triggerRef }) {
                   isSelected(day)
                     ? "bg-black text-white font-bold text-lg dark:bg-white dark:text-black hover:bg-gray-200"
                     : isToday(day)
-                      ? "bg-gray-100 dark:bg-[#ffffff15] dark:bg-[#75777e60] font-medium dark:text-white hover:bg-gray-200"
+                      ? "bg-gray-100 dark:bg-[#75777e60] font-medium dark:text-white hover:bg-gray-200"
                       : "text-[#44474e] hover:bg-gray-200 dark:hover:bg-[#ffffff15] dark:text-white hover:font-bold"
                 }`}
               >
