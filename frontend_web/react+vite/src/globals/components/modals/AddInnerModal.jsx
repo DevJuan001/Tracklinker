@@ -1,6 +1,12 @@
 import Modal from "./Modal";
 
-export default function AddInnerModal({ children, isOpen, onClose, title }) {
+export default function AddInnerModal({
+  children,
+  isOpen,
+  onClose,
+  title,
+  triggerRef,
+}) {
   return (
     <Modal
       z_index="150"
@@ -8,6 +14,8 @@ export default function AddInnerModal({ children, isOpen, onClose, title }) {
       onClose={onClose}
       title={title}
       type={"innerModal"}
+      triggerRef={triggerRef}
+      location={"center"}
     >
       {children}
     </Modal>
