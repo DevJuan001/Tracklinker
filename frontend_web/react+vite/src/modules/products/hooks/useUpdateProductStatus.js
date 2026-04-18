@@ -1,7 +1,11 @@
 import { useState } from "react";
 import { updateProductStatusService } from "../services/updateProductStatusService";
 
-export function useUpdateProductStatus(product_data) {
+export function useUpdateProductStatus(product) {
+  const [form, setForm] = useState({
+    product_id: product.product_id,
+    product_status: 1,
+  });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -10,7 +14,7 @@ export function useUpdateProductStatus(product_data) {
     setLoading(true);
 
     try {
-      const response = await updateProductStatusService(product_data);
+      const response = await updateProductStatusService(form);
       if (response.success) {
         setInnerModal("success");
       } else {
@@ -24,5 +28,5 @@ export function useUpdateProductStatus(product_data) {
     }
   }
 
-  return { loading, error, handleSubmit };
+  return { form, loading, error, handleSubmit };
 }
