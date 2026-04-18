@@ -22,29 +22,30 @@ import AddWarrantyModal from "../warranties/components/modals/AddWarrantyModal";
 import ProfileModal from "../../globals/components/modals/profileModal/ProfileModal";
 
 export default function ProductsPage() {
-  const { modalType, modalData, isOpen, openModal, closeModal } = useModal();
+  const { modalType, modalData, isOpen, triggerRef, openModal, closeModal } =
+    useModal();
   const { fetchProducts, products } = useCatalog();
   const [search, setSearch] = useState();
   const filteredProducts = useSearch(products, search);
 
   return (
     <Layout
-      avatarOnClick={() => {
-        openModal(null, "user");
+      avatarOnClick={(e) => {
+        openModal(null, "user", null, e.currentTarget);
       }}
-      helpOnClick={() => {
-        openModal(null, "help");
+      helpOnClick={(e) => {
+        openModal(null, "help", null, e.currentTarget);
       }}
     >
       <TopSection
         sectionName={"Productos"}
         addButtonIcon={productsIcons.addProductIcon}
         addButtonText={"Agregar Producto"}
-        createOnClick={() => {
-          openModal(null, "add", fetchProducts);
+        createOnClick={(e) => {
+          openModal(null, "add", fetchProducts, e.currentTarget);
         }}
-        filterOnClick={() => {
-          openModal(null, "filter");
+        filterOnClick={(e) => {
+          openModal(null, "filter", null, e.currentTarget);
         }}
       >
         <SearchBar value={search} onChange={setSearch} />
@@ -81,6 +82,8 @@ export default function ProductsPage() {
           }
           type={modalType}
           isOpen={isOpen}
+          triggerRef={triggerRef}
+          location={modalType === "filter" ? "anchored" : "center"}
           onClose={() => {
             closeModal();
           }}
