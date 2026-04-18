@@ -121,10 +121,10 @@ export default function ProductsFilterModal({ refetch, onCloseModal }) {
           value={form.product_status}
           onChange={handleChange}
           options={[
-            { value: 0, label: "Deshabilitado" },
-            { value: 1, label: "Activo" },
-            { value: 2, label: "Vendido" },
-            { value: 3, label: "En Garantía" },
+            { value: 1, label: "Deshabilitado" },
+            { value: 2, label: "Activo" },
+            { value: 3, label: "Vendido" },
+            { value: 4, label: "En Garantía" },
           ]}
         />
 
