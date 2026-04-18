@@ -10,16 +10,20 @@ export default function ActionButtons({
   return (
     <section className="flex items-center justify-center gap-5 dark:invert">
       {children}
-      <button onClick={editButtonOnClick}>
+      <button
+        onClick={editButtonOnClick}
+        className="transition-colors duration-300 rounded-xl p-1.5 hover:bg-[#969292a8]"
+      >
         <img
           src={actionsIcons.editInfoIcon}
           alt=""
-          className="dark:brightness-200 hover:scale-125"
+          className="dark:brightness-200"
         />
       </button>
       <button
         onClick={deleteButtonOnClick}
-        className={`${deleteButtonVisible ? "" : "hidden"}`}
+        className={`${deleteButtonVisible ? "" : "hidden"}
+        transition-colors duration-300 rounded-xl p-1.5 hover:bg-[#969292a8]`}
       >
         <img
           src={
@@ -28,7 +32,7 @@ export default function ActionButtons({
               : actionsIcons.lockVisibility
           }
           alt=""
-          className="dark:brightness-200 hover:scale-125"
+          className="dark:brightness-200"
         />
       </button>
     </section>

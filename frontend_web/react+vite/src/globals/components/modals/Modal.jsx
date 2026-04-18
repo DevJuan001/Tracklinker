@@ -63,25 +63,25 @@ export default function Modal({
         }`}
         onClick={(e) => e.stopPropagation()}
       >
-        <div ref={contentRef}>
-          <header className="flex justify-between items-center mb-2">
-            <span className="font-medium text-lg dark:text-[#e4e2e5]">
-              {title}
-            </span>
+        <header className="flex justify-between items-center mb-2">
+          <span
+            data-flip-id="modal-title"
+            className="min-w-36 font-medium text-lg dark:text-[#e4e2e5]"
+          >
+            {title}
+          </span>
 
-            <button
-              onClick={closeModal}
-              className="w-10 h-10 flex items-center justify-center hover:bg-[#49454f21] dark:hover:bg-[#28282bbd] rounded-full"
-            >
-              <img
-                src={modalIcons.closeIcon}
-                className="w-6 h-6 brightness-0 dark:invert dark:brightness-50"
-              />
-            </button>
-          </header>
-
-          {enhancedChildren}
-        </div>
+          <button
+            onClick={closeModal}
+            className="w-10 h-10 flex items-center justify-center hover:bg-[#49454f21] dark:hover:bg-[#28282bbd] rounded-full"
+          >
+            <img
+              src={modalIcons.closeIcon}
+              className="w-6 h-6 brightness-0 dark:invert dark:brightness-50"
+            />
+          </button>
+        </header>
+        <div ref={contentRef}>{enhancedChildren}</div>
       </section>
     </section>,
     document.getElementById("modal-root"),

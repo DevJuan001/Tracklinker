@@ -66,6 +66,7 @@ export const useFlipModal = ({
         {
           top: Math.round(currentRect.top),
           left: Math.round(currentRect.left),
+          xPercent: 0,
           width: Math.round(currentRect.width),
           height: Math.round(currentRect.height),
           minWidth: 0,
@@ -75,7 +76,7 @@ export const useFlipModal = ({
           borderRadius: triggerStyles.borderRadius,
           backgroundColor: triggerStyles.backgroundColor,
           opacity: isTransparent ? 0 : 1,
-          duration: 0.3,
+          duration: 0.25,
           ease: "power3.inOut",
         },
         "-=0.1",
@@ -102,25 +103,26 @@ export const useFlipModal = ({
     const content = contentRef.current;
     const element = triggerRef.element;
 
+    const sharedEls = Array.from(element.querySelectorAll("[data-flip-id]"));
+
     const raf = requestAnimationFrame(() => {
-      // Eliminamos las animaciones previas
       gsap.killTweensOf([modal, content, element]);
 
       const triggerStyles = window.getComputedStyle(element);
       const initialBg = triggerStyles.backgroundColor;
 
       gsap.set(modal, { opacity: 0, visibility: "hidden" });
-
-      // Estado inicial del contenido interno
       gsap.set(content, { filter: "blur(12px)", opacity: 0.3, scale: 0.95 });
 
       element.dataset.flipId = "modal-flip";
       modal.dataset.flipId = "modal-flip";
 
-      const state = Flip.getState(element);
+      const state = Flip.getState([element, ...sharedEls], {
+        props: "fontSize,color",
+      });
+
       element.style.visibility = "hidden";
 
-      // Clon para medir la altura final (mantiene el componente fluido)
       const clone = modal.cloneNode(true);
       Object.assign(clone.style, {
         position: "fixed",
@@ -145,7 +147,6 @@ export const useFlipModal = ({
         finalTop = Math.min(triggerRef.rect.top, vh - fullHeight - 20);
       }
 
-      // Calculamos qué tan cerca está de los bordes para ajustar el origen
       const isAtRight = finalLeft + WIDTH > vw - 50;
       const isAtBottom = finalTop + fullHeight > vh - 50;
       const isAtLeft = finalLeft < 50;
@@ -160,16 +161,15 @@ export const useFlipModal = ({
       if (isAtTop) originY = "top";
       else if (isAtBottom) originY = "bottom";
 
-      // Ocultamos el botón original suavemente
       gsap.set(element, { opacity: 0 });
 
-      // Preparamos la modal para el Flip
       gsap.set(modal, {
         visibility: "visible",
         opacity: 1,
         position: "fixed",
         top: finalTop,
-        left: finalLeft,
+        left: location === "center" ? vw / 2 : finalLeft,
+        xPercent: location === "center" ? -50 : 0,
         width: WIDTH,
         height: fullHeight,
         borderRadius: "32px",
@@ -183,11 +183,11 @@ export const useFlipModal = ({
       tl.add(
         Flip.from(state, {
           targets: modal,
-          duration: 0.88,
+          duration: 1,
           ease: "expo.out",
           absolute: true,
           scale: true,
-          props: "borderRadius",
+          props: "borderRadius,fontSize,color",
           onComplete: () => {
             gsap.set(modal, { overflow: "visible", opacity: 1 });
           },
@@ -218,7 +218,6 @@ export const useFlipModal = ({
       cancelAnimationFrame(raf);
       if (element) {
         gsap.set(element, { opacity: 1, visibility: "visible" });
-        delete element.dataset.flipId;
       }
     };
   }, [isOpen, triggerRef, location, modalRef, contentRef, WIDTH]);

@@ -11,8 +11,8 @@ export default function UserItem({
 }) {
   return (
     <li
-      className="flex items-center justify-between p-5 bg-[#96929213] rounded-lg transition duration-300 cursor-pointer
-      hover:bg-[#96929231]
+      className="flex items-center justify-between p-5 bg-[#F5F3F6] rounded-lg transition duration-300 cursor-pointer
+      hover:bg-[#9692923b]
       dark:bg-[#0f0f11] dark:hover:bg-[#212125]"
       key={user.id}
       onClick={editButtonOnClick}

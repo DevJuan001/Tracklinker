@@ -11,7 +11,7 @@ import ErrorModal from "../ErrorModal";
 import SuccessModal from "../SuccessModal";
 import { actionsIcons } from "../../../../assets/icons/actionsIcons";
 
-export default function ChangePasswordModal({ isOpen, onClose }) {
+export default function ChangePasswordModal({ isOpen, onClose, triggerRef }) {
   const [innerModal, setInnerModal] = useState(null);
   const {
     handleChange,
@@ -24,65 +24,70 @@ export default function ChangePasswordModal({ isOpen, onClose }) {
   } = useUpdateCurrentUserPassword();
   return (
     <Modal
-      z_index="100"
+      z_index="300"
       title={"Cambiar contraseña"}
       isOpen={isOpen}
+      type="innerModal"
       onClose={onClose}
+      location="center"
+      triggerRef={triggerRef}
     >
       <section className="flex flex-col items-center w-full gap-2">
-        <section>
-          <FormField
-            type={showPasswords.old ? "text" : "password"}
-            name="old_password"
-            labelText={"Contraseña actual"}
-            onChange={handleChange}
-          >
-            <button type="button" onClick={() => togglePassword("old")}>
-              <img
-                src={
-                  showPasswords.old
-                    ? actionsIcons.lockVisibility
-                    : actionsIcons.visibility
-                }
-                alt=""
-              />
-            </button>
-          </FormField>
-          <FormField
-            type={showPasswords.new ? "text" : "password"}
-            name="new_password"
-            labelText={"Nueva contraseña"}
-            onChange={handleChange}
-          >
-            <button type="button" onClick={() => togglePassword("new")}>
-              <img
-                src={
-                  showPasswords.new
-                    ? actionsIcons.lockVisibility
-                    : actionsIcons.visibility
-                }
-                alt=""
-              />
-            </button>
-          </FormField>
-          <FormField
-            type={showPasswords.repeat ? "text" : "password"}
-            name="repeat_password"
-            labelText={"Repita la nueva contraseña"}
-            onChange={handleChange}
-          >
-            <button type="button" onClick={() => togglePassword("repeat")}>
-              <img
-                src={
-                  showPasswords.repeat
-                    ? actionsIcons.lockVisibility
-                    : actionsIcons.visibility
-                }
-                alt=""
-              />
-            </button>
-          </FormField>
-        </section>
+        <div></div>
+        <FormField
+          id={"old_password"}
+          type={showPasswords.old ? "text" : "password"}
+          name="old_password"
+          labelText={"Contraseña actual"}
+          onChange={handleChange}
+        >
+          <button type="button" onClick={() => togglePassword("old")}>
+            <img
+              src={
+                showPasswords.old
+                  ? actionsIcons.lockVisibility
+                  : actionsIcons.visibility
+              }
+              alt=""
+            />
+          </button>
+        </FormField>
+        <FormField
+          id={"new_password"}
+          type={showPasswords.new ? "text" : "password"}
+          name="new_password"
+          labelText={"Nueva contraseña"}
+          onChange={handleChange}
+        >
+          <button type="button" onClick={() => togglePassword("new")}>
+            <img
+              src={
+                showPasswords.new
+                  ? actionsIcons.lockVisibility
+                  : actionsIcons.visibility
+              }
+              alt=""
+            />
+          </button>
+        </FormField>
+        <FormField
+          id={"repeat_password"}
+          type={showPasswords.repeat ? "text" : "password"}
+          name="repeat_password"
+          labelText={"Repita la nueva contraseña"}
+          onChange={handleChange}
+        >
+          <button type="button" onClick={() => togglePassword("repeat")}>
+            <img
+              src={
+                showPasswords.repeat
+                  ? actionsIcons.lockVisibility
+                  : actionsIcons.visibility
+              }
+              alt=""
+            />
+          </button>
+        </FormField>
         {!passwordsMatch && passwordData.repeat_password && (
           <span className="text-sm text-red-700">
             Las contraseñas no coinciden

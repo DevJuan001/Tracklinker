@@ -6,7 +6,7 @@ import { logout } from "../../../../modules/login/services/authService";
 import { actionsIcons } from "../../../../assets/icons/actionsIcons";
 import { asideIcons } from "../../../../assets/icons/asideIcons";
 
-export default function GeneralContent({ user, setInnerModal }) {
+export default function GeneralContent({ user, onEditClick, onPasswordClick }) {
   const navigate = useNavigate();
   return (
     <section className="flex flex-col w-full pb-10 gap-7 animate-blurUp dark:text-white">
@@ -32,11 +32,8 @@ export default function GeneralContent({ user, setInnerModal }) {
           </span>
         </div>
         <button
-          onClick={(e) => {
-            e.preventDefault();
-            setInnerModal("editInfo");
-          }}
-          className="flex items-center gap-1.5 px-3 py-2.5 rounded-lg bg-black text-white
+          onClick={onEditClick}
+          className="flex items-center gap-1.5 px-4 py-3 rounded-lg bg-black text-white
           dark:bg-[#2020226c]"
         >
           <img
@@ -54,11 +51,8 @@ export default function GeneralContent({ user, setInnerModal }) {
           <span className="text-xs font-light">Cambiar tu Contraseña</span>
         </section>
         <button
-          onClick={(e) => {
-            e.preventDefault();
-            setInnerModal("changePassword");
-          }}
-          className="flex items-center gap-1.5 px-3 py-2.5 rounded-lg bg-black text-sm bg-blacktransition text-white
+          onClick={onPasswordClick}
+          className="flex items-center gap-1.5 px-4 py-3 rounded-lg bg-black text-sm bg-blacktransition text-white
           dark:bg-[#2020226c] dark:text-white dark:hover:text-gray-800"
         >
           <img
@@ -79,8 +73,8 @@ export default function GeneralContent({ user, setInnerModal }) {
         </section>
         <button
           onClick={() => logout(navigate)}
-          className="flex items-center gap-1.5 px-3 py-2.5 rounded-lg bg-black text-sm bg-blacktransition text-white
-                            dark:bg-[#2020226c] dark:text-white dark:hover:text-gray-800"
+          className="flex items-center gap-1.5 px-4 py-3 rounded-lg bg-black text-sm bg-blacktransition text-white
+          dark:bg-[#2020226c] dark:text-white dark:hover:text-gray-800"
         >
           <asideIcons.logoutIcon
             alt="Cerrar sesión"
