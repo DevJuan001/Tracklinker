@@ -1,8 +1,11 @@
 import { useState } from "react";
 import { createInputOrderService } from "../services/createInputOrderService";
 
-export function useCreateInputOrder(formData) {
-  const [form, setForm] = useState(formData);
+export function useCreateInputOrder() {
+  const [form, setForm] = useState({
+    supplier_id: "",
+    input_order_bill: "",
+  });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -11,16 +14,26 @@ export function useCreateInputOrder(formData) {
     setForm((prevForm) => ({ ...prevForm, [name]: value }));
   }
 
-  async function handleSubmit(e, setInnerModal) {
+  async function handleSubmit(e, openInnerModal) {
     e.preventDefault();
     setLoading(true);
+
+    const buttonElement = e.currentTarget;
+    const buttonRect = buttonElement.getBoundingClientRect();
+
     try {
       const response = await createInputOrderService(form);
       if (response.success) {
-        setInnerModal("success");
+        openInnerModal("success", {
+          currentTarget: buttonElement,
+          rect: buttonRect,
+        });
       }
     } catch (error) {
-      setInnerModal("error");
+      openInnerModal("error", {
+        currentTarget: buttonElement,
+        rect: buttonRect,
+      });
       setError(error);
     } finally {
       setLoading(false);
