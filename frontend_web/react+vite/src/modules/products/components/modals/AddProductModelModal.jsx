@@ -12,7 +12,7 @@ import ErrorModal from "../../../../globals/components/modals/ErrorModal";
 import SuccessModal from "../../../../globals/components/modals/SuccessModal";
 import AddInnerModal from "../../../../globals/components/modals/AddInnerModal";
 
-export default function AddProductModelModal({ isOpen, onClose }) {
+export default function AddProductModelModal({ triggerRef, isOpen, onClose }) {
   const [innerModal, setInnerModal] = useState(null);
   const { brands } = useCatalog();
   const { form, loading, handleChange, handleSubmit } = useCreateProductModel({
@@ -21,8 +21,13 @@ export default function AddProductModelModal({ isOpen, onClose }) {
     product_detail_description: "",
   });
   return (
-    <AddInnerModal isOpen={isOpen} onClose={onClose} title={"Agregar modelo"}>
-      <section className="w-full flex flex-col items-center">
+    <AddInnerModal
+      triggerRef={triggerRef}
+      isOpen={isOpen}
+      onClose={onClose}
+      title={"Agregar modelo"}
+    >
+      <section className="w-full flex flex-col items-center gap-2.5">
         <SelectMenu
           value={form.product_brand_id}
           name="product_brand_id"
