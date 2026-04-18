@@ -10,8 +10,15 @@ export default function FormField({
   children,
 }) {
   return (
-    <div className="relative w-full">
+    <div
+      tabIndex={0}
+      className="relative flex w-full border pr-2 rounded-xl
+      focus-within:shadow-[0_0_3px_2px_#e5e7eb]
+      dark:border-[#28282b] dark:focus:shadow-[0_0_4px_2px_#ffffff33]
+      "
+    >
       <input
+        placeholder={placeholder}
         name={name}
         onChange={onChange}
         value={value}
@@ -19,22 +26,22 @@ export default function FormField({
         id={id}
         autoComplete={autoComplete}
         className="
-          peer w-full h-16 px-4 pt-7 pb-2 rounded-xl outline-none
-          bg-transparent border
+          w-full h-16 px-4 pt-7 pb-2 outline-none
+          bg-transparent rounded-xl
           transition-all duration-200
-          dark:border-[#28282b] dark:focus:focus:shadow-[0_0_4px_2px_#ffffff33] dark:text-[#E4E2E5]
-          focus:shadow-[0_0_3px_2px_#e5e7eb]
+          autofill:bg-white autofill:shadow-[inset_0_0_0px_1000px_white]
+          dark:text-[#E4E2E5]
         "
       />
       <label
         htmlFor={id}
         className="
-        absolute left-3.5 top-5
+        absolute left-3.5 top-5 px-0.5
         -translate-y-1/2
         text-xs text-[#7E777E]
         pointer-events-none
         transition-all duration-200
-        px-1 bg-white dark:bg-black dark:text-[#b4aab4]
+        bg-white dark:bg-black dark:text-[#b4aab4]
         "
       >
         {labelText}
