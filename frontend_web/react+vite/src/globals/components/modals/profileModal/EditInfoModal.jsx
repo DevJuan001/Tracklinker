@@ -10,7 +10,7 @@ import Modal from "../Modal";
 import ErrorModal from "../ErrorModal";
 import SuccessModal from "../SuccessModal";
 
-export default function EditInfoModal({ isOpen, onClose, user }) {
+export default function EditInfoModal({ isOpen, onClose, user, triggerRef }) {
   const { handleChange, handleSubmit, userData, loading } =
     useUpdateCurrentUserInfo({
       name: user?.name || "",
@@ -24,14 +24,17 @@ export default function EditInfoModal({ isOpen, onClose, user }) {
   const [innerModal, setInnerModal] = useState(null);
   return (
     <Modal
-      z_index="150"
+      z_index="300"
       title={"Editar información"}
       isOpen={isOpen}
-      onClose={onClose}
+      type="innerModal"
       location="center"
+      onClose={onClose}
+      triggerRef={triggerRef}
     >
-      <section className="flex flex-col items-center gap-1 animate-blurUp">
+      <section className="flex flex-col items-center gap-2">
         <FormField
+          id={"name"}
           name={"name"}
           labelText={"Nombre"}
           value={userData.name}
@@ -39,6 +42,7 @@ export default function EditInfoModal({ isOpen, onClose, user }) {
           autoComplete="given-name"
         />
         <FormField
+          id={"first_surname"}
           name={"first_surname"}
           labelText={"Primer Apellido"}
           value={userData.first_surname}
@@ -46,6 +50,7 @@ export default function EditInfoModal({ isOpen, onClose, user }) {
           autoComplete="family-name"
         />
         <FormField
+          id={"second_surname"}
           name={"second_surname"}
           labelText={"Segundo Apellido"}
           value={userData.second_surname}
@@ -53,6 +58,7 @@ export default function EditInfoModal({ isOpen, onClose, user }) {
           autoComplete="family-name"
         />
         <FormField
+          id={"email"}
           name={"email"}
           labelText={"Correo eléctronico"}
           value={userData.email}
@@ -60,6 +66,7 @@ export default function EditInfoModal({ isOpen, onClose, user }) {
           autoComplete="email"
         />
         <FormField
+          id={"phone"}
           name={"phone"}
           labelText={"Teléfono"}
           value={userData.phone}
@@ -67,6 +74,7 @@ export default function EditInfoModal({ isOpen, onClose, user }) {
           autoComplete="tel"
         />
         <FormField
+          id={"city"}
           name={"city"}
           labelText={"Ciudad"}
           value={userData.city}
@@ -74,6 +82,7 @@ export default function EditInfoModal({ isOpen, onClose, user }) {
           autoComplete="address-level2"
         />
         <FormField
+          id={"address"}
           name={"address"}
           labelText={"Dirección"}
           value={userData.address}
