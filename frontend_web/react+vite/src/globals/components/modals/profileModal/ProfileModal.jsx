@@ -1,5 +1,5 @@
 // Hooks
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useUser } from "../../../hooks/useUser";
 // Icons
 import { modalIcons } from "../../../../assets/icons/modalIcons";
@@ -13,12 +13,19 @@ import EditInfoModal from "./EditInfoModal";
 import ChangePasswordModal from "./ChangePasswordModal";
 
 export default function ProfileModal() {
-  const { user, fetchCurrentUser } = useUser();
+  const containerRef = useRef(null);
+
+  const [editTrigger, setEditTrigger] = useState(null);
+  const [passwordTrigger, setPasswordTrigger] = useState(null);
   const [activeSection, setActiveSection] = useState("general");
   const [innerModal, setInnerModal] = useState(null);
+
+  const { user, fetchCurrentUser } = useUser();
+
   return (
     <section
-      className="flex flex-col-reverse items-center min-h-full max-h-full gap-4
+      ref={containerRef}
+      className="flex flex-col-reverse items-center h-full gap-4
       md:grid md:grid-cols-[150px_1fr]"
     >
       <aside className="w-full border-gray-300 justify-self-end dark:border-[#3a3d43] md:justify-self-start md:self-start">
@@ -95,7 +102,24 @@ export default function ProfileModal() {
 
       {/* Contenido de la sección seleccionada */}
       {activeSection === "general" && (
-        <GeneralContent user={user} setInnerModal={setInnerModal} />
+        <GeneralContent
+          user={user}
+          setInnerModal={setInnerModal}
+          onEditClick={(e) => {
+            setEditTrigger({
+              element: e.currentTarget,
+              rect: e.currentTarget.getBoundingClientRect(),
+            });
+            setInnerModal("editInfo");
+          }}
+          onPasswordClick={(e) => {
+            setPasswordTrigger({
+              element: e.currentTarget,
+              rect: e.currentTarget.getBoundingClientRect(),
+            });
+            setInnerModal("changePassword");
+          }}
+        />
       )}
       {activeSection === "appearance" && <AppearanceContent />}
       {activeSection === "credits" && <CreditsContent />}
@@ -103,6 +127,7 @@ export default function ProfileModal() {
       {/* Modales Internas */}
       {innerModal === "editInfo" && (
         <EditInfoModal
+          triggerRef={editTrigger}
           isOpen={true}
           onClose={() => {
             fetchCurrentUser();
@@ -113,6 +138,7 @@ export default function ProfileModal() {
       )}
       {innerModal === "changePassword" && (
         <ChangePasswordModal
+          triggerRef={passwordTrigger}
           isOpen={true}
           onClose={() => setInnerModal(null)}
         />
