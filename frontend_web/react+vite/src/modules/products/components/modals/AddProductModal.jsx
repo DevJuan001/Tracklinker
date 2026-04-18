@@ -1,8 +1,8 @@
 // Hooks
-import { useState } from "react";
 import { useCatalog } from "../../hooks/useCatalog";
 import { useCreateProduct } from "../../hooks/useCreateProduct";
-import { actionsIcons } from "../../../../assets/icons/actionsIcons";
+import { useInnerModal } from "../../../../globals/hooks/useInnerModal";
+// Icons
 import { productsIcons } from "../../../../assets/icons/productsIcons";
 // Componentes
 import Loader from "../../../../globals/components/ui/Loader";
@@ -19,7 +19,8 @@ import AddInnerModal from "../../../../globals/components/modals/AddInnerModal";
 import AddSubcategoryModal from "../../../subcategories/components/modals/AddSubcategoryModal";
 
 export default function AddProductModal({ onCloseModal }) {
-  const [innerModal, setInnerModal] = useState(null);
+  const { innerType, innerTrigger, openInnerModal } = useInnerModal();
+
   const {
     subcategories,
     brands,
@@ -30,186 +31,184 @@ export default function AddProductModal({ onCloseModal }) {
     fetchModels,
     fetchInputOrders,
   } = useCatalog();
-  const { form, loading, handleChange, handleSubmit } = useCreateProduct({
-    input_order_id: "",
-    subcategory_id: "",
-    product_details_id: "",
-    product_serial: "",
-    product_brand_name: "",
-    product_garanty_input: "",
-  });
+
+  const { form, loading, handleChange, handleSubmit } = useCreateProduct();
 
   return (
-    <section className="w-full flex flex-col items-center">
+    <section className="w-full flex flex-col items-center gap-2">
+      {/* Menú de ordenes de entrada */}
+      <SelectMenu
+        value={form.input_order_id}
+        spanText={"Orden de entrada"}
+        onChange={handleChange}
+        name={"input_order_id"}
+        addIconFunction={(e) => openInnerModal("addInputOrder", e)}
+        addButtonInvisible={false}
+        options={inputOrders.map((inputOrder) => ({
+          value: inputOrder.id,
+          label: inputOrder.bill,
+        }))}
+      />
 
-        <div className="w-full">
-          {/* Menú de ordenes de entrada */}
-          <SelectMenu
-            value={form.input_order_id}
-            spanText={"Orden de entrada"}
-            onChange={handleChange}
-            name={"input_order_id"}
-            addIcon={actionsIcons.addIcon}
-            addIconFunction={() => setInnerModal("addInputOrder")}
-            addButtonInvisible={false}
-            options={inputOrders.map((inputOrder) => ({
-              value: inputOrder.id,
-              label: inputOrder.bill,
-            }))}
-          />
+      {/* Menú de subcategorias */}
+      <SelectMenu
+        value={form.subcategory_id}
+        name={"subcategory_id"}
+        spanText={"Subcategoria"}
+        onChange={handleChange}
+        addIconFunction={(e) => openInnerModal("addSubcategory", e)}
+        addButtonInvisible={false}
+        options={subcategories.map((subcategory) => ({
+          value: subcategory.subcategory_id,
+          label: subcategory.subcategory_name,
+        }))}
+      />
 
-          {/* Menú de subcategorias */}
-          <SelectMenu
-            value={form.subcategory_id}
-            name={"subcategory_id"}
-            spanText={"Subcategoria"}
-            onChange={handleChange}
-            addIcon={actionsIcons.addIcon}
-            addIconFunction={() => setInnerModal("addSubcategory")}
-            addButtonInvisible={false}
-            options={subcategories.map((subcategory) => ({
-              value: subcategory.subcategory_id,
-              label: subcategory.subcategory_name,
-            }))}
-          />
+      {/* Menú de marcas */}
+      <SelectMenu
+        value={form.product_brand_name}
+        spanText={"Marca"}
+        name={"product_brand_name"}
+        onChange={handleChange}
+        addIconFunction={(e) => openInnerModal("addBrand", e)}
+        addButtonInvisible={false}
+        options={brands.map((brand) => ({
+          value: brand.id,
+          label: brand.name,
+        }))}
+      />
 
-          {/* Menú de marcas */}
-          <SelectMenu
-            value={form.product_brand_name}
-            spanText={"Marca"}
-            name={"product_brand_name"}
-            onChange={handleChange}
-            addIcon={actionsIcons.addIcon}
-            addIconFunction={() => setInnerModal("addBrand")}
-            addButtonInvisible={false}
-            options={brands.map((brand) => ({
-              value: brand.id,
-              label: brand.name,
-            }))}
-          />
+      {/* Menú de modelos */}
+      <SelectMenu
+        value={form.product_details_id}
+        spanText={"Modelo"}
+        name={"product_details_id"}
+        onChange={handleChange}
+        id={"model"}
+        addIconFunction={(e) => openInnerModal("addModel", e)}
+        addButtonInvisible={false}
+        options={models.map((model) => ({
+          value: model.id,
+          label: model.model,
+        }))}
+      />
+      <FormField
+        name={"product_serial"}
+        labelText={"Serial"}
+        placeholder={"10KQ340"}
+        id={"product_serial"}
+        onChange={handleChange}
+      />
 
-          {/* Menú de modelos */}
-          <SelectMenu
-            value={form.product_details_id}
-            spanText={"Modelo"}
-            name={"product_details_id"}
-            onChange={handleChange}
-            id={"model"}
-            addIcon={actionsIcons.addIcon}
-            addIconFunction={() => setInnerModal("addModel")}
-            addButtonInvisible={false}
-            options={models.map((model) => ({
-              value: model.id,
-              label: model.model,
-            }))}
-          />
-          <FormField
-            name={"product_serial"}
-            labelText={"Serial"}
-            placeholder={"10KQ340"}
-            id={"product_serial"}
-            onChange={handleChange}
-          />
+      <SelectMenu
+        name={"product_garanty_input"}
+        onChange={handleChange}
+        value={form.product_garanty_input}
+        spanText={"Tiempo de garantía"}
+        options={[
+          { value: "3", label: "3 Meses" },
+          { value: "6", label: "6 Meses" },
+          { value: "9", label: "9 Meses" },
+          { value: "12", label: "12 Meses" },
+          { value: "24", label: "24 Meses" },
+        ]}
+      />
 
-          <SelectMenu
-            name={"product_garanty_input"}
-            onChange={handleChange}
-            value={form.product_garanty_input}
-            spanText={"Tiempo de garantía"}
-            options={[
-              { value: "3", label: "3 Meses" },
-              { value: "6", label: "6 Meses" },
-              { value: "9", label: "9 Meses" },
-              { value: "12", label: "12 Meses" },
-              { value: "24", label: "24 Meses" },
-            ]}
+      <div className="flex items-center justify-center my-2">
+        <span className="dark:text-white">o</span>
+      </div>
+      {/* Botón de leer código de barras */}
+      <section className="flex items-center justify-center">
+        <button
+          className="flex items-center py-3 px-4 gap-2 border rounded-lg transition duration-300 
+          hover:bg-gray-300
+          dark:bg-[#2020226c] dark:hover:bg-[#2c2c2e] dark:border-[#101012] hover:cursor-pointer"
+          onClick={onCloseModal}
+          disabled
+        >
+          <img
+            src={productsIcons.barcodeIcon}
+            alt=""
+            className="dark:invert dark:brightness-0"
           />
-        </div>
-        <div>
-          <div className="flex items-center justify-center p-3">
-            <span className="dark:text-white">o</span>
-          </div>
-          {/* Botón de leer código de barras */}
-          <section className="flex items-center justify-center">
-            <button
-              className="flex items-center py-3 px-4 gap-2 border rounded-lg transition duration-300 
-                    hover:bg-gray-300
-                    dark:bg-[#2020226c] dark:hover:bg-[#2c2c2e] dark:border-[#101012] hover:cursor-pointer"
-              onClick={onCloseModal}
-              disabled
-            >
-              <img
-                src={productsIcons.barcodeIcon}
-                alt=""
-                className="dark:invert dark:brightness-0"
-              />
-              <span className="text-sm dark:text-white">¡Proximamente!</span>
-            </button>
-          </section>
-          {/* Botones */}
-          <ConfirmCancelButtons
-            confirmText={loading ? <Loader /> : "Crear"}
-            cancelButtonOnClick={onCloseModal}
-            confirmButtonOnClick={(e) => handleSubmit(e, setInnerModal)}
-          />
-        </div>
+          <span className="text-sm dark:text-white">¡Proximamente!</span>
+        </button>
+      </section>
+
+      {/* Botones */}
+      <ConfirmCancelButtons
+        confirmText={loading ? <Loader /> : "Crear"}
+        cancelButtonOnClick={onCloseModal}
+        confirmButtonOnClick={(e) => handleSubmit(e, openInnerModal)}
+      />
 
       {/* Modales internos */}
-      {innerModal === "success" && (
+      {innerType === "success" && (
         <SuccessModal
+          triggerRef={innerTrigger}
           isOpen={true}
-          onClose={() => (setInnerModal(null), onCloseModal())}
+          onClose={() => (openInnerModal(null), onCloseModal())}
           confirmTitle={"Producto Creado Correctamente"}
           confirmText={"El producto ha sido creado correctamente."}
           confirmButtonText={"Volver a la página"}
         />
       )}
-      {innerModal === "error" && (
+
+      {innerType === "error" && (
         <ErrorModal
+          triggerRef={innerTrigger}
           isOpen={true}
-          onClose={() => setInnerModal(null)}
+          onClose={() => openInnerModal(null)}
           errorTitle={"Error al crear el producto"}
           errorText={"Ha ocurrido un error al intentar crear el producto."}
           confirmButtonText={"Volver a intentarlo"}
         />
       )}
-      {innerModal === "addInputOrder" && (
+
+      {innerType === "addInputOrder" && (
         <AddInputOrderModal
+          triggerRef={innerTrigger}
           isOpen={true}
           onClose={() => {
-            setInnerModal(null);
+            openInnerModal(null);
             fetchInputOrders();
           }}
         />
       )}
-      {innerModal === "addSubcategory" && (
+
+      {innerType === "addSubcategory" && (
         <AddInnerModal
+          triggerRef={innerTrigger}
           isOpen={true}
-          onClose={() => setInnerModal(null)}
+          onClose={() => openInnerModal(null)}
           title={"Agregar subcategoria"}
         >
           <AddSubcategoryModal
             onClose={() => {
-              setInnerModal(null);
+              openInnerModal(null);
               fetchSubcategories();
             }}
           />
         </AddInnerModal>
       )}
-      {innerModal === "addBrand" && (
+
+      {innerType === "addBrand" && (
         <AddProductBrandModal
+          triggerRef={innerTrigger}
           isOpen={true}
           onClose={() => {
-            setInnerModal(null);
+            openInnerModal(null);
             fetchBrands();
           }}
         />
       )}
-      {innerModal === "addModel" && (
+
+      {innerType === "addModel" && (
         <AddProductModelModal
+          triggerRef={innerTrigger}
           isOpen={true}
           onClose={() => {
-            setInnerModal(null);
+            openInnerModal(null);
             fetchModels;
           }}
         />
