@@ -18,6 +18,7 @@ export default function FormField({
       "
     >
       <input
+        required
         placeholder={placeholder}
         name={name}
         onChange={onChange}
