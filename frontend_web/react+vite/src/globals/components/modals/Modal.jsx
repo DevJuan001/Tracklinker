@@ -59,7 +59,7 @@ export default function Modal({
               : type === "help"
                 ? "md:max-w-[600px]"
                 : type === "filter"
-                  ? "min-w-[450px] max-w-[450px]"
+                  ? "min-w-[400px] max-w-[400px]"
                   : "min-w-[500px] max-w-[500px]"
           }`}
           onClick={(e) => e.stopPropagation()}
