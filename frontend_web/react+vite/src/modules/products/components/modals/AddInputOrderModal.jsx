@@ -1,5 +1,5 @@
 // Hooks
-import { useState } from "react";
+import { useInnerModal } from "../../../../globals/hooks/useInnerModal";
 import { useSuppliers } from "../../../suppliers/hooks/useSuppliers";
 import { useCreateInputOrder } from "../../hooks/useCreateInputOrder";
 // Components
@@ -12,54 +12,56 @@ import ErrorModal from "../../../../globals/components/modals/ErrorModal";
 import SuccessModal from "../../../../globals/components/modals/SuccessModal";
 import AddInnerModal from "../../../../globals/components/modals/AddInnerModal";
 
-export default function AddInputOrderModal({ isOpen, onClose }) {
-  const [innerModal, setInnerModal] = useState(null);
+export default function AddInputOrderModal({ triggerRef, isOpen, onClose }) {
+  const { innerType, innerTrigger, openInnerModal, closeInnerModal } =
+    useInnerModal();
   const { suppliers } = useSuppliers();
-  const { form, loading, handleChange, handleSubmit } = useCreateInputOrder({
-    supplier_id: "",
-    input_order_bill: "",
-  });
+  const { form, loading, handleChange, handleSubmit } = useCreateInputOrder();
   return (
     <AddInnerModal
+      triggerRef={triggerRef}
       isOpen={isOpen}
       onClose={onClose}
       title={"Agregar orden de entrada"}
     >
-      <section className="w-full flex flex-col items-center">
-        <section className="w-full flex flex-col items-center">
-          <SelectMenu
-            value={form.supplier_id}
-            name={"supplier_id"}
-            spanText={"Proveedor"}
-            id={"supplier_id"}
-            onChange={handleChange}
-            options={suppliers.map((supplier) => ({
-              value: supplier.supplier_id,
-              label: supplier.supplier_name,
-            }))}
-          />
-          <FormField
-            name={"input_order_bill"}
-            labelText={"Factura a la que pertenece"}
-            placeholder={"Ej: INP0001"}
-            id={"input_order_bill"}
-            onChange={handleChange}
-          />
-        </section>
+      <section className="w-full flex flex-col items-center gap-2.5">
+        <SelectMenu
+          value={form.supplier_id}
+          name={"supplier_id"}
+          spanText={"Proveedor"}
+          id={"supplier_id"}
+          onChange={handleChange}
+          options={suppliers.map((supplier) => ({
+            value: supplier.supplier_id,
+            label: supplier.supplier_name,
+          }))}
+        />
+        <FormField
+          name={"input_order_bill"}
+          labelText={"Factura a la que pertenece"}
+          placeholder={"Ej: INP0001"}
+          id={"input_order_bill"}
+          onChange={handleChange}
+        />
 
         <ConfirmCancelButtons
+          confirmBtnRef={innerTrigger}
           confirmText={loading ? <Loader /> : "Agregar"}
-          confirmButtonOnClick={(e) => handleSubmit(e, setInnerModal)}
+          confirmButtonOnClick={(e) => handleSubmit(e, openInnerModal)}
           cancelButtonOnClick={onClose}
         />
       </section>
       {/* Modales Internas */}
-      {innerModal === "success" && (
+      {innerType === "success" && (
         <SuccessModal
+          triggerRef={innerTrigger}
           isOpen={true}
-          onClose={() => {
+          onClose={(e) => {
+            if (e && e.stopPropagation) {
+              e.stopPropagation();
+            }
             onClose();
-            setInnerModal(null);
+            closeInnerModal();
           }}
           confirmTitle={"Orden creada correctamente"}
           confirmButtonText={"Volver"}
@@ -68,10 +70,16 @@ export default function AddInputOrderModal({ isOpen, onClose }) {
           }
         />
       )}
-      {innerModal === "error" && (
+      {innerType === "error" && (
         <ErrorModal
+          triggerRef={innerTrigger}
           isOpen={true}
-          onClose={() => setInnerModal(null)}
+          onClose={(e) => {
+            if (e && e.stopPropagation) {
+              e.stopPropagation();
+            }
+            openInnerModal(null);
+          }}
           confirmButtonText={"Volver a intentarlo"}
           errorTitle={"!No se pudo crear la orden!"}
           errorText={
