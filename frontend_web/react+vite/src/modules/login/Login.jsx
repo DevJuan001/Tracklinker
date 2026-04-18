@@ -8,7 +8,7 @@ import ErrorModal from "./components/modals/ErrorModal";
 import RecoverPasswordModal from "./components/modals/RecoverPasswordModal";
 
 export default function Login() {
-  const { modalType, isOpen, openModal, closeModal } = useModal();
+  const { modalType, isOpen, triggerRef, openModal, closeModal } = useModal();
 
   return (
     <section className="w-screen h-screen flex items-center justify-center">
@@ -19,6 +19,8 @@ export default function Login() {
           title={modalType === "rememberPassword" ? "Olvide Mi Contraseña" : ""}
           type={modalType}
           isOpen={isOpen}
+          location="center"
+          triggerRef={triggerRef}
           onClose={() => closeModal()}
         >
           {modalType === "error" && <ErrorModal onClose={() => closeModal()} />}
