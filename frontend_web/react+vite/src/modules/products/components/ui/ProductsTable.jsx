@@ -27,7 +27,7 @@ export default function ProductsTable({ products, openModal, refetch }) {
         >
           <tr
             className="border-b bg-white border-gray-200 text-sm
-            dark:border-[#303033] dark:bg-[#1a1a1a]"
+            dark:border-[#303033] dark:bg-[#1a1a1a60]"
           >
             <th className="font-medium text-start pl-4 pt-1">Estado</th>
             <th className="font-medium text-start pl-4 pt-1">
@@ -120,9 +120,9 @@ export default function ProductsTable({ products, openModal, refetch }) {
               {/* Botones */}
               <th className="flex items-center justify-center h-14 pr-4">
                 <ActionButtons
-                  editButtonOnClick={() => {
+                  editButtonOnClick={(e) => {
+                    openModal(product, "edit", refetch, e.currentTarget);
                     setOpenId(null);
-                    openModal(product, "edit", refetch);
                   }}
                   deleteButtonVisible={false}
                 />
