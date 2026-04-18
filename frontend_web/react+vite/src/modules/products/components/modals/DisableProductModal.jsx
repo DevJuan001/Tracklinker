@@ -10,10 +10,7 @@ import SuccessModal from "../../../../globals/components/modals/SuccessModal";
 
 export default function DisableProductModal({ product, onClose, refetch }) {
   const [innerModal, setInnerModal] = useState(null);
-  const { handleSubmit, loading } = useUpdateProductStatus({
-    product_id: product.product_id,
-    product_status: 1,
-  });
+  const { handleSubmit, loading } = useUpdateProductStatus();
 
   return (
     <section className="flex flex-col justify-center items-center dark:text-white">
