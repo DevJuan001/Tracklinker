@@ -14,7 +14,7 @@ export default function ErrorModal({ onClose }) {
         <button
           onClick={onClose}
           className="px-6 py-3 bg-black rounded-xl text-white
-                dark:bg-white dark:text-black dark:hover:text-gray-800"
+          dark:bg-white dark:text-black dark:hover:text-gray-800"
         >
           Ok
         </button>

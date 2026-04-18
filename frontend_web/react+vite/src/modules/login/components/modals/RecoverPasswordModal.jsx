@@ -17,16 +17,15 @@ export default function RecoverPasswordModal({ onClose }) {
   const [innerModal, setInnerModal] = useState(null);
   return (
     <section className="flex flex-col items-center">
-      <section className="w-72">
-        <FormField
-          name={"email"}
-          labelText={"Email"}
-          onChange={handleChange}
-          inputIcon={loginIcons.emailIcon}
-          type="email"
-          placeholder={"Escribe tu correo aquí"}
-        />
-      </section>
+      <FormField
+        id={"email"}
+        name={"email"}
+        labelText={"Email"}
+        onChange={handleChange}
+        inputIcon={loginIcons.emailIcon}
+        type="email"
+        placeholder={"Escribe tu correo aquí"}
+      />
       <ConfirmCancelButtons
         cancelText="Cancelar"
         cancelButtonOnClick={onClose}

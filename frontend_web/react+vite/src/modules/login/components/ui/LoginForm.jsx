@@ -48,6 +48,7 @@ export default function LoginForm({ openModal }) {
             <span className="text-sm font-medium">Contraseña</span>
             <div className="h-14 flex items-center rounded-xl border dark:border-gray-700">
               <input
+                id="password"
                 type={showPassword ? "text" : "password"}
                 placeholder="********"
                 onChange={(e) => setPassword(e.target.value)}
@@ -76,12 +77,13 @@ export default function LoginForm({ openModal }) {
           {/* Botones de Ingresar y recuperar contraseña */}
           <FormButtons
             getIntoButtonText={loading ? <Loader /> : "Ingresar"}
-            getIntoButtonOnclick={handleLogin}
-            recoverButtonOnclick={() => openModal(null, "rememberPassword")}
+            getIntoButtonOnclick={(e) => handleLogin(e)}
+            recoverButtonOnclick={(e) =>
+              openModal(null, "rememberPassword", null, e.currentTarget)
+            }
           />
         </form>
       </div>
-      {}
     </section>
   );
 }

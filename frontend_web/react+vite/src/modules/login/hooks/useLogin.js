@@ -11,8 +11,10 @@ export function useLogin(openModal) {
   const [showPassword, setShowPassword] = useState(false);
   const controllerRef = useRef(null);
 
-  const handleLogin = async (e) => {
+  async function handleLogin(e) {
     e.preventDefault();
+    const targetElement = e.currentTarget;
+
     controllerRef.current?.abort();
     controllerRef.current = new AbortController();
     setLoading(true);
@@ -26,15 +28,15 @@ export function useLogin(openModal) {
       if (response.success === true) {
         navigate("/home");
       } else {
-        openModal(null, "error");
+        openModal(null, "error", null, targetElement);
       }
     } catch (error) {
       if (error.name === "AbortError") return;
-      openModal(null, "error");
+      openModal(null, "error", null, targetElement);
     } finally {
       setLoading(false);
     }
-  };
+  }
 
   return {
     showPassword,
