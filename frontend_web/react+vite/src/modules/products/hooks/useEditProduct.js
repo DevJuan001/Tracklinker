@@ -1,9 +1,13 @@
 import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { editProductService } from "../services/editProductService";
-import { useFormValidation } from "../../../globals/hooks/useFormValidator";
+import { useFormValidation } from "../../../globals/hooks/useFormValidation";
 
 export function useEditProduct(product) {
-  const initialState = {
+  const queryClient = useQueryClient();
+  const { validate, getChanges } = useFormValidation();
+
+  const [form, setForm] = useState({
     id: product.product_id,
     input_order: product.input_order_id || "",
     subcategory: product.subcategory_id || "",
@@ -12,10 +16,7 @@ export function useEditProduct(product) {
     model: product.product_details_id || "",
     warranty_time: product.warranty_time || "",
     status: product.status || "",
-  };
-  const { validate, getChanges } = useFormValidation();
-
-  const [form, setForm] = useState(initialState);
+  });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -43,7 +44,8 @@ export function useEditProduct(product) {
     const changes = getChanges(product, form);
 
     if (Object.keys(changes).length === 0) {
-      return console.error("No hay cambios para guardar");
+      openInnerModal("error", triggerData);
+      return;
     }
 
     setLoading(true);
@@ -55,6 +57,7 @@ export function useEditProduct(product) {
       });
       if (response.success) {
         openInnerModal("success", triggerData);
+        queryClient.invalidateQueries({ queryKey: ["products"] });
       } else {
         openInnerModal("error", triggerData);
       }
