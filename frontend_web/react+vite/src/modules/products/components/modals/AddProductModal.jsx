@@ -21,16 +21,7 @@ import AddSubcategoryModal from "../../../subcategories/components/modals/AddSub
 export default function AddProductModal({ onCloseModal }) {
   const { innerType, innerTrigger, openInnerModal } = useInnerModal();
 
-  const {
-    subcategories,
-    brands,
-    models,
-    inputOrders,
-    fetchSubcategories,
-    fetchBrands,
-    fetchModels,
-    fetchInputOrders,
-  } = useCatalog();
+  const { subcategories, brands, models, inputOrders } = useCatalog();
 
   const { form, loading, handleChange, handleSubmit } = useCreateProduct();
 
@@ -66,16 +57,22 @@ export default function AddProductModal({ onCloseModal }) {
 
       {/* Menú de marcas */}
       <SelectMenu
-        value={form.product_brand_name}
+        value={form.product_brand_id}
         spanText={"Marca"}
-        name={"product_brand_name"}
+        name={"product_brand_id"}
         onChange={handleChange}
         addIconFunction={(e) => openInnerModal("addBrand", e)}
         addButtonInvisible={false}
-        options={brands.map((brand) => ({
-          value: brand.id,
-          label: brand.name,
-        }))}
+        options={brands
+          .filter(
+            (brand) =>
+              !form.subcategory_id ||
+              brand.subcategory_id === form.subcategory_id,
+          )
+          .map((brand) => ({
+            value: brand.id,
+            label: brand.name,
+          }))}
       />
 
       {/* Menú de modelos */}
@@ -87,10 +84,15 @@ export default function AddProductModal({ onCloseModal }) {
         id={"model"}
         addIconFunction={(e) => openInnerModal("addModel", e)}
         addButtonInvisible={false}
-        options={models.map((model) => ({
-          value: model.id,
-          label: model.model,
-        }))}
+        options={models
+          .filter(
+            (model) =>
+              !form.product_brand_id || model.brand === form.product_brand_id,
+          )
+          .map((model) => ({
+            value: model.id,
+            label: model.model,
+          }))}
       />
       <FormField
         name={"product_serial"}
@@ -160,7 +162,9 @@ export default function AddProductModal({ onCloseModal }) {
           isOpen={true}
           onClose={() => openInnerModal(null)}
           errorTitle={"Error al crear el producto"}
-          errorText={"Ha ocurrido un error al intentar crear el producto."}
+          errorText={
+            "Ha ocurrido un error al intentar crear el producto, revisa que los campos no estén vacíos y que el serial no exista."
+          }
           confirmButtonText={"Volver a intentarlo"}
         />
       )}
@@ -169,10 +173,7 @@ export default function AddProductModal({ onCloseModal }) {
         <AddInputOrderModal
           triggerRef={innerTrigger}
           isOpen={true}
-          onClose={() => {
-            openInnerModal(null);
-            fetchInputOrders();
-          }}
+          onClose={() => openInnerModal(null)}
         />
       )}
 
@@ -183,12 +184,7 @@ export default function AddProductModal({ onCloseModal }) {
           onClose={() => openInnerModal(null)}
           title={"Agregar subcategoria"}
         >
-          <AddSubcategoryModal
-            onClose={() => {
-              openInnerModal(null);
-              fetchSubcategories();
-            }}
-          />
+          <AddSubcategoryModal onClose={() => openInnerModal(null)} />
         </AddInnerModal>
       )}
 
@@ -196,10 +192,7 @@ export default function AddProductModal({ onCloseModal }) {
         <AddProductBrandModal
           triggerRef={innerTrigger}
           isOpen={true}
-          onClose={() => {
-            openInnerModal(null);
-            fetchBrands();
-          }}
+          onClose={() => openInnerModal(null)}
         />
       )}
 
@@ -207,10 +200,7 @@ export default function AddProductModal({ onCloseModal }) {
         <AddProductModelModal
           triggerRef={innerTrigger}
           isOpen={true}
-          onClose={() => {
-            openInnerModal(null);
-            fetchModels;
-          }}
+          onClose={() => openInnerModal(null)}
         />
       )}
     </section>
