@@ -1,6 +1,5 @@
-import React, { useRef } from "react";
+import React, { useRef, useId } from "react";
 import { modalIcons } from "../../../assets/icons/modalIcons";
-import { asideIcons } from "../../../assets/icons/asideIcons";
 import { useFlipModal } from "../../hooks/useFlipModal";
 import { createPortal } from "react-dom";
 
@@ -13,10 +12,14 @@ export default function Modal({
   location = "anchored",
   triggerRef,
   z_index = "50",
+  disableClose = false,
 }) {
   const modalRef = useRef();
   const contentRef = useRef();
   const overlayRef = useRef();
+
+  const id = useId();
+  const modalId = id.replace(/:/g, "");
 
   if (type === "user" || type === "help") {
     location = "center";
@@ -30,10 +33,15 @@ export default function Modal({
     overlayRef,
     onClose,
     location,
+    id: modalId,
   });
 
   const enhancedChildren = React.Children.map(children, (child) => {
     if (React.isValidElement(child)) {
+      // Si el hijo es otro Modal o un componente que ya maneja su propio isOpen/onClose,
+      // evitamos sobreescribir su onClose para no cerrar el padre accidentalmente.
+      if (child.props.isOpen !== undefined) return child;
+
       return React.cloneElement(child, { onClose: closeModal });
     }
     return child;
@@ -45,9 +53,12 @@ export default function Modal({
         ref={overlayRef}
         style={{ zIndex: z_index }}
         className="fixed inset-0 bg-[#0000001a] dark:bg-[#0000001a]"
-        onClick={closeModal}
+        onClick={(e) => {
+          if (e.target === e.currentTarget && !disableClose) closeModal(e);
+        }}
       >
         <section
+          onClick={(e) => e.stopPropagation()}
           style={{
             visibility: "hidden",
           }}
@@ -62,13 +73,12 @@ export default function Modal({
                   ? "min-w-[400px] max-w-[400px]"
                   : "min-w-[500px] max-w-[500px]"
           }`}
-          onClick={(e) => e.stopPropagation()}
         >
           <div ref={contentRef}>
             <header className="flex justify-between items-center mb-2">
               <span
                 data-flip-id="modal-title"
-                className="min-w-40 font-medium text-lg dark:text-[#e4e2e5]"
+                className="min-w-44 font-medium text-lg dark:text-[#e4e2e5]"
               >
                 {title}
               </span>
