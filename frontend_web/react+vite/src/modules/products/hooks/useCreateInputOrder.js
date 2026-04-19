@@ -1,7 +1,9 @@
 import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { createInputOrderService } from "../services/createInputOrderService";
 
 export function useCreateInputOrder() {
+  const queryClient = useQueryClient();
   const [form, setForm] = useState({
     supplier_id: "",
     input_order_bill: "",
@@ -28,6 +30,7 @@ export function useCreateInputOrder() {
           currentTarget: buttonElement,
           rect: buttonRect,
         });
+        queryClient.invalidateQueries({ queryKey: ["inputOrders"] });
       }
     } catch (error) {
       openInnerModal("error", {
