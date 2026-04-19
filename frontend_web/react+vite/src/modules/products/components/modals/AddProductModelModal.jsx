@@ -1,6 +1,6 @@
 // Hooks
-import { useState } from "react";
 import { useCatalog } from "../../hooks/useCatalog";
+import { useInnerModal } from "../../../../globals/hooks/useInnerModal";
 import { useCreateProductModel } from "../../hooks/useCreateProductModel";
 // Components
 import Loader from "../../../../globals/components/ui/Loader";
@@ -13,13 +13,10 @@ import SuccessModal from "../../../../globals/components/modals/SuccessModal";
 import AddInnerModal from "../../../../globals/components/modals/AddInnerModal";
 
 export default function AddProductModelModal({ triggerRef, isOpen, onClose }) {
-  const [innerModal, setInnerModal] = useState(null);
+  const { innerType, innerTrigger, openInnerModal, closeInnerModal } =
+    useInnerModal();
   const { brands } = useCatalog();
-  const { form, loading, handleChange, handleSubmit } = useCreateProductModel({
-    product_brand_id: "",
-    product_detail_model: "",
-    product_detail_description: "",
-  });
+  const { form, loading, handleChange, handleSubmit } = useCreateProductModel();
   return (
     <AddInnerModal
       triggerRef={triggerRef}
@@ -55,15 +52,16 @@ export default function AddProductModelModal({ triggerRef, isOpen, onClose }) {
         />
         <ConfirmCancelButtons
           confirmText={loading ? <Loader /> : "Crear"}
-          confirmButtonOnClick={(e) => handleSubmit(e, setInnerModal)}
+          confirmButtonOnClick={(e) => handleSubmit(e, openInnerModal)}
         />
 
         {/* Modales internas */}
-        {innerModal === "success" && (
+        {innerType === "success" && (
           <SuccessModal
+            triggerRef={innerTrigger}
             isOpen={true}
             onClose={() => {
-              setInnerModal(null);
+              closeInnerModal();
               onClose();
             }}
             confirmTitle={"Modelo creado correctamente"}
@@ -71,10 +69,11 @@ export default function AddProductModelModal({ triggerRef, isOpen, onClose }) {
             confirmButtonText={"Volver"}
           />
         )}
-        {innerModal === "error" && (
+        {innerType === "error" && (
           <ErrorModal
+            triggerRef={innerTrigger}
             isOpen={true}
-            onClose={() => setInnerModal(null)}
+            onClose={() => closeInnerModal()}
             confirmButtonText={"Volver a intentarlo"}
             errorTitle={"!No se pudo crear el modelo!"}
             errorText={
