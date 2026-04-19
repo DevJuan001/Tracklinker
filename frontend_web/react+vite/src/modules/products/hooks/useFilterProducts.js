@@ -1,7 +1,17 @@
 import { useState } from "react";
 
-export function useFilterProducts(filters, refetch) {
-  const [form, setForm] = useState(filters);
+export function useFilterProducts() {
+  const [form, setForm] = useState({
+      start_date: "",
+      end_date: "",
+      category_order: "",
+      subcategory_order: "",
+      warranty_time: "",
+      brand: "",
+      input_order: "",
+      product_model: "",
+      product_status: "",
+    });
 
   function handleChange(e) {
     setForm((prev) => ({
@@ -10,13 +20,8 @@ export function useFilterProducts(filters, refetch) {
     }));
   }
 
-  function handleApply() {
-    refetch(form);
-  }
-
   return {
     form,
     handleChange,
-    handleApply,
   };
 }
