@@ -1,13 +1,15 @@
 import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { createProductService } from "../services/createProductService";
 
 export function useCreateProduct() {
+  const queryClient = useQueryClient();
   const [form, setForm] = useState({
     input_order_id: "",
     subcategory_id: "",
     product_details_id: "",
     product_serial: "",
-    product_brand_name: "",
+    product_brand_id: "",
     product_garanty_input: "",
   });
   const [loading, setLoading] = useState(false);
@@ -32,7 +34,6 @@ export function useCreateProduct() {
     );
 
     if (isFormIncomplete) {
-      // Disparamos la modal de error y salimos de la función
       openInnerModal("error", {
         currentTarget: buttonElement,
         rect: buttonRect,
@@ -49,6 +50,7 @@ export function useCreateProduct() {
           currentTarget: buttonElement,
           rect: buttonRect,
         });
+        await queryClient.invalidateQueries({ queryKey: ["products"] });
       }
     } catch (error) {
       openInnerModal("error", {
