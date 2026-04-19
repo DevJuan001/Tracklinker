@@ -1,4 +1,5 @@
 // Hooks
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 // Services
 import { getProducts } from "../services/getProducts";
@@ -11,10 +12,12 @@ import { getSubcategories } from "../../subcategories/services/getSubcategoriesS
 // Status
 import { productStatusConfig } from "../constants/productStatusConfig";
 
-export function useCatalog(filters) {
+export function useCatalog() {
+  const [filters, setFilters] = useState([]);
+
   const products = useQuery({
     queryKey: ["products", filters],
-    queryFn: () => getProducts(filters),
+    queryFn: ({ signal }) => getProducts(filters, signal),
     select: (data) =>
       data.map((product) => ({
         ...product,
@@ -83,5 +86,6 @@ export function useCatalog(filters) {
       models.error ||
       inputOrders.error ||
       productStatus.error,
+    setFilters,
   };
 }
