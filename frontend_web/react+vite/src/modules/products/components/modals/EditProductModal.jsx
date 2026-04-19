@@ -24,8 +24,8 @@ export default function EditProductModal({
   return (
     <section className="w-full flex flex-col items-center gap-2.5">
       <SelectMenu
-        value={form.subcategory_id}
-        name={"subcategory_id"}
+        value={form.subcategory}
+        name={"subcategory"}
         spanText={"Subcategoria"}
         onChange={handleChange}
         options={subcategories.map((subcategory) => ({
@@ -36,9 +36,9 @@ export default function EditProductModal({
 
       <SelectMenu
         onChange={handleChange}
-        value={form.input_order_id}
+        value={form.input_order}
         spanText={"Orden de entrada"}
-        name={"input_order_id"}
+        name={"input_order"}
         id={"input_order"}
         options={inputOrders.map((input_order) => ({
           value: input_order.id,
@@ -48,9 +48,9 @@ export default function EditProductModal({
 
       <SelectMenu
         onChange={handleChange}
-        value={form.product_brand_id}
+        value={form.brand}
         spanText={"Marca"}
-        name={"product_brand_id"}
+        name={"brand"}
         id={"brand"}
         options={brands.map((brand) => ({
           value: brand.id,
@@ -60,9 +60,9 @@ export default function EditProductModal({
 
       <SelectMenu
         onChange={handleChange}
-        value={form.product_details_id}
+        value={form.model}
         spanText={"Modelo"}
-        name={"product_details_id"}
+        name={"model"}
         id={"model"}
         options={models.map((model) => ({
           value: model.id,
@@ -71,18 +71,18 @@ export default function EditProductModal({
       />
 
       <FormField
-        id={"product_serial"}
-        name={"product_serial"}
+        id={"serial"}
+        name={"serial"}
         labelText={"Serial"}
-        value={form.product_serial}
+        value={form.serial}
         onChange={handleChange}
       />
 
       <FormField
-        id={"product_garanty_input"}
+        id={"warranty_time"}
         type="date"
-        name={"product_garanty_input"}
-        value={form.product_garanty_input}
+        name={"warranty_time"}
+        value={form.warranty_time}
         labelText={"Tiempo de garantía"}
         spanText={"Tiempo de garantía"}
         onChange={handleChange}
@@ -90,10 +90,10 @@ export default function EditProductModal({
 
       <SelectMenu
         onChange={handleChange}
-        value={form.product_status}
+        value={form.status}
         spanText={"Estado"}
-        name={"product_status"}
-        id={"model"}
+        name={"status"}
+        id={"status"}
         options={[
           { value: 1, label: "Deshabilitado" },
           { value: 2, label: "Activo" },
@@ -101,6 +101,7 @@ export default function EditProductModal({
           { value: 4, label: "En garantía" },
         ]}
       />
+
       {/* Botones */}
       <ConfirmCancelButtons
         confirmText={loading ? <Loader /> : "Editar"}
