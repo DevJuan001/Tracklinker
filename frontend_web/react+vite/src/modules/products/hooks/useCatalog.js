@@ -1,5 +1,5 @@
 // Hooks
-import { useState, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 // Services
 import { getProducts } from "../services/getProducts";
 import { getProductStatus } from "../services/getProductStatus";
@@ -11,114 +11,77 @@ import { getSubcategories } from "../../subcategories/services/getSubcategoriesS
 // Status
 import { productStatusConfig } from "../constants/productStatusConfig";
 
-export function useCatalog() {
-  // Definir los estados y sus valores por defecto
-  const [products, setProducts] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [subcategories, setSubcategories] = useState([]);
-  const [productStatus, setProductStatus] = useState([]);
-  const [brands, setBrands] = useState([]);
-  const [models, setModels] = useState([]);
-  const [inputOrders, setInputOrders] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  async function fetchProducts(filters) {
-    try {
-      setLoading(true);
-      const data = await getProducts(filters);
-      const formattedProducts = data.map((product) => ({
+export function useCatalog(filters) {
+  const products = useQuery({
+    queryKey: ["products", filters],
+    queryFn: () => getProducts(filters),
+    select: (data) =>
+      data.map((product) => ({
         ...product,
         status_text: productStatusConfig[product.status]?.text,
-      }));
-      setProducts(formattedProducts);
-    } catch (error) {
-      setError(error.message);
-    } finally {
-      setLoading(false);
-    }
-  }
+      })),
+    staleTime: 1000 * 60 * 3,
+  });
 
-  async function fetchCategories() {
-    try {
-      const categoryData = await getCategoriesService();
-      setCategories(categoryData);
-    } catch (error) {
-      setError(error.message);
-    }
-  }
+  const categories = useQuery({
+    queryKey: ["categories"],
+    queryFn: getCategoriesService,
+    staleTime: 1000 * 60 * 10,
+  });
 
-  async function fetchSubcategories() {
-    try {
-      const subcategoryData = await getSubcategories();
-      setSubcategories(subcategoryData);
-    } catch (error) {
-      setError(error.message);
-    }
-  }
+  const subcategories = useQuery({
+    queryKey: ["subcategories"],
+    queryFn: getSubcategories,
+    staleTime: 1000 * 60 * 10,
+  });
 
-  async function fetchBrands() {
-    try {
-      const brandsData = await getProductBrands();
-      setBrands(brandsData);
-    } catch (error) {
-      setError(error.message);
-    }
-  }
+  const brands = useQuery({
+    queryKey: ["brands"],
+    queryFn: getProductBrands,
+    staleTime: 1000 * 60 * 10,
+  });
 
-  async function fetchModels() {
-    try {
-      const modelsData = await getProductModels();
-      setModels(modelsData);
-    } catch (error) {
-      setError(error.message);
-    }
-  }
+  const models = useQuery({
+    queryKey: ["models"],
+    queryFn: getProductModels,
+    staleTime: 1000 * 60 * 10,
+  });
 
-  async function fetchInputOrders() {
-    try {
-      const inputOrdersData = await getInputOrdersService();
-      setInputOrders(inputOrdersData);
-    } catch (error) {
-      setError(error.message);
-    }
-  }
+  const inputOrders = useQuery({
+    queryKey: ["inputOrders"],
+    queryFn: getInputOrdersService,
+    staleTime: 1000 * 60 * 5,
+  });
 
-  async function fetchProductStatus() {
-    try {
-      const productStatus = await getProductStatus();
-      setProductStatus(productStatus);
-    } catch (error) {
-      setError(error.message);
-    }
-  }
-
-  useEffect(() => {
-    fetchProducts();
-    fetchCategories();
-    fetchSubcategories();
-    fetchBrands();
-    fetchModels();
-    fetchInputOrders();
-    fetchProductStatus();
-  }, []);
+  const productStatus = useQuery({
+    queryKey: ["productStatus"],
+    queryFn: getProductStatus,
+    staleTime: 1000 * 60 * 10,
+  });
 
   return {
-    products,
-    categories,
-    subcategories,
-    brands,
-    models,
-    inputOrders,
-    productStatus,
-    loading,
-    error,
-    fetchProducts,
-    fetchBrands,
-    fetchCategories,
-    fetchInputOrders,
-    fetchModels,
-    fetchSubcategories,
-    fetchProductStatus,
+    products: products.data || [],
+    categories: categories.data || [],
+    subcategories: subcategories.data || [],
+    brands: brands.data || [],
+    models: models.data || [],
+    inputOrders: inputOrders.data || [],
+    productStatus: productStatus.data || [],
+    loading:
+      products.isLoading ||
+      categories.isLoading ||
+      subcategories.isLoading ||
+      brands.isLoading ||
+      models.isLoading ||
+      inputOrders.isLoading ||
+      productStatus.isLoading,
+    error:
+      products.error ||
+      categories.error ||
+      subcategories.error ||
+      brands.error ||
+      models.error ||
+      inputOrders.error ||
+      productStatus.error,
   };
 }
