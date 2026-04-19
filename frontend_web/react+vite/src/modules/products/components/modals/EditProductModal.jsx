@@ -11,11 +11,7 @@ import ConfirmCancelButtons from "../../../../globals/components/modals/ConfirmC
 import ErrorModal from "../../../../globals/components/modals/ErrorModal";
 import SuccessModal from "../../../../globals/components/modals/SuccessModal";
 
-export default function EditProductModal({
-  refetch,
-  selectedProduct,
-  onCloseModal,
-}) {
+export default function EditProductModal({ selectedProduct, onCloseModal }) {
   const { innerType, innerTrigger, openInnerModal } = useInnerModal();
   const { subcategories, brands, models, inputOrders } = useCatalog();
   const { form, loading, handleChange, handleSubmit } =
@@ -117,7 +113,6 @@ export default function EditProductModal({
           onClose={() => {
             openInnerModal(null);
             onCloseModal();
-            refetch();
           }}
           confirmTitle={"Producto Editado Correctamente"}
           confirmText={"El producto ha sido editado correctamente."}
