@@ -6,6 +6,7 @@ export default function AddInnerModal({
   onClose,
   title,
   triggerRef,
+  disableClose = false,
 }) {
   return (
     <Modal
@@ -16,6 +17,7 @@ export default function AddInnerModal({
       type={"innerModal"}
       triggerRef={triggerRef}
       location={"center"}
+      disableClose={disableClose}
     >
       {children}
     </Modal>
