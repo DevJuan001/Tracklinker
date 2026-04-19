@@ -10,6 +10,12 @@ export default function ErrorModal({
   errorText,
   confirmButtonText,
 }) {
+  const handleClose = (e) => {
+    e?.stopPropagation();
+    e?.preventDefault();
+    if (onClose) onClose(e);
+  };
+
   return (
     <Modal
       z_index="300"
@@ -27,12 +33,8 @@ export default function ErrorModal({
         </section>
         <ConfirmCancelButtons
           confirmText={confirmButtonText}
-          confirmButtonOnClick={(e) => {
-            if (onClose) onClose(e);
-          }}
-          cancelButtonOnClick={(e) => {
-            if (onClose) onClose(e);
-          }}
+          confirmButtonOnClick={handleClose}
+          cancelButtonOnClick={handleClose}
         />
       </section>
     </Modal>
