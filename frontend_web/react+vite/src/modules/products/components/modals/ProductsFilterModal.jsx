@@ -3,29 +3,16 @@ import { useFilterProducts } from "../../hooks/useFilterProducts";
 import FilterModal from "../../../../globals/components/modals/FilterModal";
 import SelectMenu from "../../../../globals/components/modals/SelectMenu";
 
-export default function ProductsFilterModal({ refetch, onCloseModal }) {
+export default function ProductsFilterModal({ setFilters, onCloseModal }) {
   const { categories, subcategories, inputOrders, models, brands } =
     useCatalog();
-  const { form, handleChange, handleApply } = useFilterProducts(
-    {
-      start_date: "",
-      end_date: "",
-      category_order: "",
-      subcategory_order: "",
-      warranty_time: "",
-      brand: "",
-      input_order: "",
-      product_model: "",
-      product_status: "",
-    },
-    refetch,
-  );
+  const { form, handleChange } = useFilterProducts();
 
   return (
     <FilterModal
       applyButtonOnClick={() => {
+        setFilters({ ...form });
         onCloseModal();
-        handleApply();
       }}
       fieldName="Ingreso"
       orderByStartDateOnChange={handleChange}
@@ -80,24 +67,6 @@ export default function ProductsFilterModal({ refetch, onCloseModal }) {
             }))}
         />
 
-        {/* Ordenar Por Modelo */}
-        <SelectMenu
-          name={"product_model"}
-          spanText={"Modelo"}
-          value={form.product_model}
-          onChange={handleChange}
-          options={models
-            .filter(
-              (model) =>
-                !form.subcategory_order ||
-                model.subcategory_id === form.subcategory_order,
-            )
-            .map((model) => ({
-              value: model.id,
-              label: model.model,
-            }))}
-        />
-
         {/* Ordenar Por Marca */}
         <SelectMenu
           name={"brand"}
@@ -106,11 +75,27 @@ export default function ProductsFilterModal({ refetch, onCloseModal }) {
           onChange={handleChange}
           options={brands
             .filter(
-              (brand) => !form.model_order || brand.model === form.model_order,
+              (brand) =>
+                !form.subcategory_order ||
+                brand.subcategory_id === form.subcategory_order,
             )
             .map((brand) => ({
               value: brand.id,
               label: brand.name,
+            }))}
+        />
+
+        {/* Ordenar Por Modelo */}
+        <SelectMenu
+          name={"product_model"}
+          spanText={"Modelo"}
+          value={form.product_model}
+          onChange={handleChange}
+          options={models
+            .filter((model) => !form.brand || model.brand === form.brand)
+            .map((model) => ({
+              value: model.id,
+              label: model.model,
             }))}
         />
 
@@ -121,10 +106,10 @@ export default function ProductsFilterModal({ refetch, onCloseModal }) {
           value={form.product_status}
           onChange={handleChange}
           options={[
-            { value: 0, label: "Deshabilitado" },
-            { value: 1, label: "Activo" },
-            { value: 2, label: "Vendido" },
-            { value: 3, label: "En Garantía" },
+            { value: 1, label: "Deshabilitado" },
+            { value: 2, label: "Activo" },
+            { value: 3, label: "Vendido" },
+            { value: 4, label: "En Garantía" },
           ]}
         />
 

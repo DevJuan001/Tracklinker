@@ -1,13 +1,15 @@
 import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 
 export function useModal() {
+  const queryClient = useQueryClient();
   const [modalType, setModalType] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const [modalData, setModalData] = useState(null);
-  const [refetch, setRefetch] = useState(null);
+  const [queriesToInvalidate, setQueriesToInvalidate] = useState([]);
   const [triggerRef, setTriggerRef] = useState(null);
 
-  const openModal = (data, type, refetchFn, ref = null) => {
+  const openModal = (data, type, queries = [], ref = null) => {
     let rect = null;
 
     if (ref) {
@@ -18,7 +20,7 @@ export function useModal() {
     setModalType(type);
     setIsOpen(true);
     setTriggerRef({ element: ref, rect });
-    setRefetch(() => refetchFn);
+    setQueriesToInvalidate(queries);
   };
 
   const closeModal = () => {
@@ -26,11 +28,11 @@ export function useModal() {
     setIsOpen(false);
     setModalType(null);
 
-    if (typeof refetch === "function") {
-      refetch();
-    }
+    queriesToInvalidate.forEach((key) => {
+      queryClient.invalidateQueries({ queryKey: [key] });
+    });
 
-    setRefetch(null);
+    setQueriesToInvalidate([]);
     setTriggerRef(null);
   };
 
@@ -38,7 +40,6 @@ export function useModal() {
     modalType,
     isOpen,
     modalData,
-    refetch,
     triggerRef,
     openModal,
     closeModal,

@@ -3,7 +3,7 @@ import { fetchWithAuth } from "../../../utils/fetchWithAuth";
 
 // Función para loguearse
 export async function login(email, password, signal) {
-  const res = await fetch(`${apiRoutes.apiUrl}${apiRoutes.auth}/login`, {
+  const res = await fetchWithAuth(`${apiRoutes.apiUrl}${apiRoutes.auth}/login`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

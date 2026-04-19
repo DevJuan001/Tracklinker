@@ -10,13 +10,20 @@ export default function ErrorModal({
   errorText,
   confirmButtonText,
 }) {
+  const handleClose = (e) => {
+    e?.stopPropagation();
+    e?.preventDefault();
+    if (onClose) onClose(e);
+  };
+
   return (
     <Modal
-      z_index="150"
+      z_index="300"
       type="innerModal"
       isOpen={isOpen}
       onClose={onClose}
       triggerRef={triggerRef}
+      location="center"
     >
       <section className="flex flex-col items-center gap-1 animate-blurUp">
         <img src={modalIcons.errorWithFillIcon} alt="" className="w-20" />
@@ -26,8 +33,8 @@ export default function ErrorModal({
         </section>
         <ConfirmCancelButtons
           confirmText={confirmButtonText}
-          confirmButtonOnClick={onClose}
-          cancelButtonOnClick={onClose}
+          confirmButtonOnClick={handleClose}
+          cancelButtonOnClick={handleClose}
         />
       </section>
     </Modal>

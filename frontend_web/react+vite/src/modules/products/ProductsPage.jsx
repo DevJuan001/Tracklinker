@@ -22,40 +22,37 @@ import AddWarrantyModal from "../warranties/components/modals/AddWarrantyModal";
 import ProfileModal from "../../globals/components/modals/profileModal/ProfileModal";
 
 export default function ProductsPage() {
-  const { modalType, modalData, isOpen, openModal, closeModal } = useModal();
-  const { fetchProducts, products } = useCatalog();
+  const { modalType, modalData, isOpen, triggerRef, openModal, closeModal } =
+    useModal();
+  const { products, setFilters } = useCatalog();
   const [search, setSearch] = useState();
-  const filteredProducts = useSearch(products, search);
+  const filteredProducts = useSearch(products ?? [], search);
 
   return (
     <Layout
-      avatarOnClick={() => {
-        openModal(null, "user");
+      avatarOnClick={(e) => {
+        openModal(null, "user", null, e.currentTarget);
       }}
-      helpOnClick={() => {
-        openModal(null, "help");
+      helpOnClick={(e) => {
+        openModal(null, "help", null, e.currentTarget);
       }}
     >
       <TopSection
         sectionName={"Productos"}
         addButtonIcon={productsIcons.addProductIcon}
         addButtonText={"Agregar Producto"}
-        createOnClick={() => {
-          openModal(null, "add", fetchProducts);
+        createOnClick={(e) => {
+          openModal(null, "add", ["products"], e.currentTarget);
         }}
-        filterOnClick={() => {
-          openModal(null, "filter");
+        filterOnClick={(e) => {
+          openModal(null, "filter", null, e.currentTarget);
         }}
       >
         <SearchBar value={search} onChange={setSearch} />
       </TopSection>
 
       {/* Contenedor de la tabla */}
-      <ProductsTable
-        products={filteredProducts}
-        openModal={openModal}
-        refetch={fetchProducts}
-      />
+      <ProductsTable products={filteredProducts} openModal={openModal} />
 
       {/* Modales */}
       {isOpen && (
@@ -81,6 +78,8 @@ export default function ProductsPage() {
           }
           type={modalType}
           isOpen={isOpen}
+          triggerRef={triggerRef}
+          location={modalType === "filter" ? "anchored" : "center"}
           onClose={() => {
             closeModal();
           }}
@@ -88,7 +87,7 @@ export default function ProductsPage() {
           {modalType === "user" && <ProfileModal />}
           {modalType === "filter" && (
             <ProductsFilterModal
-              refetch={fetchProducts}
+              setFilters={setFilters}
               onCloseModal={() => closeModal()}
             />
           )}
@@ -103,28 +102,24 @@ export default function ProductsPage() {
           {/* Modal para editar el producto */}
           {modalType === "edit" && (
             <EditProductModal
-              refetch={fetchProducts}
               selectedProduct={modalData}
               onCloseModal={() => closeModal()}
             />
           )}
           {modalType === "disable" && (
             <DisableProductModal
-              refetch={fetchProducts}
               product={modalData}
               onClose={() => closeModal()}
             />
           )}
           {modalType === "enable" && (
             <EnableProductModal
-              refetch={fetchProducts}
               product={modalData}
               onClose={() => closeModal()}
             />
           )}
           {modalType === "addWarranty" && (
             <AddWarrantyModal
-              refetch={fetchProducts}
               product={modalData}
               onAddSuccess={() => closeModal()}
               onCloseModal={() => closeModal()}

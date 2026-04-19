@@ -1,5 +1,6 @@
 // Hooks
-import { useState } from "react";
+import { useCatalog } from "../../hooks/useCatalog";
+import { useInnerModal } from "../../../../globals/hooks/useInnerModal";
 import { useCreateProductBrand } from "../../hooks/useCreateProductBrand";
 // Components
 import Loader from "../../../../globals/components/ui/Loader";
@@ -9,44 +10,48 @@ import ConfirmCancelButtons from "../../../../globals/components/modals/ConfirmC
 import ErrorModal from "../../../../globals/components/modals/ErrorModal";
 import SuccessModal from "../../../../globals/components/modals/SuccessModal";
 import AddInnerModal from "../../../../globals/components/modals/AddInnerModal";
-import { useCatalog } from "../../hooks/useCatalog";
 
-export default function AddProductBrandModal({ isOpen, onClose }) {
+export default function AddProductBrandModal({ triggerRef, isOpen, onClose }) {
   const { fetchBrands } = useCatalog();
-  const [innerModal, setInnerModal] = useState(null);
+  const { innerType, innerTrigger, openInnerModal, closeInnerModal } =
+    useInnerModal();
   const { loading, handleChange, handleSubmit } = useCreateProductBrand({
     product_brand_name: "",
   });
   return (
-    <AddInnerModal isOpen={isOpen} onClose={onClose} title={"Crear Marca"}>
-      <section className="w-full flex flex-col items-center">
-        <form className="w-full flex flex-col gap-1">
-          <FormField
-            name={"product_brand_name"}
-            labelText={"Nombre de la marca"}
-            placeholder={"Asus"}
-            onChange={handleChange}
-          />
-        </form>
+    <AddInnerModal
+      triggerRef={triggerRef}
+      isOpen={isOpen}
+      onClose={onClose}
+      title={"Crear Marca"}
+    >
+      <section className="w-full flex flex-col items-center gap-2.5">
+        <FormField
+          name={"product_brand_name"}
+          labelText={"Nombre de la marca"}
+          placeholder={"Asus"}
+          onChange={handleChange}
+        />
+
         <ConfirmCancelButtons
           confirmText={loading ? <Loader /> : "Crear"}
-          confirmButtonOnClick={(e) => handleSubmit(e, setInnerModal)}
+          confirmButtonOnClick={(e) => handleSubmit(e, openInnerModal)}
           cancelButtonOnClick={() => {
-            setInnerModal(null);
-            fetchBrands();
+            openInnerModal(null);
             onClose();
           }}
         />
       </section>
 
       {/* Modales internas */}
-      {innerModal === "success" && (
+      {innerType === "success" && (
         <SuccessModal
+          triggerRef={innerTrigger}
           isOpen={true}
           onClose={() => {
             fetchBrands();
             onClose();
-            setInnerModal(null);
+            openInnerModal(null);
           }}
           confirmTitle={"Marca creada correctamente"}
           confirmText={
@@ -55,14 +60,11 @@ export default function AddProductBrandModal({ isOpen, onClose }) {
           confirmButtonText={"Volver"}
         />
       )}
-      {innerModal === "error" && (
+      {innerType === "error" && (
         <ErrorModal
+          triggerRef={innerTrigger}
           isOpen={true}
-          onClose={() => {
-            fetchBrands();
-            onClose();
-            setInnerModal(null);
-          }}
+          onClose={() => openInnerModal(null)}
           confirmButtonText={"Volver a intentarlo"}
           errorTitle={"!No se pudo crear la marca!"}
           errorText={"Revisa que el campo tenga datos y vuelve a intentarlo"}

@@ -1,5 +1,5 @@
 // Hooks
-import { useState } from "react";
+import { useInnerModal } from "../../../../globals/hooks/useInnerModal";
 import { useCatalog } from "../../hooks/useCatalog";
 import { useEditProduct } from "../../hooks/useEditProduct";
 // Components
@@ -11,28 +11,17 @@ import ConfirmCancelButtons from "../../../../globals/components/modals/ConfirmC
 import ErrorModal from "../../../../globals/components/modals/ErrorModal";
 import SuccessModal from "../../../../globals/components/modals/SuccessModal";
 
-export default function EditProductModal({
-  refetch,
-  selectedProduct,
-  onCloseModal,
-}) {
-  const [innerModal, setInnerModal] = useState(null);
+export default function EditProductModal({ selectedProduct, onCloseModal }) {
+  const { innerType, innerTrigger, openInnerModal } = useInnerModal();
   const { subcategories, brands, models, inputOrders } = useCatalog();
-  const { form, loading, handleChange, handleSubmit } = useEditProduct({
-    product_id: selectedProduct.product_id,
-    input_order_id: selectedProduct.input_order_id || "",
-    subcategory_id: selectedProduct.subcategory_id || "",
-    product_serial: selectedProduct.product_serial || "",
-    product_brand_id: selectedProduct.brand_id || "",
-    product_details_id: selectedProduct.product_details_id || "",
-    product_garanty_input: selectedProduct.warranty_time || "",
-    product_status: selectedProduct.status || "",
-  });
+  const { form, loading, handleChange, handleSubmit } =
+    useEditProduct(selectedProduct);
+
   return (
-    <section className="w-full flex flex-col items-center">
+    <section className="w-full flex flex-col items-center gap-2.5">
       <SelectMenu
-        value={form.subcategory_id}
-        name={"subcategory_id"}
+        value={form.subcategory}
+        name={"subcategory"}
         spanText={"Subcategoria"}
         onChange={handleChange}
         options={subcategories.map((subcategory) => ({
@@ -43,9 +32,9 @@ export default function EditProductModal({
 
       <SelectMenu
         onChange={handleChange}
-        value={form.input_order_id}
+        value={form.input_order}
         spanText={"Orden de entrada"}
-        name={"input_order_id"}
+        name={"input_order"}
         id={"input_order"}
         options={inputOrders.map((input_order) => ({
           value: input_order.id,
@@ -55,9 +44,9 @@ export default function EditProductModal({
 
       <SelectMenu
         onChange={handleChange}
-        value={form.product_brand_id}
+        value={form.brand}
         spanText={"Marca"}
-        name={"product_brand_id"}
+        name={"brand"}
         id={"brand"}
         options={brands.map((brand) => ({
           value: brand.id,
@@ -67,9 +56,9 @@ export default function EditProductModal({
 
       <SelectMenu
         onChange={handleChange}
-        value={form.product_details_id}
+        value={form.model}
         spanText={"Modelo"}
-        name={"product_details_id"}
+        name={"model"}
         id={"model"}
         options={models.map((model) => ({
           value: model.id,
@@ -78,16 +67,18 @@ export default function EditProductModal({
       />
 
       <FormField
-        name={"product_serial"}
+        id={"serial"}
+        name={"serial"}
         labelText={"Serial"}
-        value={form.product_serial}
+        value={form.serial}
         onChange={handleChange}
       />
 
       <FormField
+        id={"warranty_time"}
         type="date"
-        name={"product_garanty_input"}
-        value={form.product_garanty_input}
+        name={"warranty_time"}
+        value={form.warranty_time}
         labelText={"Tiempo de garantía"}
         spanText={"Tiempo de garantía"}
         onChange={handleChange}
@@ -95,10 +86,10 @@ export default function EditProductModal({
 
       <SelectMenu
         onChange={handleChange}
-        value={form.product_status}
+        value={form.status}
         spanText={"Estado"}
-        name={"product_status"}
-        id={"model"}
+        name={"status"}
+        id={"status"}
         options={[
           { value: 1, label: "Deshabilitado" },
           { value: 2, label: "Activo" },
@@ -106,33 +97,37 @@ export default function EditProductModal({
           { value: 4, label: "En garantía" },
         ]}
       />
+
       {/* Botones */}
       <ConfirmCancelButtons
-        confirmButtonOnClick={(e) => handleSubmit(e, setInnerModal)}
         confirmText={loading ? <Loader /> : "Editar"}
         cancelButtonOnClick={onCloseModal}
+        confirmButtonOnClick={(e) => handleSubmit(e, openInnerModal)}
       />
 
       {/* Modales internos */}
-      {innerModal === "success" && (
+      {innerType === "success" && (
         <SuccessModal
+          triggerRef={innerTrigger}
           isOpen={true}
           onClose={() => {
-            setInnerModal(null);
+            openInnerModal(null);
             onCloseModal();
-            refetch();
           }}
-          confirmTitle={"Producto Creado Correctamente"}
-          confirmText={"El producto ha sido creado correctamente."}
+          confirmTitle={"Producto Editado Correctamente"}
+          confirmText={"El producto ha sido editado correctamente."}
           confirmButtonText={"Volver a la página"}
         />
       )}
-      {innerModal === "error" && (
+      {innerType === "error" && (
         <ErrorModal
+          triggerRef={innerTrigger}
           isOpen={true}
-          onClose={() => setInnerModal(null)}
-          errorTitle={"Error al crear el producto"}
-          errorText={"Ha ocurrido un error al intentar crear el producto."}
+          onClose={() => openInnerModal(null)}
+          errorTitle={"Error al editar el producto"}
+          errorText={
+            "Revisa que hayas hecho cambios y que ningún campo esté vacío."
+          }
           confirmButtonText={"Volver a intentarlo"}
         />
       )}

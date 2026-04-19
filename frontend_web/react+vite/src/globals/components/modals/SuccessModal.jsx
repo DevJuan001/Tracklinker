@@ -12,11 +12,12 @@ export default function SuccessModal({
 }) {
   return (
     <Modal
-      z_index="250"
+      z_index="300"
       isOpen={isOpen}
       onClose={onClose}
       type="innerModal"
       triggerRef={triggerRef}
+      location={"center"}
     >
       <section className="flex flex-col items-center gap-1">
         <div className="flex flex-col items-center gap-3">

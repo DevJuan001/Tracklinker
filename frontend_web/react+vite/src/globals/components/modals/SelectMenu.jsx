@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { modalIcons } from "../../../assets/icons/modalIcons";
+import { actionsIcons } from "../../../assets/icons/actionsIcons";
 
 export default function SelectMenu({
   name,
@@ -7,8 +8,8 @@ export default function SelectMenu({
   value,
   spanText,
   options = [],
-  addIcon,
   addIconFunction,
+  addIconRef,
   addButtonInvisible = true,
 }) {
   const [open, setOpen] = useState(false);
@@ -54,17 +55,18 @@ export default function SelectMenu({
           />
         </div>
         <button
+          ref={addIconRef}
           onClick={(e) => {
             e.stopPropagation();
             if (addIconFunction) addIconFunction(e);
           }}
           disabled={addButtonInvisible}
           type="button"
-          className={`w-16 h-16 flex items-center justify-center border rounded-2xl bg-[#e5e5e527]
+          className={`h-16 flex items-center justify-center px-6 border rounded-2xl bg-[#e5e5e527]
           ${addButtonInvisible ? "hidden" : "opacity-100"} 
           dark:bg-black dark:border-[#28282b]`}
         >
-          <img src={addIcon} className="h-4 w-4 dark:invert" />
+          <img src={actionsIcons.addIcon} className="h-5 w-5 dark:invert" />
         </button>
       </div>
 
