@@ -3,9 +3,9 @@ import { productsIcons } from "../../../../assets/icons/productsIcons";
 import { productStatusConfig } from "../../constants/productStatusConfig";
 import ActionButtons from "../../../../globals/components/ui/ActionButtons";
 
-export default function ProductsTable({ products, openModal, refetch }) {
+export default function ProductsTable({ products, openModal }) {
   const [openId, setOpenId] = useState(null);
-  const noProducts = products.length === 0;
+  const noProducts = !Array.isArray(products) || products.length === 0;
 
   return noProducts ? (
     <div className="flex items-center justify-center">
@@ -121,7 +121,7 @@ export default function ProductsTable({ products, openModal, refetch }) {
               <th className="flex items-center justify-center h-14 pr-4">
                 <ActionButtons
                   editButtonOnClick={(e) => {
-                    openModal(product, "edit", refetch, e.currentTarget);
+                    openModal(product, "edit", ["products"], e.currentTarget);
                     setOpenId(null);
                   }}
                   deleteButtonVisible={false}
@@ -156,8 +156,13 @@ export default function ProductsTable({ products, openModal, refetch }) {
                       .map(([id, config]) => (
                         <div
                           key={id}
-                          onClick={() => {
-                            openModal(product, config.modalType, refetch);
+                          onClick={(e) => {
+                            openModal(
+                              product,
+                              config.modalType,
+                              ["products"],
+                              e.currentTarget,
+                            );
                             setOpenId(null);
                           }}
                           className={`${config.optionStyles} px-3 py-2 cursor-pointer text-sm font-normal transition-all duration-200 
