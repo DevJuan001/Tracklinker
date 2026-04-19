@@ -24,9 +24,9 @@ import ProfileModal from "../../globals/components/modals/profileModal/ProfileMo
 export default function ProductsPage() {
   const { modalType, modalData, isOpen, triggerRef, openModal, closeModal } =
     useModal();
-  const { fetchProducts, products } = useCatalog();
+  const { products } = useCatalog();
   const [search, setSearch] = useState();
-  const filteredProducts = useSearch(products, search);
+  const filteredProducts = useSearch(products ?? [], search);
 
   return (
     <Layout
@@ -42,7 +42,7 @@ export default function ProductsPage() {
         addButtonIcon={productsIcons.addProductIcon}
         addButtonText={"Agregar Producto"}
         createOnClick={(e) => {
-          openModal(null, "add", fetchProducts, e.currentTarget);
+          openModal(null, "add", ["products"], e.currentTarget);
         }}
         filterOnClick={(e) => {
           openModal(null, "filter", null, e.currentTarget);
@@ -52,11 +52,7 @@ export default function ProductsPage() {
       </TopSection>
 
       {/* Contenedor de la tabla */}
-      <ProductsTable
-        products={filteredProducts}
-        openModal={openModal}
-        refetch={fetchProducts}
-      />
+      <ProductsTable products={filteredProducts} openModal={openModal} />
 
       {/* Modales */}
       {isOpen && (
@@ -90,10 +86,7 @@ export default function ProductsPage() {
         >
           {modalType === "user" && <ProfileModal />}
           {modalType === "filter" && (
-            <ProductsFilterModal
-              refetch={fetchProducts}
-              onCloseModal={() => closeModal()}
-            />
+            <ProductsFilterModal onCloseModal={() => closeModal()} />
           )}
           {modalType === "help" && <HelpModal onClose={() => closeModal()} />}
           {modalType === "add" && (
@@ -106,28 +99,24 @@ export default function ProductsPage() {
           {/* Modal para editar el producto */}
           {modalType === "edit" && (
             <EditProductModal
-              refetch={fetchProducts}
               selectedProduct={modalData}
               onCloseModal={() => closeModal()}
             />
           )}
           {modalType === "disable" && (
             <DisableProductModal
-              refetch={fetchProducts}
               product={modalData}
               onClose={() => closeModal()}
             />
           )}
           {modalType === "enable" && (
             <EnableProductModal
-              refetch={fetchProducts}
               product={modalData}
               onClose={() => closeModal()}
             />
           )}
           {modalType === "addWarranty" && (
             <AddWarrantyModal
-              refetch={fetchProducts}
               product={modalData}
               onAddSuccess={() => closeModal()}
               onCloseModal={() => closeModal()}
