@@ -24,7 +24,7 @@ import ProfileModal from "../../globals/components/modals/profileModal/ProfileMo
 export default function ProductsPage() {
   const { modalType, modalData, isOpen, triggerRef, openModal, closeModal } =
     useModal();
-  const { products } = useCatalog();
+  const { products, setFilters } = useCatalog();
   const [search, setSearch] = useState();
   const filteredProducts = useSearch(products ?? [], search);
 
@@ -86,7 +86,10 @@ export default function ProductsPage() {
         >
           {modalType === "user" && <ProfileModal />}
           {modalType === "filter" && (
-            <ProductsFilterModal onCloseModal={() => closeModal()} />
+            <ProductsFilterModal
+              setFilters={setFilters}
+              onCloseModal={() => closeModal()}
+            />
           )}
           {modalType === "help" && <HelpModal onClose={() => closeModal()} />}
           {modalType === "add" && (
