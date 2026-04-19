@@ -1,17 +1,19 @@
 import { useState } from "react";
 import { editProductService } from "../services/editProductService";
+import { useFormValidation } from "../../../globals/hooks/useFormValidator";
 
 export function useEditProduct(product) {
   const initialState = {
-    product_id: product.product_id,
-    input_order_id: product.input_order_id || "",
-    subcategory_id: product.subcategory_id || "",
-    product_serial: product.product_serial || "",
-    product_brand_id: product.brand_id || "",
-    product_details_id: product.product_details_id || "",
-    product_garanty_input: product.warranty_time || "",
-    product_status: product.status || "",
+    id: product.product_id,
+    input_order: product.input_order_id || "",
+    subcategory: product.subcategory_id || "",
+    serial: product.product_serial || "",
+    brand: product.brand_id || "",
+    model: product.product_details_id || "",
+    warranty_time: product.warranty_time || "",
+    status: product.status || "",
   };
+  const { validate, getChanges } = useFormValidation();
 
   const [form, setForm] = useState(initialState);
   const [loading, setLoading] = useState(false);
@@ -31,35 +33,26 @@ export function useEditProduct(product) {
     const buttonRect = buttonElement.getBoundingClientRect();
     const triggerData = { currentTarget: buttonElement, rect: buttonRect };
 
-    const updates = { product_id: form.product_id };
-    let hasChanges = false;
+    const isValid = validate(form);
 
-    Object.keys(form).forEach((key) => {
-      if (form[key].toString() !== initialState[key].toString()) {
-        updates[key] = form[key];
-        hasChanges = true;
-      }
-    });
-
-    if (!hasChanges) {
+    if (!isValid) {
       openInnerModal("error", triggerData);
       return;
     }
 
-    const isAnyUpdateEmpty = Object.values(updates).some(
-      (val) =>
-        val === undefined || val === null || val.toString().trim() === "",
-    );
+    const changes = getChanges(product, form);
 
-    if (isAnyUpdateEmpty) {
-      openInnerModal("error", triggerData);
-      return;
+    if (Object.keys(changes).length === 0) {
+      return console.error("No hay cambios para guardar");
     }
 
     setLoading(true);
 
     try {
-      const response = await editProductService(form);
+      const response = await editProductService({
+        id: product.product_id,
+        ...changes,
+      });
       if (response.success) {
         openInnerModal("success", triggerData);
       } else {
