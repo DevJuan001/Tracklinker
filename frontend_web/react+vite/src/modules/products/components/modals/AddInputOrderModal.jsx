@@ -23,6 +23,7 @@ export default function AddInputOrderModal({ triggerRef, isOpen, onClose }) {
       isOpen={isOpen}
       onClose={onClose}
       title={"Agregar orden de entrada"}
+      disableClose={innerType !== null}
     >
       <section className="w-full flex flex-col items-center gap-2.5">
         <SelectMenu
@@ -45,7 +46,6 @@ export default function AddInputOrderModal({ triggerRef, isOpen, onClose }) {
         />
 
         <ConfirmCancelButtons
-          confirmBtnRef={innerTrigger}
           confirmText={loading ? <Loader /> : "Agregar"}
           confirmButtonOnClick={(e) => handleSubmit(e, openInnerModal)}
           cancelButtonOnClick={onClose}
@@ -74,12 +74,7 @@ export default function AddInputOrderModal({ triggerRef, isOpen, onClose }) {
         <ErrorModal
           triggerRef={innerTrigger}
           isOpen={true}
-          onClose={(e) => {
-            if (e && e.stopPropagation) {
-              e.stopPropagation();
-            }
-            openInnerModal(null);
-          }}
+          onClose={() => openInnerModal(null)}
           confirmButtonText={"Volver a intentarlo"}
           errorTitle={"!No se pudo crear la orden!"}
           errorText={
