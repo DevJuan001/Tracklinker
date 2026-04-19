@@ -14,6 +14,7 @@ export const useFlipModal = ({
   overlayRef,
   onClose,
   location,
+  id,
 }) => {
   useEffect(() => {
     if (!isOpen || !modalRef.current || !triggerRef?.element) return;
@@ -23,19 +24,24 @@ export const useFlipModal = ({
     const element = triggerRef.element;
     const overlay = overlayRef?.current;
 
+    // Etiquetamos el modal con su ID único para scoping
+    modal.dataset.flipModalId = id;
+
     let cancelled = false;
 
     const raf = requestAnimationFrame(() => {
       if (cancelled) return;
       gsap.killTweensOf([modal, content, element, overlay]);
 
-      // 1. MEDIR dimensiones finales reales del modal tal como React las colocó en el DOM
-      // (con sus clases y media-queries aplicadas antes de que las alteremos)
+      gsap.set(modal, { force3D: true, willChange: "transform" });
+      gsap.set(content, { force3D: true });
+
+      // Medimos dimensiones finales reales del modal
       const fullWidth = modal.offsetWidth;
       const fullHeight = modal.offsetHeight;
       const finalBg = window.getComputedStyle(modal).backgroundColor;
 
-      // 2. AHORA SÍ aplicamos las anulaciones físicas necesarias para que GSAP pueda encogerlo/estirarlo
+      // Aplicamos las anulaciones físicas necesarias para que GSAP pueda encogerlo/estirarlo
       modal.style.setProperty("min-height", "0px", "important");
       modal.style.setProperty("min-width", "0px", "important");
 
@@ -44,17 +50,24 @@ export const useFlipModal = ({
         clearProps: "position,top,left,width,height,boxSizing",
       });
 
-      // emparejamiento padre para que Flip reconozca que la Modal y el Botón son "el mismo"
-      element.dataset.flipId = "modal-morph";
-      modal.dataset.flipId = "modal-morph";
+      // Emparejamiento padre único para evitar colisiones en modales anidados
+      const flipId = `modal-morph-${id}`;
+      element.dataset.flipId = flipId;
+      modal.dataset.flipId = flipId;
 
-      // "Shared Elements": localizamos dinámicamente gemelos dentro de los botones y modales
+      // "Shared Elements": localizamos dinámicamente gemelos.
       const triggerShared = Array.from(
         element.querySelectorAll("[data-flip-id]"),
       );
       const modalShared = Array.from(
         modal.querySelectorAll("[data-flip-id]"),
-      ).filter((n) => n !== modal);
+      ).filter((n) => {
+        if (n === modal) return false;
+        // Solo incluimos si el elemento NO está dentro de otro sub-modal (con data-flip-modal-id)
+        // o si es hijo directo del flujo de este modal.
+        const closestModal = n.closest("[data-flip-modal-id]");
+        return closestModal === modal;
+      });
 
       const state = Flip.getState([element, ...triggerShared], {
         props: "borderRadius,backgroundColor,color,padding",
@@ -62,8 +75,6 @@ export const useFlipModal = ({
 
       element.style.setProperty("opacity", "0", "important");
       element.style.setProperty("visibility", "hidden", "important");
-
-      const triggerStyles = window.getComputedStyle(element);
 
       const vw = window.innerWidth;
       const vh = window.innerHeight;
@@ -113,6 +124,7 @@ export const useFlipModal = ({
             modal.style.removeProperty("min-width");
             gsap.set(modal, {
               overflow: "visible",
+              willChange: "auto",
               clearProps: "backgroundColor,color,padding",
             });
             element.style.setProperty("opacity", "0", "important");
@@ -135,7 +147,7 @@ export const useFlipModal = ({
         });
       }
     };
-  }, [isOpen, triggerRef, location, modalRef, contentRef, overlayRef]);
+  }, [isOpen, triggerRef, location, modalRef, contentRef, overlayRef, id]);
 
   const closeModal = useCallback(
     (e) => {
@@ -154,25 +166,17 @@ export const useFlipModal = ({
         return;
       }
 
-      // Matamos TODO — incluyendo tweens de apertura a medias
       gsap.killTweensOf([modal, content, overlay, element]);
-      gsap.globalTimeline
-        .getChildren(true, true, true)
-        .forEach((t) => t.kill());
 
-      // Limpiamos !important inline que pudo dejar la apertura
       element.style.removeProperty("opacity");
       element.style.removeProperty("visibility");
+      gsap.set(element, { opacity: 1, visibility: "visible" });
 
       const buttonChildren = Array.from(element.children);
 
-      // Botón oculto — sus hijos listos para el reveal
       gsap.set(element, { opacity: 0, visibility: "hidden" });
       gsap.set(buttonChildren, { clearProps: "filter,y,opacity" });
       gsap.set(buttonChildren, { filter: "blur(8px)", y: 8, opacity: 0 });
-
-      // ← sin ningún gsap.set que lo revierta aquí
-
       gsap.set(modal, { overflow: "hidden" });
 
       const contentRect = content.getBoundingClientRect();
@@ -185,9 +189,17 @@ export const useFlipModal = ({
         boxSizing: "border-box",
       });
 
+      const flipId = `modal-morph-${id}`;
+      element.dataset.flipId = flipId;
+      modal.dataset.flipId = flipId;
+
       const modalShared = Array.from(
         modal.querySelectorAll("[data-flip-id]"),
-      ).filter((n) => n !== modal);
+      ).filter((n) => {
+        if (n === modal) return false;
+        const closestModal = n.closest("[data-flip-modal-id]");
+        return closestModal === modal;
+      });
 
       const state = Flip.getState([modal, ...modalShared], {
         props: "backgroundColor,color,padding",
@@ -197,6 +209,7 @@ export const useFlipModal = ({
       const triggerStyles = window.getComputedStyle(element);
 
       gsap.set(modal, { clearProps: "transform,x,y,scale,xPercent,yPercent" });
+
       modal.style.setProperty("min-height", "0px", "important");
       modal.style.setProperty("min-width", "0px", "important");
 
@@ -213,9 +226,13 @@ export const useFlipModal = ({
         margin: 0,
       });
 
+      gsap.set(modal, { force3D: true, willChange: "transform" });
+      gsap.set(content, { force3D: true });
+
       function cleanup() {
         modal.style.removeProperty("min-height");
         modal.style.removeProperty("min-width");
+        gsap.set(modal, { willChange: "auto" });
         gsap.set(element, {
           opacity: 1,
           visibility: "visible",
@@ -275,7 +292,7 @@ export const useFlipModal = ({
         0.17,
       );
     },
-    [onClose, triggerRef, modalRef, contentRef, overlayRef],
+    [onClose, triggerRef, modalRef, contentRef, overlayRef, id],
   );
 
   return { closeModal };

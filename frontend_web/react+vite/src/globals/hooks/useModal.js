@@ -20,7 +20,7 @@ export function useModal() {
     setModalType(type);
     setIsOpen(true);
     setTriggerRef({ element: ref, rect });
-    setQueriesToInvalidate(queries);
+    setQueriesToInvalidate(Array.isArray(queries) ? queries : []);
   };
 
   const closeModal = () => {
@@ -28,9 +28,11 @@ export function useModal() {
     setIsOpen(false);
     setModalType(null);
 
-    queriesToInvalidate.forEach((key) => {
-      queryClient.invalidateQueries({ queryKey: [key] });
-    });
+    if (queriesToInvalidate?.length) {
+      queriesToInvalidate.forEach((key) => {
+        queryClient.invalidateQueries({ queryKey: [key] });
+      });
+    }
 
     setQueriesToInvalidate([]);
     setTriggerRef(null);
