@@ -39,9 +39,7 @@ export default function SubcategoriesPage() {
         sectionName={"Subcategorias"}
         addButtonIcon={actionsIcons.addIcon}
         addButtonText={"Agregar Subcategoria"}
-        createOnClick={(e) =>
-          openModal(null, "add", ["subcategories"], e.currentTarget)
-        }
+        createOnClick={(e) => openModal(null, "add", null, e.currentTarget)}
         filterOnClick={(e) => openModal(null, "filter", null, e.currentTarget)}
       >
         <SearchBar value={search} onChange={setSearch} />
