@@ -48,56 +48,59 @@ export default function Modal({
   });
 
   return createPortal(
-    <div>
+    <section
+      ref={overlayRef}
+      style={{ zIndex: z_index }}
+      className="fixed inset-0"
+      onClick={(e) => {
+        if (e.target === e.currentTarget && !disableClose) closeModal(e);
+      }}
+    >
       <section
-        ref={overlayRef}
-        style={{ zIndex: z_index }}
-        className="fixed inset-0 bg-[#0000001a] dark:bg-[#0000001a]"
-        onClick={(e) => {
-          if (e.target === e.currentTarget && !disableClose) closeModal(e);
+        onClick={(e) => e.stopPropagation()}
+        style={{
+          visibility: "hidden",
         }}
-      >
-        <section
-          onClick={(e) => e.stopPropagation()}
-          style={{
-            visibility: "hidden",
-          }}
-          ref={modalRef}
-          className={`bg-white rounded-[32px] shadow-lg p-7 dark:bg-black 
+        ref={modalRef}
+        className={`bg-white rounded-[32px] shadow-lg ${type === "calendar" ? "p-0" : "p-7"}
+          dark:bg-black 
           ${
             type === "user"
               ? "max-w-full min-h-screen md:min-w-[650px] md:max-w-[650px] md:min-h-[550px] md:max-h-[550px]"
               : type === "help"
                 ? "md:max-w-[600px]"
                 : type === "filter"
-                  ? "min-w-[400px] max-w-[400px]"
-                  : "min-w-[500px] max-w-[500px]"
+                  ? "md:min-w-[400px] md:max-w-[400px]"
+                  : type === "calendar"
+                    ? "md:min-w-[400px] md:max-w-[400px]"
+                    : "md:min-w-[500px] md:max-w-[500px]"
           }`}
-        >
-          <div ref={contentRef}>
-            <header className="flex justify-between items-center mb-2">
-              <span
-                data-flip-id="modal-title"
-                className="min-w-44 font-medium text-lg dark:text-[#e4e2e5]"
-              >
-                {title}
-              </span>
-              <button
-                onClick={closeModal}
-                className="w-10 h-10 self-end flex items-center justify-center hover:bg-[#49454f21] dark:hover:bg-[#28282bbd] rounded-full"
-              >
-                <img
-                  src={modalIcons.closeIcon}
-                  className="w-6 h-6 brightness-0 dark:invert dark:brightness-50"
-                />
-              </button>
-            </header>
+      >
+        <div ref={contentRef}>
+          <header
+            className={`${type === "calendar" ? "hidden" : ""} flex justify-between items-center mb-2`}
+          >
+            <span
+              data-flip-id="modal-title"
+              className="min-w-56 font-medium text-lg dark:text-[#e4e2e5]"
+            >
+              {title}
+            </span>
+            <button
+              onClick={closeModal}
+              className="w-10 h-10 self-end flex items-center justify-center hover:bg-[#49454f21] dark:hover:bg-[#28282bbd] rounded-full"
+            >
+              <img
+                src={modalIcons.closeIcon}
+                className="w-6 h-6 brightness-0 dark:invert dark:brightness-50"
+              />
+            </button>
+          </header>
 
-            {enhancedChildren}
-          </div>
-        </section>
+          {enhancedChildren}
+        </div>
       </section>
-    </div>,
+    </section>,
     document.getElementById("modal-root"),
   );
 }
