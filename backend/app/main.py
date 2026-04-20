@@ -1,13 +1,26 @@
+from contextlib import asynccontextmanager
+from app.core.redis import init_redis, close_redis
 from fastapi import FastAPI
+from fastapi_limiter import FastAPILimiter
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.database import get_connection
 from app.routes import user_routes, dashboard_routes, category_routes, subcategories_routes, auth_routes, output_details_routes, suggestion_routes, guarantees_routes, products_routes, reports_routes, suppliers_routes
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Inicialización de recursos
+    redis = await init_redis(app)
+    await FastAPILimiter.init(redis)
+    yield
+    # Cierre de recursos
+    await close_redis()
 
 # Instancia principal de la app FastAPI
 app = FastAPI(
     title="API con FastAPI y MySQL",
     description="Api para tracklinker",
     version="1.0.0",
+    lifespan=lifespan
 )
 
 # CORS
