@@ -17,12 +17,16 @@ export const useFlipModal = ({
   id,
 }) => {
   useEffect(() => {
-    if (!isOpen || !modalRef.current || !triggerRef?.element) return;
-
     const modal = modalRef.current;
     const content = contentRef.current;
-    const element = triggerRef.element;
     const overlay = overlayRef?.current;
+
+    // Normalizamos el trigger ya que este puede ser un objeto del hook useModal ({element, rect})
+    // o un Ref de React estándar ({current: element})
+    const element = triggerRef?.element || triggerRef?.current;
+    if (!isOpen || !modal || !element) return;
+
+    const rect = triggerRef.rect || element.getBoundingClientRect();
 
     // Etiquetamos el modal con su ID único para scoping
     modal.dataset.flipModalId = id;
@@ -63,8 +67,6 @@ export const useFlipModal = ({
         modal.querySelectorAll("[data-flip-id]"),
       ).filter((n) => {
         if (n === modal) return false;
-        // Solo incluimos si el elemento NO está dentro de otro sub-modal (con data-flip-modal-id)
-        // o si es hijo directo del flujo de este modal.
         const closestModal = n.closest("[data-flip-modal-id]");
         return closestModal === modal;
       });
@@ -82,13 +84,10 @@ export const useFlipModal = ({
       let finalLeft = Math.round((vw - fullWidth) / 2);
       let finalTop = Math.round((vh - fullHeight) / 2);
 
-      if (location !== "center" && triggerRef?.rect) {
-        finalLeft = Math.round(
-          Math.min(triggerRef.rect.left, vw - fullWidth - 20),
-        );
-        finalTop = Math.round(
-          Math.min(triggerRef.rect.top, vh - fullHeight - 20),
-        );
+      if (location !== "center" && (triggerRef?.rect || rect)) {
+        const r = triggerRef.rect || rect;
+        finalLeft = Math.round(Math.min(r.left, vw - fullWidth - 20));
+        finalTop = Math.round(Math.min(r.top, vh - fullHeight - 20));
       }
 
       finalLeft = Math.max(20, finalLeft);
@@ -110,7 +109,6 @@ export const useFlipModal = ({
       });
 
       const tl = gsap.timeline();
-
       tl.add(
         Flip.from(state, {
           targets: [modal, ...modalShared],
@@ -132,6 +130,14 @@ export const useFlipModal = ({
           },
         }),
       );
+
+      if (overlay) {
+        tl.to(
+          overlay,
+          { backgroundColor: "rgba(0,0,0,0.08)", duration: 0.15 },
+          0,
+        );
+      }
     });
 
     return () => {
@@ -205,7 +211,9 @@ export const useFlipModal = ({
         props: "backgroundColor,color,padding",
       });
 
-      const triggerRect = element.getBoundingClientRect();
+      if (!element) return;
+
+      const triggerRect = triggerRef.rect || element.getBoundingClientRect();
       const triggerStyles = window.getComputedStyle(element);
 
       gsap.set(modal, { clearProps: "transform,x,y,scale,xPercent,yPercent" });
