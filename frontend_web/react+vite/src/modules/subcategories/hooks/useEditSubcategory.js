@@ -1,11 +1,15 @@
 import { useState } from "react";
 import { editSubcategoryService } from "../services/editSubcategoryService";
+import { useFormValidation } from "../../../globals/hooks/useFormValidation";
 
-export function useEditSubcategory(id, formData) {
-  const [form, setForm] = useState(formData);
-  const [data, setData] = useState([]);
+export function useEditSubcategory(subcategory) {
+  const [form, setForm] = useState({
+    category_id: subcategory.category_id || "",
+    subcategory_name: subcategory.subcategory_name || "",
+  });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const { validate, getChanges } = useFormValidation();
 
   function handleChange(e) {
     setForm((prev) => ({
@@ -14,25 +18,44 @@ export function useEditSubcategory(id, formData) {
     }));
   }
 
-  // Función que pasa los parametros al service y valida la respuesta
-  async function handleSubmit(e, setInnerModal) {
+  async function handleSubmit(e, openInnerModal) {
     e.preventDefault();
+
+    const buttonElement = e.currentTarget;
+    const buttonRect = buttonElement.getBoundingClientRect();
+    const triggerData = { currentTarget: buttonElement, rect: buttonRect };
+
+    const isValid = validate(form);
+
+    if (!isValid) {
+      openInnerModal("error", triggerData);
+      return;
+    }
+
+    const changes = getChanges(subcategory, form);
+
+    if (Object.keys(changes).length === 0) {
+      openInnerModal("error", triggerData);
+      return;
+    }
 
     setLoading(true);
 
     try {
-      const response = await editSubcategoryService(id, form);
-      if (response.success) {
-        setInnerModal("success");
+      const response = await editSubcategoryService(
+        subcategory.subcategory_id,
+        form,
+      );
+      if (response.success === true) {
+        openInnerModal("success", triggerData);
       }
-      setData(response);
     } catch (error) {
-      setInnerModal("error");
+      openInnerModal("error", triggerData);
       setError(error);
     } finally {
       setLoading(false);
     }
   }
 
-  return { form, data, loading, error, handleSubmit, handleChange };
+  return { form, loading, error, handleSubmit, handleChange };
 }
