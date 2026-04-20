@@ -3,6 +3,7 @@ from app.controllers.auth_controller import AuthController
 from app.models.auth_model import LoginModel, RecoverPassword
 from app.models.user_model import UpdateCurrentUser, UpdatePassword
 from app.middlewares.jwt_middleware import verify_jwt
+from fastapi_limiter.depends import RateLimiter
 
 router = APIRouter(
     prefix="/api/auth", 
@@ -10,7 +11,12 @@ router = APIRouter(
 )
 
 # Endpoint para loguearse
-@router.post("/login")
+@router.post(
+    "/login",
+    dependencies=[
+        Depends(RateLimiter(times=2, seconds=60))
+    ]
+)
 def login(credentials: LoginModel, response: Response):
     return AuthController.login(credentials.email, credentials.password, response)
 
