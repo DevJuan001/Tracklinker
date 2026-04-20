@@ -20,24 +20,18 @@ export function useEditSubcategory(subcategory) {
     }));
   }
 
-  async function handleSubmit(e, openInnerModal) {
+  async function handleSubmit(e, onClose) {
     e.preventDefault();
-
-    const buttonElement = e.currentTarget;
-    const buttonRect = buttonElement.getBoundingClientRect();
-    const triggerData = { currentTarget: buttonElement, rect: buttonRect };
 
     const isValid = validate(form);
 
     if (!isValid) {
-      openInnerModal("error", triggerData);
       return;
     }
 
     const changes = getChanges(subcategory, form);
 
     if (Object.keys(changes).length === 0) {
-      openInnerModal("error", triggerData);
       return;
     }
 
@@ -49,11 +43,10 @@ export function useEditSubcategory(subcategory) {
         form,
       );
       if (response.success === true) {
-        openInnerModal("success", triggerData);
         queryClient.invalidateQueries(["subcategories"]);
+        onClose();
       }
     } catch (error) {
-      openInnerModal("error", triggerData);
       setError(error);
     } finally {
       setLoading(false);
