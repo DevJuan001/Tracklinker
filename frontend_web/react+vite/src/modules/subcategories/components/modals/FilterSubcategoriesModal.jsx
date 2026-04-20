@@ -1,25 +1,16 @@
+import { useCategories } from "../../hooks/useCategories";
+import { useFilterSubcategories } from "../../hooks/useFilterSubcategories";
 import FilterModal from "../../../../globals/components/modals/FilterModal";
 import SelectMenu from "../../../../globals/components/modals/SelectMenu";
-import { useCategories } from "../../hooks/useCategories";
-import useFilterSubcategories from "../../hooks/useFilterSubcategories";
 
-export default function FilterSubcategoriesModal({ refetch, onClose }) {
+export default function FilterSubcategoriesModal({ setFilters, onClose }) {
   const { categories } = useCategories();
-  const { form, handleChange, handleApply } = useFilterSubcategories(
-    {
-      start_date: "",
-      end_date: "",
-      category_order: "",
-      status: "",
-      name_order: "",
-    },
-    refetch,
-  );
+  const { form, handleChange } = useFilterSubcategories();
   return (
     <FilterModal
       applyButtonOnClick={() => {
+        setFilters({ ...form });
         onClose();
-        handleApply();
       }}
       orderByStartDateValue={form.start_date}
       orderByStartDateOnChange={handleChange}
@@ -27,37 +18,39 @@ export default function FilterSubcategoriesModal({ refetch, onClose }) {
       orderByFinishDateOnChange={handleChange}
       onClose={onClose}
     >
-      <SelectMenu
-        spanText={"Categoría"}
-        name={"category_order"}
-        value={form.category_order}
-        onChange={handleChange}
-        options={categories.map((category) => ({
-          value: category.category_id,
-          label: category.category_name,
-        }))}
-      />
-      <SelectMenu
-        spanText={"Nombres"}
-        name={"name_order"}
-        onChange={handleChange}
-        value={form.name_order}
-        options={[
-          { value: "asc", label: "a - Z" },
-          { value: "desc", label: "Z - a" },
-        ]}
-      />
+      <div className="flex flex-col gap-2">
+        <SelectMenu
+          spanText={"Categoría"}
+          name={"category_order"}
+          value={form.category_order}
+          onChange={handleChange}
+          options={categories.map((category) => ({
+            value: category.category_id,
+            label: category.category_name,
+          }))}
+        />
+        <SelectMenu
+          spanText={"Nombres"}
+          name={"name_order"}
+          onChange={handleChange}
+          value={form.name_order}
+          options={[
+            { value: "asc", label: "a - Z" },
+            { value: "desc", label: "Z - a" },
+          ]}
+        />
 
-      <SelectMenu
-        spanText={"Estado"}
-        value={form.status}
-        name={"status"}
-        onChange={handleChange}
-        options={[
-          { value: 1, label: "Deshabilitada" },
-          { value: 2, label: "Activa" },
-        ]}
-      />
+        <SelectMenu
+          spanText={"Estado"}
+          value={form.status}
+          name={"status"}
+          onChange={handleChange}
+          options={[
+            { value: 1, label: "Deshabilitada" },
+            { value: 2, label: "Activa" },
+          ]}
+        />
+      </div>
     </FilterModal>
   );
 }
