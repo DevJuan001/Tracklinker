@@ -46,7 +46,7 @@ export default function SubcategoriesItem({
           openModal(
             subcategory,
             categoryStatusConfig[subcategory.subcategory_status]?.modalType,
-            ["subcategories"],
+            null,
             e.currentTarget,
           );
         }}
