@@ -14,10 +14,10 @@ export default function TopSection({
 }) {
   return (
     <section
-      className={`h-[6%] flex items-center justify-between pl-2 pb-2 ${sectionVisible ? "block" : "hidden"}`}
+      className={`h-[7%] flex items-center justify-between pl-2 pb-2 ${sectionVisible ? "block" : "hidden"}`}
     >
       <span className="text-sm md:text-lg xl:text-lg font-medium dark:text-white">{sectionName}</span>
-      <section className="flex justify-end gap-3">
+      <section className="flex justify-between">
         {children}
         <FilterButton
           onClick={filterOnClick}
