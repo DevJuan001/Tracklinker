@@ -18,7 +18,7 @@ export default function CreateButton({
       />
       <span
         data-flip-id="modal-title"
-        className="hidden sm:block lg:block md:block xl:block text-base text-white font-medium dark:text-black"
+        className="hidden text-white font-medium dark:text-black lg:block"
       >
         {text}
       </span>
