@@ -1,4 +1,8 @@
+import json
 from fastapi import APIRouter, Depends, Body
+from fastapi_limiter.depends import RateLimiter
+from app.core.cache import invalidate_cache
+from app.core.redis import get_redis
 from app.controllers.products_controller import ProductsController
 from app.middlewares.roles_middleware import require_roles
 from app.models.product_model import Product, UpdateProduct
@@ -12,8 +16,13 @@ router = APIRouter(
 )
 
 # Endpoint para obtener todos los productos
-@router.get("/")
-def get_all_products(
+@router.get(
+        "/",
+        dependencies=[
+            Depends(RateLimiter(times=10, seconds=60))
+        ]
+)
+async def get_all_products(
     start_date: str = None,
     end_date: str = None,
     input_order: int = None,
@@ -23,8 +32,9 @@ def get_all_products(
     product_status: int = None,
     brand: int = None,
     product_model: int = None,
+    redis = Depends(get_redis)
 ):
-    return ProductsController.get_all_products(
+    result = ProductsController.get_all_products(
         start_date,
         end_date,
         input_order,
@@ -35,6 +45,8 @@ def get_all_products(
         brand,
         product_model,
     )
+    await redis.setex("products:all", 300, json.dumps(result))
+    return result
 
 # Endpoint para obtener todas las marcas de productos
 @router.get("/brands")
@@ -57,9 +69,17 @@ def get_all_product_status():
     return ProductsController.get_all_product_status()
 
 # Endpoint para crear o agregar productos
-@router.post("/create")
-def create_product(product_data: Product):
-    return ProductsController.create_product(product_data)
+@router.post(
+    "/create",
+    dependencies=[
+        Depends(require_roles(["Admin", "Almacen"])),
+        Depends(RateLimiter(times=5, seconds=60))
+    ]
+)
+async def create_product(product_data: Product, redis = Depends(get_redis)):
+    result = ProductsController.create_product(product_data)
+    await invalidate_cache(redis, "products:*")
+    return result
 
 # Endpoint para crear o agregar modelos de productos
 @router.post("/create-model")
