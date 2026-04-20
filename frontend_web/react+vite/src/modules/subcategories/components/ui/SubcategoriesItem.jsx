@@ -7,7 +7,6 @@ export default function SubcategoriesItem({
   subcategory,
   editButtonOnClick,
   openModal,
-  refetch,
   moreInfoOnClick,
 }) {
   return (
@@ -47,7 +46,8 @@ export default function SubcategoriesItem({
           openModal(
             subcategory,
             categoryStatusConfig[subcategory.subcategory_status]?.modalType,
-            refetch,
+            ["subcategories"],
+            e.currentTarget,
           );
         }}
         visibilityIcon={
