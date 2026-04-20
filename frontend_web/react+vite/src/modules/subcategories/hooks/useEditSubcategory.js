@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { editSubcategoryService } from "../services/editSubcategoryService";
 import { useFormValidation } from "../../../globals/hooks/useFormValidation";
 
@@ -10,6 +11,7 @@ export function useEditSubcategory(subcategory) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const { validate, getChanges } = useFormValidation();
+  const queryClient = useQueryClient();
 
   function handleChange(e) {
     setForm((prev) => ({
@@ -48,6 +50,7 @@ export function useEditSubcategory(subcategory) {
       );
       if (response.success === true) {
         openInnerModal("success", triggerData);
+        queryClient.invalidateQueries(["subcategories"]);
       }
     } catch (error) {
       openInnerModal("error", triggerData);
