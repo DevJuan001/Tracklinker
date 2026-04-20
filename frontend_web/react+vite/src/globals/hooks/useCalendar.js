@@ -1,8 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
-export function useCalendar(value, onChange, triggerRef) {
-  const [coords, setCoords] = useState(null);
-
+export function useCalendar(value, onChange) {
   const today = new Date();
   const [current, setCurrent] = useState({
     year: today.getFullYear(),
@@ -44,29 +42,7 @@ export function useCalendar(value, onChange, triggerRef) {
     return day === dd && month + 1 === mm && year === yyyy;
   };
 
-  useEffect(() => {
-    if (triggerRef?.current) {
-      const rect = triggerRef.current.getBoundingClientRect();
-      const calendarWidth = 400;
-      const padding = 20;
-
-      const wouldOverflowRight = rect.left + calendarWidth > window.innerWidth;
-
-      let finalLeft = rect.left;
-
-      if (wouldOverflowRight) {
-        finalLeft = window.innerWidth - calendarWidth - padding;
-      }
-
-      setCoords({
-        top: rect.bottom + window.scrollY + 8,
-        left: Math.max(padding, finalLeft),
-      });
-    }
-  }, [triggerRef]);
-
   return {
-    coords,
     year,
     month,
     firstDow,
