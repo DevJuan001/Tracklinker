@@ -38,12 +38,7 @@ export default function SubcategoriesList({
               }}
               editButtonOnClick={(e) => {
                 e.stopPropagation();
-                openModal(
-                  subcategory,
-                  "edit",
-                  ["subcategories"],
-                  e.currentTarget,
-                );
+                openModal(subcategory, "edit", null, e.currentTarget);
               }}
             />
           ))
