@@ -1,6 +1,13 @@
 import { useState } from "react";
-export default function useFilterSubcategories(filters, refetch) {
-  const [form, setForm] = useState(filters);
+
+export function useFilterSubcategories() {
+  const [form, setForm] = useState({
+    start_date: "",
+    end_date: "",
+    category_order: "",
+    status: "",
+    name_order: "",
+  });
 
   function handleChange(e) {
     setForm((prev) => ({
@@ -9,13 +16,8 @@ export default function useFilterSubcategories(filters, refetch) {
     }));
   }
 
-  function handleApply() {
-    refetch(form);
-  }
-
   return {
     form,
     handleChange,
-    handleApply,
   };
 }

@@ -22,25 +22,25 @@ import SearchBar from "../../globals/components/ui/SearchBar";
 import EnableSubcategoryModal from "./components/modals/EnableSubcategoryModal";
 
 export default function SubcategoriesPage() {
-  const { subcategories, loading, error, fetchSubcategories } =
-    useSubcategories();
-  const { modalType, isOpen, modalData, openModal, closeModal } = useModal();
+  const { subcategories, loading, error, setFilters } = useSubcategories();
+  const { modalType, isOpen, modalData, triggerRef, openModal, closeModal } =
+    useModal();
   const [search, setSearch] = useState("");
   const filteredSubcategories = useSearch(subcategories, search);
 
   return (
     <Layout
-      avatarOnClick={() => openModal(null, "user")}
-      helpOnClick={() => {
-        openModal(null, "help");
+      avatarOnClick={(e) => openModal(null, "user", null, e.currentTarget)}
+      helpOnClick={(e) => {
+        openModal(null, "help", null, e.currentTarget);
       }}
     >
       <TopSection
         sectionName={"Subcategorias"}
         addButtonIcon={actionsIcons.addIcon}
         addButtonText={"Agregar Subcategoria"}
-        createOnClick={() => openModal(null, "add", fetchSubcategories)}
-        filterOnClick={() => openModal(null, "filter", fetchSubcategories)}
+        createOnClick={(e) => openModal(null, "add", null, e.currentTarget)}
+        filterOnClick={(e) => openModal(null, "filter", null, e.currentTarget)}
       >
         <SearchBar value={search} onChange={setSearch} />
       </TopSection>
@@ -49,7 +49,6 @@ export default function SubcategoriesPage() {
         subcategories={filteredSubcategories}
         loading={loading}
         error={error}
-        refetch={fetchSubcategories}
         openModal={openModal}
       />
       {/* Modales */}
@@ -74,12 +73,14 @@ export default function SubcategoriesPage() {
           }
           type={modalType}
           isOpen={isOpen}
+          triggerRef={triggerRef}
+          location={modalType === "info" ? "center" : "anchored"}
           onClose={() => closeModal()}
         >
           {modalType === "user" && <ProfileModal />}
           {modalType === "filter" && (
             <FilterSubcategoriesModal
-              refetch={fetchSubcategories}
+              setFilters={setFilters}
               onClose={() => closeModal()}
             />
           )}

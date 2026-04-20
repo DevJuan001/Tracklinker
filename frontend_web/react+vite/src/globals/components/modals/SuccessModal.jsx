@@ -9,6 +9,7 @@ export default function SuccessModal({
   triggerRef,
   confirmText,
   confirmButtonText,
+  location = "center",
 }) {
   return (
     <Modal
@@ -17,7 +18,7 @@ export default function SuccessModal({
       onClose={onClose}
       type="innerModal"
       triggerRef={triggerRef}
-      location={"center"}
+      location={location}
     >
       <section className="flex flex-col items-center gap-1">
         <div className="flex flex-col items-center gap-3">

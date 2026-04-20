@@ -8,6 +8,7 @@ export default function ErrorModal({
   onClose,
   errorTitle,
   errorText,
+  location = "center",
   confirmButtonText,
 }) {
   const handleClose = (e) => {
@@ -23,7 +24,7 @@ export default function ErrorModal({
       isOpen={isOpen}
       onClose={onClose}
       triggerRef={triggerRef}
-      location="center"
+      location={location}
     >
       <section className="flex flex-col items-center gap-1 animate-blurUp">
         <img src={modalIcons.errorWithFillIcon} alt="" className="w-20" />

@@ -121,7 +121,7 @@ export default function ProductsTable({ products, openModal }) {
               <th className="flex items-center justify-center h-14 pr-4">
                 <ActionButtons
                   editButtonOnClick={(e) => {
-                    openModal(product, "edit", ["products"], e.currentTarget);
+                    openModal(product, "edit", null, e.currentTarget);
                     setOpenId(null);
                   }}
                   deleteButtonVisible={false}

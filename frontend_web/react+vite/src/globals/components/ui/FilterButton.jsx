@@ -13,7 +13,9 @@ export default function FilterButton({ onClick, filterButtonVisibility }) {
         alt=""
         className="w-5 h-5 dark:invert-[.7]"
       />
-      <p className="hidden sm:block lg:block md:block xl:block text-base font-medium dark:text-gray-300"> Filtrar </p>
+      <span className="hidden font-medium dark:text-gray-300 lg:block">
+        Filtrar
+      </span>
     </button>
   );
 }

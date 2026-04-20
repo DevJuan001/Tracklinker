@@ -7,12 +7,11 @@ export default function SubcategoriesItem({
   subcategory,
   editButtonOnClick,
   openModal,
-  refetch,
   moreInfoOnClick,
 }) {
   return (
     <li
-      className="flex items-center justify-between p-5 bg-[#96929213] rounded-lg transition duration-300 cursor-pointer
+      className="flex items-center justify-between p-5 bg-[#F5F3F6] rounded-lg transition duration-300 cursor-pointer
       hover:bg-[#96929231]
       dark:bg-[#0f0f11] dark:hover:bg-[#212125]"
       key={subcategory.subcategory_id}
@@ -47,7 +46,8 @@ export default function SubcategoriesItem({
           openModal(
             subcategory,
             categoryStatusConfig[subcategory.subcategory_status]?.modalType,
-            refetch,
+            null,
+            e.currentTarget,
           );
         }}
         visibilityIcon={

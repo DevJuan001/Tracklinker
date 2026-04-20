@@ -1,24 +1,19 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { getSubcategories } from "../services/getSubcategoriesService";
 
 export function useSubcategories() {
-  const [subcategories, setSubcategories] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [filters, setFilters] = useState();
+  const subcategories = useQuery({
+    queryKey: ["subcategories", filters],
+    queryFn: () => getSubcategories(filters),
+    staleTime: 1000 * 60 * 10,
+  });
 
-  // Esta función llama al service getAllSubcategories y espera a obtener todos los datos y los almacena en "data"
-  async function fetchSubcategories(filters) {
-    try {
-      const data = await getSubcategories(filters);
-      setSubcategories(data);
-      setLoading(false);
-    } catch (error) {
-      setError(error.message);
-    }
-  }
-  useEffect(() => {
-    fetchSubcategories();
-  }, []);
-
-  return { subcategories, loading, error, fetchSubcategories };
+  return {
+    subcategories: subcategories.data || [],
+    loading: subcategories.isLoading,
+    error: subcategories.error,
+    setFilters,
+  };
 }

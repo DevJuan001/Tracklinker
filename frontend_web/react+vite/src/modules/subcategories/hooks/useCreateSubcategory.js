@@ -1,11 +1,18 @@
 import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import { useFormValidation } from "../../../globals/hooks/useFormValidation";
 import { createSubcategory } from "../services/createSubcategorySevice";
 
-export function useCreateSubcategory(formData) {
-  const [form, setForm] = useState(formData);
+export function useCreateSubcategory() {
+  const [form, setForm] = useState({
+    category_id: "",
+    subcategory_name: "",
+  });
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const { validate } = useFormValidation();
+  const queryClient = useQueryClient();
 
   function handleChange(e) {
     setForm((prev) => ({
@@ -13,20 +20,32 @@ export function useCreateSubcategory(formData) {
       [e.target.name]: e.target.value,
     }));
   }
-  // Función que pasa los parametros al service y valida la respuesta
-  async function handleSubmit(e, setInnerModal) {
+
+  async function handleSubmit(e, openInnerModal) {
     e.preventDefault();
+
+    const buttonElement = e.currentTarget;
+    const buttonRect = buttonElement.getBoundingClientRect();
+    const triggerData = { currentTarget: buttonElement, rect: buttonRect };
+
+    const isValid = validate(form);
+
+    if (!isValid) {
+      openInnerModal("error", triggerData);
+      return;
+    }
 
     setLoading(true);
 
     try {
       const response = await createSubcategory(form);
       setData(response);
-      if (response.success) {
-        setInnerModal("success");
+      if (response.success === true) {
+        openInnerModal("success", triggerData);
+        queryClient.invalidateQueries({ queryKey: ["subcategories"] });
       }
     } catch (error) {
-      setInnerModal("error");
+      openInnerModal("error", triggerData);
       setError(error);
     } finally {
       setLoading(false);

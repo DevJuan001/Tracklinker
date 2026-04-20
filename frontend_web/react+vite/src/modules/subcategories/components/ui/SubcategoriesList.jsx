@@ -5,7 +5,6 @@ import "react-loading-skeleton/dist/skeleton.css";
 export default function SubcategoriesList({
   subcategories,
   loading,
-  refetch,
   openModal,
 }) {
   const noSubcategories = subcategories.length === 0 && !loading;
@@ -33,14 +32,13 @@ export default function SubcategoriesList({
               key={subcategory.subcategory_id}
               subcategory={subcategory}
               openModal={openModal}
-              refetch={refetch}
               moreInfoOnClick={(e) => {
                 e.stopPropagation();
-                openModal(subcategory, "info", refetch);
+                openModal(subcategory, "info", null, e.currentTarget);
               }}
               editButtonOnClick={(e) => {
                 e.stopPropagation();
-                openModal(subcategory, "edit", refetch);
+                openModal(subcategory, "edit", null, e.currentTarget);
               }}
             />
           ))
