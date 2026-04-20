@@ -42,7 +42,7 @@ export default function ProductsPage() {
         addButtonIcon={productsIcons.addProductIcon}
         addButtonText={"Agregar Producto"}
         createOnClick={(e) => {
-          openModal(null, "add", ["products"], e.currentTarget);
+          openModal(null, "add", null, e.currentTarget);
         }}
         filterOnClick={(e) => {
           openModal(null, "filter", null, e.currentTarget);
