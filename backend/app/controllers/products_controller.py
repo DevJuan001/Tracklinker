@@ -1,4 +1,7 @@
 from app.repository.products_repository import ProductsRepository
+from app.repository.product_details_repository import ProductDetailsRepository
+from app.repository.product_brands_repository import ProductBrandsRepository
+from app.repository.input_orders_repository import InputOrdersRepository
 from app.models.product_model import UpdateProduct, Product
 from fastapi import HTTPException
 
@@ -37,7 +40,7 @@ class ProductsController:
 
     @staticmethod
     def get_all_input_orders():
-        error, input_orders = ProductsRepository.find_all_input_orders()
+        error, input_orders = InputOrdersRepository.find_all_input_orders()
 
         if error:
             raise HTTPException(status_code=404, detail=error)
@@ -48,7 +51,7 @@ class ProductsController:
 
     @staticmethod
     def get_all_product_brands():
-        error, brands = ProductsRepository.find_all_product_brands()
+        error, brands = ProductBrandsRepository.find_all_product_brands()
 
         if error:
             raise HTTPException(status_code=404, detail=error)
@@ -59,7 +62,7 @@ class ProductsController:
 
     @staticmethod
     def get_all_product_models():
-        error, models = ProductsRepository.find_all_product_models()
+        error, models = ProductDetailsRepository.find_all_product_models()
 
         if error:
             raise HTTPException(status_code=404, detail=error)
@@ -93,7 +96,7 @@ class ProductsController:
 
     @staticmethod
     def create_product_model(product_model):
-        error, success, message = ProductsRepository.create_product_details(
+        error, success, message = ProductDetailsRepository.create_product_details(
             product_model)
 
         if error:
@@ -105,7 +108,7 @@ class ProductsController:
 
     @staticmethod
     def create_product_brand(product_brand):
-        error, success, message = ProductsRepository.create_product_brand(
+        error, success, message = ProductBrandsRepository.create_product_brand(
             product_brand)
 
         if error:
@@ -117,7 +120,7 @@ class ProductsController:
 
     @staticmethod
     def create_input_order(input_order):
-        error, success, message = ProductsRepository.create_input_order(
+        error, success, message = InputOrdersRepository.create_input_order(
             input_order)
 
         if error:

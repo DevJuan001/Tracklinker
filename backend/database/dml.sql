@@ -5,12 +5,12 @@ INSERT INTO ROLES VALUES
 (null, 'Cliente');
 
 INSERT INTO CITIES VALUES
-(null 'Bogotá'),
-(null 'Medellin'),
-(null 'Miami'),
-(null 'Barranquilla'),
-(null 'Cali'),
-(null 'Cartagena');
+(null, 'Bogotá'),
+(null, 'Medellin'),
+(null, 'Miami'),
+(null, 'Barranquilla'),
+(null, 'Cali'),
+(null, 'Cartagena');
 
 
 INSERT INTO USERS VALUES 
