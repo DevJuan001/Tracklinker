@@ -106,7 +106,6 @@ class UserRepository:
             user_name,
             user_first_surname,
             user_second_surname,
-            user_password,
             user_phone,
             user_email,
             user_address,
@@ -130,7 +129,6 @@ class UserRepository:
                     "name": item["user_name"],
                     "first_surname": item["user_first_surname"],
                     "second_surname": item["user_second_surname"],
-                    "user_password": item["user_password"],
                     "phone": item["user_phone"],
                     "email": item["user_email"],
                     "address": item["user_address"],
@@ -286,7 +284,10 @@ class UserRepository:
     # Actualizar la información de un usuario
     @staticmethod
     def update(user_id: int, user_data: UpdateUser):
-        data = user_data.model_dump()
+        data = user_data.model_dump(exclude_none=True)
+
+        if not data:
+            return None, False, "No hay campos para actualizar"
 
         connection = get_connection()
         cursor = connection.cursor(dictionary=True)
