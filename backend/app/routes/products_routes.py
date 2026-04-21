@@ -1,6 +1,7 @@
 import json
 from fastapi import APIRouter, Depends, Body
 from fastapi_limiter.depends import RateLimiter
+from fastapi.encoders import jsonable_encoder
 from app.core.cache import invalidate_cache
 from app.core.redis import get_redis
 from app.controllers.products_controller import ProductsController
@@ -45,7 +46,7 @@ async def get_all_products(
         brand,
         product_model,
     )
-    await redis.setex("products:all", 300, json.dumps(result))
+    await redis.setex("products:all", 300, json.dumps(jsonable_encoder(result)))
     return result
 
 # Endpoint para obtener todas las marcas de productos
