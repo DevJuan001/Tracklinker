@@ -1,0 +1,72 @@
+services:
+  db:
+    image: mysql:8.0
+    container_name: tracklinker-db
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+      - MYSQL_DATABASE=${DB_NAME}
+      - MYSQL_USER=${DB_USER}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - tracklinker-net
+
+  redis:
+    image: redis:7-alpine
+    container_name: tracklinker-redis
+    volumes:
+      - redis_data:/data
+    networks:
+      - tracklinker-net
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: tracklinker-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - REDIS_URL=redis://redis:6379
+    restart: always
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    networks:
+      - tracklinker-net
+
+  frontend:
+    build:
+      context: ./frontend_web/react+vite
+      dockerfile: Dockerfile
+    environment:
+      - VITE_API_URL=${VITE_API_URL}
+    container_name: tracklinker-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - tracklinker-net
+
+volumes:
+  redis_data:
+  mysql_data:
+
+networks:
+  tracklinker-net:
+    driver: bridge
