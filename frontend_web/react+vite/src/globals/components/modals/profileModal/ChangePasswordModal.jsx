@@ -1,5 +1,5 @@
 // Hooks
-import { useState } from "react";
+import { useInnerModal } from "../../../hooks/useInnerModal";
 import { useUpdateCurrentUserPassword } from "../../../hooks/useUpdateCurrentUserPassword";
 // Components
 import Loader from "../../ui/Loader";
@@ -12,7 +12,7 @@ import SuccessModal from "../SuccessModal";
 import { actionsIcons } from "../../../../assets/icons/actionsIcons";
 
 export default function ChangePasswordModal({ isOpen, onClose, triggerRef }) {
-  const [innerModal, setInnerModal] = useState(null);
+  const { innerType, innerTrigger, openInnerModal } = useInnerModal();
   const {
     handleChange,
     handleSubmit,
@@ -33,7 +33,6 @@ export default function ChangePasswordModal({ isOpen, onClose, triggerRef }) {
       triggerRef={triggerRef}
     >
       <section className="flex flex-col items-center w-full gap-2">
-        <div></div>
         <FormField
           id={"old_password"}
           type={showPasswords.old ? "text" : "password"}
@@ -95,27 +94,29 @@ export default function ChangePasswordModal({ isOpen, onClose, triggerRef }) {
         )}
         <ConfirmCancelButtons
           confirmText={loading ? <Loader /> : "Cambiar"}
-          confirmButtonOnClick={(e) => handleSubmit(e, setInnerModal)}
+          confirmButtonOnClick={(e) => handleSubmit(e, openInnerModal)}
           cancelButtonOnClick={onClose}
           disabled={!passwordsMatch}
         />
-        {innerModal === "success" && (
+        {innerType === "success" && (
           <SuccessModal
+            triggerRef={innerTrigger}
             isOpen={true}
             confirmTitle={"Contraseña actualizada con exito"}
             confirmText={"Su contraseña ha sido actualizada con exito"}
             onClose={onClose}
           />
         )}
-        {innerModal === "error" && (
+        {innerType === "error" && (
           <ErrorModal
+            triggerRef={innerTrigger}
             isOpen={true}
             errorTitle={"No se pudo actualizar su contraseña!"}
             errorText={
               "Verifique que su contraseña anterior sea la correcta y vuelva a intentarlo"
             }
             confirmButtonText={"Volver a intentarlo"}
-            onClose={() => setInnerModal(null)}
+            onClose={() => openInnerModal(null)}
           />
         )}
       </section>
