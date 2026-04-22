@@ -14,8 +14,13 @@ services:
       - MYSQL_DATABASE=${DB_NAME}
       - MYSQL_USER=${DB_USER}
       - MYSQL_PASSWORD=${DB_PASSWORD}
+    command: >
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
+      --skip-character-set-client-handshake
     volumes:
       - mysql_data_dev:/var/lib/mysql
+      - ./backend/database:/docker-entrypoint-initdb.d
     networks:
       - tracklinker-net
 
