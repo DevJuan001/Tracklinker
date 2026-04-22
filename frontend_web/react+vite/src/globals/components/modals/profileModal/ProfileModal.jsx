@@ -20,7 +20,7 @@ export default function ProfileModal() {
   const [activeSection, setActiveSection] = useState("general");
   const [innerModal, setInnerModal] = useState(null);
 
-  const { user, fetchCurrentUser } = useUser();
+  const { user } = useUser();
 
   return (
     <section
@@ -130,7 +130,6 @@ export default function ProfileModal() {
           triggerRef={editTrigger}
           isOpen={true}
           onClose={() => {
-            fetchCurrentUser();
             setInnerModal(null);
           }}
           user={user}
