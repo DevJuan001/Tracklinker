@@ -1,7 +1,8 @@
 // Hooks
-import { useRef, useState } from "react";
 import { useRoles } from "../../hooks/useRoles";
+import { useCities } from "../../hooks/useCities";
 import { useEditUser } from "../../hooks/useEditUser";
+import { useInnerModal } from "../../../../globals/hooks/useInnerModal";
 // Componentes
 import Loader from "../../../../globals/components/ui/Loader";
 import FormField from "../../../../globals/components/ui/FormField";
@@ -10,28 +11,15 @@ import ConfirmCancelButtons from "../../../../globals/components/modals/ConfirmC
 // Modales
 import ErrorModal from "../../../../globals/components/modals/ErrorModal";
 import SuccessModal from "../../../../globals/components/modals/SuccessModal";
-import { useCities } from "../../hooks/useCities";
 
 export default function EditUserInfoModal({ user, onClose }) {
-  const [innerModal, setInnerModal] = useState(null);
-  const containerRef = useRef();
-  const confirmBtnRef = useRef();
+  const { innerType, innerTrigger, openInnerModal } = useInnerModal();
   const { roles } = useRoles();
   const { cities } = useCities();
-  const { handleChange, handleSubmit, loading, form } = useEditUser(user.id, {
-    rol_id: user.rol_id || "",
-    name: user.name || "",
-    first_surname: user.first_surname || "",
-    second_surname: user.second_surname || "",
-    address: user.address || "",
-    city: user.city || "",
-    email: user.email || "",
-    phone: user.phone || "",
-    status: user.status || "",
-  });
+  const { handleChange, handleSubmit, loading, form } = useEditUser(user);
 
   return (
-    <section ref={containerRef} className="flex flex-col items-center">
+    <section className="flex flex-col items-center">
       <form action="" className="w-full flex flex-col gap-2.5">
         <SelectMenu
           name={"rol_id"}
@@ -118,20 +106,16 @@ export default function EditUserInfoModal({ user, onClose }) {
 
       {/* Botones */}
       <ConfirmCancelButtons
-        confirmBtnRef={confirmBtnRef}
         confirmText={loading ? <Loader /> : "Confirmar"}
         cancelText={"Cancelar"}
-        confirmButtonOnClick={(e) => handleSubmit(e, setInnerModal)}
+        confirmButtonOnClick={(e) => handleSubmit(e, openInnerModal)}
         cancelButtonOnClick={onClose}
       />
 
       {/* Modales Internas */}
-      {innerModal === "success" && (
+      {innerType === "success" && (
         <SuccessModal
-          triggerRef={{
-            element: confirmBtnRef.current,
-            rect: null,
-          }}
+          triggerRef={innerTrigger}
           isOpen={true}
           confirmTitle={"Información editada con éxito!"}
           confirmText={
@@ -139,22 +123,19 @@ export default function EditUserInfoModal({ user, onClose }) {
           }
           confirmButtonText={"Volver a la pagina"}
           onClose={() => {
-            setInnerModal(null);
+            openInnerModal(null);
             onClose();
           }}
         />
       )}
-      {innerModal === "error" && (
+      {innerType === "error" && (
         <ErrorModal
-          triggerRef={{
-            element: containerRef.current,
-            rect: null,
-          }}
+          triggerRef={innerTrigger}
           isOpen={true}
           errorTitle="¡No se pudo completar el registro!"
           errorText="Verfica que todos los campos esten completos y que el correo electronico es el correcto"
           confirmButtonText="Volver a intentarlo"
-          onClose={() => setInnerModal(null)}
+          onClose={() => openInnerModal(null)}
         />
       )}
     </section>
