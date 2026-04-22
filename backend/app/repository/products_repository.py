@@ -263,8 +263,12 @@ class ProductsRepository:
                     return error, success, message
 
             # Campos de PRODUCTS — traduce con el mapa antes de construir el query
-            product_fields = {key: data[key]
-                              for key in ["subcategory", "status", "model"] if key in data}
+            product_fields = {
+                key: data[key]
+                for key in ["subcategory", "status", "model"]
+                if key in data
+            }
+            
             if product_fields:
                 mapped = {
                     PRODUCT_FIELD_MAP[key]: value for key, value in product_fields.items()}

@@ -106,7 +106,6 @@ class UserRepository:
             user_name,
             user_first_surname,
             user_second_surname,
-            user_password,
             user_phone,
             user_email,
             user_address,
@@ -130,7 +129,6 @@ class UserRepository:
                     "name": item["user_name"],
                     "first_surname": item["user_first_surname"],
                     "second_surname": item["user_second_surname"],
-                    "user_password": item["user_password"],
                     "phone": item["user_phone"],
                     "email": item["user_email"],
                     "address": item["user_address"],
@@ -278,7 +276,7 @@ class UserRepository:
             connection.commit()
             return None, True, "Usuario creado correctamente"
         except Exception as e:
-            return f"Error al ejecutar la consulta: {e}", None, None
+            return f"Error al ejecutar la consulta: {e}", False, None
         finally:
             cursor.close()
             connection.close()
@@ -286,55 +284,59 @@ class UserRepository:
     # Actualizar la información de un usuario
     @staticmethod
     def update(user_id: int, user_data: UpdateUser):
-        data = user_data.model_dump()
+        data = user_data.model_dump(exclude_none=True)
+
+        USER_FIELDS = {
+            "name": "user_name",
+            "first_surname": "user_first_surname",
+            "second_surname": "user_second_surname",
+            "email": "user_email",
+            "phone": "user_phone",
+            "city": "user_city",
+            "address": "user_address",
+            "status": "user_status"
+        }
 
         connection = get_connection()
         cursor = connection.cursor(dictionary=True)
 
-        # Verificar si existe el usuario
-        cursor.execute("SELECT * FROM USERS WHERE user_id = %s", (user_id,))
-        user = cursor.fetchone()
-
-        if not user:
-            cursor.close()
-            connection.close()
-            return "Usuario no encontrado", None, None
-
-        # Verificar si existe el correo y no duplicarlo
-        if "user_email" in user_data:
-            cursor.execute(
-                "SELECT user_id FROM USERS WHERE user_email = %s", (user_data["user_email"],))
-            existing = cursor.fetchone()
-
-            if existing and existing["user_id"] != user_id:
-                cursor.close()
-                connection.close()
-                return None, False, "El correo ya está registrado"
-
-        query = """
-        UPDATE USERS SET
-            user_name = %s,
-            user_first_surname = %s,
-            user_second_surname = %s,
-            user_email = %s,
-            user_phone = %s,
-            user_city = %s,
-            user_address = %s,
-            user_status = %s
-        WHERE user_id = %s"""
-
         try:
-            cursor.execute(query, (
-                data["name"],
-                data["first_surname"],
-                data["second_surname"],
-                data["email"],
-                data["phone"],
-                data["city"],
-                data["address"],
-                data["status"],
-                user_id
-            ))
+            # Verificar si existe el usuario
+            cursor.execute(
+                "SELECT * FROM USERS WHERE user_id = %s", (user_id,))
+            user = cursor.fetchone()
+
+            if not user:
+                return "Usuario no encontrado", None, None
+
+            # Verificar si existe el correo y no duplicarlo
+            if "user_email" in user_data:
+                cursor.execute(
+                    "SELECT user_id FROM USERS WHERE user_email = %s", (user_data["user_email"],))
+                existing = cursor.fetchone()
+
+                if existing and existing["user_id"] != user_id:
+                    cursor.close()
+                    connection.close()
+                    return None, False, "El correo ya está registrado"
+
+            user_fields = {
+                key: data[key]
+                for key in USER_FIELDS.keys()
+                if key in data
+            }
+
+            if user_fields:
+                mapped = {
+                    USER_FIELDS[key]: value for key, value in user_fields.items()}
+
+                columns = ", ".join(f"{col} = %s" for col in mapped.keys())
+                values = list(mapped.values()) + [user_id]
+
+                cursor.execute(
+                    f"UPDATE USERS SET {columns} WHERE user_id = %s",
+                    values
+                )
             connection.commit()
 
             return None, True, "Usuario actualizado correctamente"
@@ -346,10 +348,20 @@ class UserRepository:
             connection.close()
 
     # Actualizar la información de un usuario
-
     @staticmethod
     def update_current_user(user_id: int, user_data: UpdateCurrentUser):
         data = user_data.model_dump()
+
+        USER_FIELDS = {
+            "name": "user_name",
+            "first_surname": "user_first_surname",
+            "second_surname": "user_second_surname",
+            "email": "user_email",
+            "phone": "user_phone",
+            "city": "user_city",
+            "address": "user_address",
+            "status": "user_status"
+        }
 
         connection = get_connection()
         cursor = connection.cursor(dictionary=True)
@@ -374,28 +386,24 @@ class UserRepository:
                 connection.close()
                 return None, False, "El correo ya está registrado"
 
-        query = """
-        UPDATE USERS SET
-            user_name = %s,
-            user_first_surname = %s,
-            user_second_surname = %s,
-            user_email = %s,
-            user_phone = %s,
-            user_city = %s,
-            user_address = %s
-        WHERE user_id = %s"""
-
         try:
-            cursor.execute(query, (
-                data["name"],
-                data["first_surname"],
-                data["second_surname"],
-                data["email"],
-                data["phone"],
-                data["address"],
-                data["city"],
-                user_id
-            ))
+            user_fields = {
+                key: data[key]
+                for key in USER_FIELDS.keys()
+                if key in data
+            }
+
+            if user_fields:
+                mapped = {
+                    USER_FIELDS[key]: value for key, value in user_fields.items()}
+
+                columns = ", ".join(f"{col} = %s" for col in mapped.keys())
+                values = list(mapped.values()) + user_id
+
+                cursor.execute(
+                    f"UPDATE USERS SET {columns} WHERE user_id = %s",
+                    values
+                )
             connection.commit()
 
             return None, True, "Usuario actualizado correctamente"
