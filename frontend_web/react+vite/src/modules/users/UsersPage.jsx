@@ -21,7 +21,6 @@ import TopSection from "../../globals/components/ui/TopSection";
 import EnableUserModal from "./components/modals/EnableUserModal";
 
 export default function UsersPage() {
-  // Traer todos los datos o states de sus hooks
   const { modalType, isOpen, modalData, triggerRef, openModal, closeModal } =
     useModal();
   const { users, loading, error, setFilters } = useUsers();
