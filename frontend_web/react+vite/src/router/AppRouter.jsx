@@ -13,7 +13,7 @@ export default function AppRouter() {
       <Route path="/login" element={<Login />} />
 
       {routesConfig.map(({ path, component: Component, roles }) => (
-        <Route element={<ProtectedRoutes roles={roles} />}>
+        <Route key={path} element={<ProtectedRoutes roles={roles} />}>
           <Route path={path} element={<Component />} />
         </Route>
       ))}
