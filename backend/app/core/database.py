@@ -10,7 +10,9 @@ def get_connection():
             port=settings.DB_PORT,
             user=settings.DB_USER,
             password=settings.DB_PASSWORD,
-            database=settings.DB_NAME
+            database=settings.DB_NAME,
+            charset="utf8mb4",
+            collation="utf8mb4_unicode_ci"
         )
         return connection
 
