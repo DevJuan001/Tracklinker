@@ -1,26 +1,14 @@
-import { useState, useEffect, useRef } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { getCurrentUserService } from "../services/getCurrentUserService";
 
 export function useUser() {
-  const [user, setUser] = useState([]);
-  const [error, setError] = useState(null);
-  const controllerRef = useRef(null);
+  const user = useQuery({
+    queryKey: ["currentUser"],
+    queryFn: async ({ signal }) => {
+      return getCurrentUserService(signal);
+    },
+    staleTime: 1000 * 60 * 60,
+  });
 
-  async function fetchCurrentUser() {
-    controllerRef.current?.abort();
-    controllerRef.current = new AbortController();
-    try {
-      const data = await getCurrentUserService();
-      setUser(data);
-    } catch (error) {
-      setError(error);
-    }
-  }
-
-  useEffect(() => {
-    fetchCurrentUser();
-    return () => controllerRef.current?.abort();
-  }, []);
-
-  return { user, error, fetchCurrentUser };
+  return { user: user.data || [], error: user.error };
 }
