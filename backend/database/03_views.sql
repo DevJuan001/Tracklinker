@@ -57,8 +57,8 @@ CREATE VIEW get_all_subcategories AS
 	c.category_name,
 	sc.subcategory_name,
 	sc.subcategory_id
-	FROM categories AS c
-	INNER JOIN subcategories AS sc
+	FROM CATEGORIES AS c
+	INNER JOIN SUBCATEGORIES AS sc
 	ON c.category_id=sc.category_id;
 
 -- Estado de garantías (Sin completar, en proceso, completada)
@@ -172,13 +172,3 @@ SELECT
     LEFT JOIN PRODUCT_BRANDS AS pb
     ON pd.product_brand_id = pb.product_brand_id
     ORDER BY p.product_id;
-    
-SELECT * FROM get_output_products;
-
- SELECT 
-            product_brand_name AS brand,
-            SUM(stock) AS products
-        FROM get_all_products_with_stock
-        GROUP BY product_brand_name
-        ORDER BY products DESC
-        LIMIT 7;
