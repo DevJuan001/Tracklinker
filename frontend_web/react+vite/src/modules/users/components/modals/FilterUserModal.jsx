@@ -4,19 +4,10 @@ import SelectMenu from "../../../../globals/components/modals/SelectMenu";
 import FilterModal from "../../../../globals/components/modals/FilterModal";
 import { useCities } from "../../hooks/useCities";
 
-export default function FilterUserModal({ refetch, onClose }) {
+export default function FilterUserModal({ setFilters, onClose }) {
   const { roles } = useRoles();
   const { cities } = useCities();
-  const { form, handleChange, handleApply } = useFilterUsers(
-    {
-      role_order: "",
-      name_order: "",
-      start_date: "",
-      end_date: "",
-      status: "",
-    },
-    refetch,
-  );
+  const { form, handleChange } = useFilterUsers();
 
   return (
     <FilterModal
@@ -26,8 +17,8 @@ export default function FilterUserModal({ refetch, onClose }) {
       orderByFinishDateOnChange={handleChange}
       onClose={onClose}
       applyButtonOnClick={() => {
+        setFilters({ ...form });
         onClose();
-        handleApply();
       }}
     >
       <div className="flex flex-col gap-2">
