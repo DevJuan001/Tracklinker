@@ -1,58 +1,63 @@
-import { lazy } from "react";
+import HomePage from "../../modules/home/HomePage";
+import DashBoardPage from "../../modules/dashboard/DashboardPage";
+import UsersPage from "../../modules/users/UsersPage";
+import ProductsPage from "../../modules/products/ProductsPage";
+import CategoriesPage from "../../modules/categories/CategoriesPage";
+import SubcategoriesPage from "../../modules/subcategories/SubcategoriesPage";
+import ReportsPage from "../../modules/reports/ReportsPage";
+import WarrantiesPage from "../../modules/warranties/WarrantiesPage";
+import SuppliersPage from "../../modules/suppliers/SuppliersPage";
+import TransformationsPage from "../../modules/transformations/TransformationsPage";
 
 export const routesConfig = [
   {
     path: "/home",
-    component: lazy(() => import("../../modules/home/HomePage")),
+    component: HomePage,
     roles: ["Admin"],
   },
   {
     path: "/dashboard",
-    component: lazy(() => import("../../modules/dashboard/DashboardPage")),
+    component: DashBoardPage,
     roles: ["Admin"],
   },
   {
     path: "/users",
-    component: lazy(() => import("../../modules/users/UsersPage")),
+    component: UsersPage,
     roles: ["Admin"],
   },
   {
     path: "/products",
-    component: lazy(() => import("../../modules/products/ProductsPage")),
+    component: ProductsPage,
     roles: ["Admin"],
   },
   {
     path: "/categories",
-    component: lazy(() => import("../../modules/categories/CategoriesPage")),
+    component: CategoriesPage,
     roles: ["Admin"],
   },
   {
     path: "/subcategories",
-    component: lazy(
-      () => import("../../modules/subcategories/SubcategoriesPage"),
-    ),
+    component: SubcategoriesPage,
     roles: ["Admin"],
   },
   {
     path: "/reports",
-    component: lazy(() => import("../../modules/reports/ReportsPage")),
+    component: ReportsPage,
     roles: ["Admin"],
   },
   {
     path: "/warranties",
-    component: lazy(() => import("../../modules/warranties/WarrantiesPage")),
+    component: WarrantiesPage,
     roles: ["Admin"],
   },
   {
     path: "/suppliers",
-    component: lazy(() => import("../../modules/suppliers/SuppliersPage")),
+    component: SuppliersPage,
     roles: ["Admin"],
   },
   {
     path: "/transformations",
-    component: lazy(
-      () => import("../../modules/transformations/TransformationsPage"),
-    ),
+    component: TransformationsPage,
     roles: ["Admin"],
   },
 ];
