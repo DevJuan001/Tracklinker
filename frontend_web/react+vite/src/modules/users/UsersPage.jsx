@@ -24,7 +24,7 @@ export default function UsersPage() {
   // Traer todos los datos o states de sus hooks
   const { modalType, isOpen, modalData, triggerRef, openModal, closeModal } =
     useModal();
-  const { users, loading, error, fetchUsers } = useUsers();
+  const { users, loading, error, setFilters } = useUsers();
   const [search, setSearch] = useState("");
   const filteredUsers = useSearch(users, search);
 
@@ -39,9 +39,7 @@ export default function UsersPage() {
         sectionName={"Usuarios"}
         addButtonIcon={usersIcons.addUserIcon}
         addButtonText={"Agregar Usuario"}
-        createOnClick={(e) =>
-          openModal(null, "add", fetchUsers, e.currentTarget)
-        }
+        createOnClick={(e) => openModal(null, "add", null, e.currentTarget)}
         filterOnClick={(e) => openModal(null, "filter", null, e.currentTarget)}
       >
         <SearchBar value={search} onChange={setSearch} />
@@ -52,7 +50,6 @@ export default function UsersPage() {
         users={filteredUsers}
         loading={loading}
         error={error}
-        refetch={fetchUsers}
         openModal={openModal}
       />
 
@@ -83,7 +80,7 @@ export default function UsersPage() {
           {modalType === "user" && <ProfileModal />}
           {modalType === "filter" && (
             <FilterUserModal
-              refetch={fetchUsers}
+              setFilters={setFilters}
               onClose={() => closeModal()}
             />
           )}
