@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { getWarrantiesDataService } from "../../services/Warranties/getWarrantiesDataService";
+import { getWarrantiesDataService } from "../../services/warranties/getWarrantiesDataService";
 
 export function useWarrantiesData() {
   const [warrantiesData, setWarrantiesData] = useState([]);
