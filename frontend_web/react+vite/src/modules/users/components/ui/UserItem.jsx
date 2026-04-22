@@ -6,7 +6,6 @@ import ActionButtons from "../../../../globals/components/ui/ActionButtons";
 export default function UserItem({
   user,
   openModal,
-  refetch,
   editButtonOnClick,
 }) {
   return (
@@ -55,7 +54,7 @@ export default function UserItem({
           openModal(
             user,
             userStatus[user.status]?.modalType,
-            refetch,
+            null,
             e.currentTarget,
           );
         }}
