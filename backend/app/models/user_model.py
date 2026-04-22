@@ -32,7 +32,7 @@ class UpdateCurrentUser(BaseModel):
     first_surname: str
     second_surname: str
     address: str
-    city: str
+    city: int
     email: EmailStr
     phone: int
 
