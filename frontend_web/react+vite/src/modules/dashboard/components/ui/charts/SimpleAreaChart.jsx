@@ -5,6 +5,7 @@ import {
   XAxis,
   YAxis,
   CartesianGrid,
+  ResponsiveContainer,
 } from "recharts";
 import { useAreaChart } from "../../../hooks/useAreaChart";
 import ChartCard from "../ChartCard";
@@ -23,23 +24,22 @@ export default function SimpleAreaChart() {
       bgColor={""}
       name={"Salidas Mensuales del año"}
     >
-      {/* Grafico en forma de ola */}
-      <AreaChart width="100%" height="95%" responsive data={areaChartInfo} margin={{left: 20}}>
-        {/* Número de ordenes de salidas que sale a la izquierda */}
-        <YAxis width="auto" fontSize={"11px"} />
-        {/* Nombres o meses que salen debajo del gráfico */}
-        <XAxis dataKey={"month"} fontSize={"10px"} width={"100%"} />
-        {/* Eje Y */}
-        <Tooltip />
-        <CartesianGrid vertical={false} stroke="#e5e7eb" />
-        {/* Ola que va dentro del gráfico */}
-        <Area
-          type={"natural"}
-          dataKey={"output_orders"}
-          stroke="#152DD1"
-          fill="#152DD1"
-        />
-      </AreaChart>
+      <div className="w-full h-full min-h-[150px]">
+        <ResponsiveContainer width="100%" height="100%">
+          <AreaChart data={areaChartInfo} margin={{ left: 20 }}>
+            <YAxis width="auto" fontSize={"11px"} />
+            <XAxis dataKey={"month"} fontSize={"10px"} />
+            <Tooltip />
+            <CartesianGrid vertical={false} stroke="#e5e7eb" />
+            <Area
+              type={"natural"}
+              dataKey={"output_orders"}
+              stroke="#152DD1"
+              fill="#152DD1"
+            />
+          </AreaChart>
+        </ResponsiveContainer>
+      </div>
     </ChartCard>
   );
 }
