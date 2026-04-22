@@ -2,7 +2,7 @@ import UserItem from "./UserItem";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
-export default function UsersList({ users, loading, refetch, openModal }) {
+export default function UsersList({ users, loading, openModal }) {
   const noUsers = users.length === 0 && !loading;
   const isFirstLoad = users.length === 0 && loading;
 
@@ -28,10 +28,9 @@ export default function UsersList({ users, loading, refetch, openModal }) {
               key={user.id}
               user={user}
               openModal={openModal}
-              refetch={refetch}
               editButtonOnClick={(e) => {
                 e.stopPropagation();
-                openModal(user, "edit", refetch, e.currentTarget);
+                openModal(user, "edit", null, e.currentTarget);
               }}
             />
           ))

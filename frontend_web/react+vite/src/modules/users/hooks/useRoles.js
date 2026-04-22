@@ -1,24 +1,18 @@
-import { useState, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { getRoles } from "../services/getRolesService";
 
 export function useRoles() {
-  const [roles, setRoles] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const roles = useQuery({
+    queryKey: ["roles"],
+    queryFn: async ({ signal }) => {
+      return getRoles(signal);
+    },
+    staleTime: 1000 * 60 * 30
+  });
 
-  useEffect(() => {
-    async function fetchRoles() {
-      try {
-        const data = await getRoles();
-        setRoles(data);
-        setLoading(false);
-      } catch (error) {
-        setError(error);
-      }
-    }
-
-    fetchRoles();
-  }, []);
-
-  return { roles, loading, error };
+  return {
+    roles: roles.data || [],
+    loading: roles.isLoading,
+    error: roles.error,
+  };
 }

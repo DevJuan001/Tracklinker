@@ -1,24 +1,18 @@
-import { useState, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { getCitiesService } from "../services/getCitiesService";
 
 export function useCities() {
-  const [cities, setCities] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const cities = useQuery({
+    queryKey: ["cities"],
+    queryFn: async ({ signal }) => {
+      return getCitiesService(signal);
+    },
+    staleTime: 1000 * 60 * 5
+  });
 
-  async function fetchCities() {
-    try {
-      const data = await getCitiesService();
-      setCities(data);
-      setLoading(false);
-    } catch (error) {
-      setError(error);
-    }
-  }
-
-  useEffect(() => {
-    fetchCities();
-  }, []);
-
-  return { cities, loading, error, fetchCities };
+  return {
+    cities: cities.data || [],
+    loading: cities.isLoading,
+    error: cities.error,
+  };
 }
