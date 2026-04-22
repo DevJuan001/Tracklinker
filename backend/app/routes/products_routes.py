@@ -18,10 +18,10 @@ router = APIRouter(
 
 # Endpoint para obtener todos los productos
 @router.get(
-        "/",
-        dependencies=[
-            Depends(RateLimiter(times=10, seconds=60))
-        ]
+    "/",
+    dependencies=[
+        Depends(RateLimiter(times=30, seconds=60))
+    ]
 )
 async def get_all_products(
     start_date: str = None,
@@ -46,7 +46,6 @@ async def get_all_products(
         brand,
         product_model,
     )
-    await redis.setex("products:all", 300, json.dumps(jsonable_encoder(result)))
     return result
 
 # Endpoint para obtener todas las marcas de productos
