@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { formatLabel } from "../../../../utils/formatLabel";
-import { getWarrantiesAreaChartService } from "../../services/Warranties/getWarrantiesAreaChartService";
+import { getWarrantiesAreaChartService } from "../../services/warranties/getWarrantiesAreaChartService";
 
 export function useWarrantiesAreaData(period) {
   const [warrantiesData, setWarrantiesData] = useState([]);

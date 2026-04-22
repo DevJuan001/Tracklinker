@@ -1,47 +1,36 @@
 import { Navigate, Outlet } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { apiRoutes } from "../config/apiRoutes";
 import { fetchWithAuth } from "../utils/fetchWithAuth";
 
 export default function ProtectedRoutes({ roles }) {
-  const [authorized, setAuthorized] = useState(null);
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["roles-verification", roles],
+    queryFn: async () => {
+      const res = await fetchWithAuth(
+        `${apiRoutes.apiUrl}${apiRoutes.auth}/verify-roles`,
+        {
+          method: "POST",
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ roles }),
+        },
+      );
 
-  useEffect(() => {
-    const verifyRole = async () => {
-      try {
-        const res = await fetchWithAuth(
-          `${apiRoutes.apiUrl}${apiRoutes.auth}/verify-roles`,
-          {
-            method: "POST",
-            credentials: "include",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ roles }),
-          },
-        );
+      if (!res.ok) throw new Error("Not authorized");
+      const result = await res.json();
+      return result.success === true;
+    },
+    // Cacheamos la verificación por 30 minutos para evitar peticiones en cada clic
+    staleTime: 1000 * 60 * 30,
+    retry: false,
+  });
 
-        const data = await res.json();
+  // Mientras carga, podemos retornar null o un loader ligero
+  if (isLoading) return null;
 
-        if (!res.ok) {
-          setAuthorized(false);
-          return;
-        }
-
-        if (data.success === true) {
-          setAuthorized(true);
-        } else {
-          setAuthorized(false);
-        }
-      } catch {
-        setAuthorized(false);
-      }
-    };
-
-    verifyRole();
-  }, [roles]);
-
-  if (authorized === null) return null;
-  // Verifica si authorized es false y lo redirige al login
-  if (authorized === false) return <Navigate to={"/login"} replace />;
+  // Si hay error o no está autorizado, al login
+  if (isError || data === false) return <Navigate to={"/login"} replace />;
 
   return <Outlet />;
 }

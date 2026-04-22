@@ -22,13 +22,13 @@ import ProfileModal from "../../globals/components/modals/profileModal/ProfileMo
 export default function ReportsPage() {
   const [topSectionVisiblity, setTopSectionVisiblity] = useState(true);
   const [report, setReport] = useState("home");
-  const { modalType, isOpen, openModal, closeModal } = useModal();
+  const { modalType, isOpen, triggerRef, openModal, closeModal } = useModal();
 
   return (
     <Layout
-      avatarOnClick={() => openModal(null, "user")}
-      helpOnClick={() => {
-        openModal(null, "help");
+      avatarOnClick={(e) => openModal(null, "user", null, e.currentTarget)}
+      helpOnClick={(e) => {
+        openModal(null, "help", null, e.currentTarget);
       }}
     >
       <TopSection
@@ -53,13 +53,12 @@ export default function ReportsPage() {
       )}
       {report === "warranties" && <WarrantiesReport setReport={setReport} />}
       {report === "suppliers" && <SuppliersReport setReport={setReport} />}
-      {report === "outputs" && (
-        <OutputsReport setReport={setReport} />
-      )}
+      {report === "outputs" && <OutputsReport setReport={setReport} />}
 
       {/* Modales */}
       {modalType && (
         <Modal
+          triggerRef={triggerRef}
           title={modalType === "user" ? "Configuración" : "Ayuda"}
           type={modalType}
           isOpen={isOpen}

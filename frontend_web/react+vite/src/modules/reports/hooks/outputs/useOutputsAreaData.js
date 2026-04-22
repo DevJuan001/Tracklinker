@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { formatLabel } from "../../../../utils/formatLabel";
-import { getOutputsAreaChartService } from "../../services/Outputs/getOutputsAreaChartService";
+import { getOutputsAreaChartService } from "../../services/outputs/getOutputsAreaChartService";
 
 export function useOutputsAreaData(period) {
   const [outputsData, setOutputsData] = useState([]);
