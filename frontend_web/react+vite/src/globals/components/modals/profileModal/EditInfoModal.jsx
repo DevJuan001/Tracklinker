@@ -1,5 +1,6 @@
 //Hooks
-import { useState } from "react";
+import { useInnerModal } from "../../../hooks/useInnerModal";
+import { useCities } from "../../../../modules/users/hooks/useCities";
 import { useUpdateCurrentUserInfo } from "../../../hooks/useUpdateCurrentUserInfo";
 // Components
 import Loader from "../../ui/Loader";
@@ -9,19 +10,14 @@ import ConfirmCancelButtons from "../ConfirmCancelButtons";
 import Modal from "../Modal";
 import ErrorModal from "../ErrorModal";
 import SuccessModal from "../SuccessModal";
+import SelectMenu from "../SelectMenu";
 
 export default function EditInfoModal({ isOpen, onClose, user, triggerRef }) {
+  const { innerType, innerTrigger, openInnerModal } = useInnerModal();
+  const { cities } = useCities();
   const { handleChange, handleSubmit, userData, loading } =
-    useUpdateCurrentUserInfo({
-      name: user?.name || "",
-      first_surname: user?.first_surname || "",
-      second_surname: user?.second_surname || "",
-      address: user?.address || "",
-      city: user?.city || "",
-      email: user?.email || "",
-      phone: user?.phone || "",
-    });
-  const [innerModal, setInnerModal] = useState(null);
+    useUpdateCurrentUserInfo(user);
+
   return (
     <Modal
       z_index="300"
@@ -41,6 +37,7 @@ export default function EditInfoModal({ isOpen, onClose, user, triggerRef }) {
           onChange={handleChange}
           autoComplete="given-name"
         />
+
         <FormField
           id={"first_surname"}
           name={"first_surname"}
@@ -49,6 +46,7 @@ export default function EditInfoModal({ isOpen, onClose, user, triggerRef }) {
           onChange={handleChange}
           autoComplete="family-name"
         />
+
         <FormField
           id={"second_surname"}
           name={"second_surname"}
@@ -57,6 +55,7 @@ export default function EditInfoModal({ isOpen, onClose, user, triggerRef }) {
           onChange={handleChange}
           autoComplete="family-name"
         />
+
         <FormField
           id={"email"}
           name={"email"}
@@ -65,6 +64,7 @@ export default function EditInfoModal({ isOpen, onClose, user, triggerRef }) {
           onChange={handleChange}
           autoComplete="email"
         />
+
         <FormField
           id={"phone"}
           name={"phone"}
@@ -73,14 +73,20 @@ export default function EditInfoModal({ isOpen, onClose, user, triggerRef }) {
           onChange={handleChange}
           autoComplete="tel"
         />
-        <FormField
+
+        <SelectMenu
           id={"city"}
           name={"city"}
-          labelText={"Ciudad"}
+          spanText={"Ciudad"}
           value={userData.city}
+          options={cities.map((city) => ({
+            value: city.id,
+            label: city.name,
+          }))}
           onChange={handleChange}
           autoComplete="address-level2"
         />
+
         <FormField
           id={"address"}
           name={"address"}
@@ -89,15 +95,17 @@ export default function EditInfoModal({ isOpen, onClose, user, triggerRef }) {
           onChange={handleChange}
           autoComplete="street-address"
         />
+
         <ConfirmCancelButtons
           confirmText={loading ? <Loader /> : "Editar"}
-          confirmButtonOnClick={(e) => handleSubmit(e, setInnerModal)}
+          confirmButtonOnClick={(e) => handleSubmit(e, openInnerModal)}
           cancelButtonOnClick={onClose}
         />
       </section>
       {/* Modales Internas */}
-      {innerModal === "success" && (
+      {innerType === "success" && (
         <SuccessModal
+          triggerRef={innerTrigger}
           isOpen={true}
           confirmTitle={"Información editada con éxito!"}
           confirmText={
@@ -105,18 +113,19 @@ export default function EditInfoModal({ isOpen, onClose, user, triggerRef }) {
           }
           confirmButtonText={"Volver a la pagina"}
           onClose={() => {
-            setInnerModal(null);
-            setTimeout(() => onClose(), 0);
+            openInnerModal(null);
+            onClose();
           }}
         />
       )}
-      {innerModal === "error" && (
+      {innerType === "error" && (
         <ErrorModal
+          triggerRef={innerTrigger}
           isOpen={true}
           errorTitle="¡No se pudo completar el registro!"
           errorText="Verfica que todos los campos esten completos y que el correo electronico es el correcto"
           confirmButtonText="Volver a intentarlo"
-          onClose={() => setInnerModal(null)}
+          onClose={() => openInnerModal(null)}
         />
       )}
     </Modal>
