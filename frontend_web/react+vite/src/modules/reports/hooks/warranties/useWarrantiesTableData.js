@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { getWarrantiesTableDataService } from "../../services/Warranties/getWarrantiesTableDataService";
+import { getWarrantiesTableDataService } from "../../services/warranties/getWarrantiesTableDataService";
 
 export function useWarrantiesTableData() {
   const [warranties, setWarranties] = useState([]);
