@@ -1,5 +1,5 @@
 import { userStatus } from "../../../../../users/constants/userStatus";
-import { useSubcategoriesTableData } from "../../../../hooks/subcategories/useSubcategoriesTableData";
+import { useSubcategoriesTableData } from "../../../../hooks/subcategories/useSubCategoriesTableData";
 
 export default function SubcategoriesTable() {
   const { subcategoriesData } = useSubcategoriesTableData();
