@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { colors } from "../../../../utils/colors";
-import { getWarrantiesPieDataService } from "../../services/Warranties/getWarrantiesPieDataService";
+import { getWarrantiesPieDataService } from "../../services/warranties/getWarrantiesPieDataService";
 
 export function useWarrantiesPieData(period) {
   const [warrantiesData, setWarrantiesData] = useState([]);
