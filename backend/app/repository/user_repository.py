@@ -398,7 +398,7 @@ class UserRepository:
                     USER_FIELDS[key]: value for key, value in user_fields.items()}
 
                 columns = ", ".join(f"{col} = %s" for col in mapped.keys())
-                values = list(mapped.values()) + user_id
+                values = list(mapped.values()) + [user_id]
 
                 cursor.execute(
                     f"UPDATE USERS SET {columns} WHERE user_id = %s",
@@ -407,7 +407,7 @@ class UserRepository:
             connection.commit()
 
             return None, True, "Usuario actualizado correctamente"
-        except Exception as e:
+        except Exception:
             connection.rollback()
             return f"Error al ejecutar la consulta", False, None
         finally:
