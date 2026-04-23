@@ -1,37 +1,22 @@
-import { modalIcons } from "../../../../assets/icons/modalIcons";
-
 export default function DownloadToast({ showDownloadToast, onClose }) {
   if (showDownloadToast === true) {
     setTimeout(() => {
       onClose();
-    }, 5000);
+    }, 3500);
   }
 
   return (
     <section
-      className="fixed inset-0 z-10 flex items-end justify-end gap-5 pr-5 pb-5 animate-blurUp
-    dark:text-white"
+      className="fixed inset-0 z-10 flex items-start justify-center gap-5 pr-5 pb-5 pt-5 animate-toastIn
+    dark:text-white pointer-events-auto"
     >
       <div
-        className="relative flex gap-2 border bg-white rounded-xl shadow-lg p-4 animate-blur
+        className="relative border bg-green-200 rounded-full shadow-md shadow-green-300 py-1.5 px-3 animate-toastIn
       dark:bg-black dark:border-[#7e77773b]"
       >
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 flex items-center justify-center bg-green-100 rounded-full dark:bg-green-950">
-            <img src={modalIcons.confirmIcon} alt="" />
-          </div>
-          <div className="flex flex-col">
-            <span className="font-medium">Descarga exitosa</span>
-            <span className="text-xs">Ya puedes ver tu archivo descargado</span>
-          </div>
-        </div>
-
-        <img
-          onClick={onClose}
-          src={modalIcons.closeIcon}
-          alt=""
-          className="w-5 h-5 cursor-pointer dark:invert"
-        />
+        <span className="font-medium text-green-600 text-sm">
+          Descarga exitosa
+        </span>
       </div>
     </section>
   );

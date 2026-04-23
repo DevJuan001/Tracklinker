@@ -16,14 +16,14 @@ import ProfileModal from "../../globals/components/modals/profileModal/ProfileMo
 import DownloadToast from "./components/modals/DownloadToast";
 
 export default function DashBoardPage() {
-  const { modalType, isOpen, openModal, closeModal } = useModal();
+  const { modalType, isOpen, triggerRef, openModal, closeModal } = useModal();
   const [showDownloadToast, setShowDownloadToast] = useState(false);
 
   return (
     <Layout
-      avatarOnClick={() => openModal(null, "user")}
-      helpOnClick={() => {
-        openModal(null, "help");
+      avatarOnClick={(e) => openModal(null, "user", null, e.currentTarget)}
+      helpOnClick={(e) => {
+        openModal(null, "help", null, e.currentTarget);
       }}
     >
       <TopSection
@@ -48,6 +48,7 @@ export default function DashBoardPage() {
                   ? "Ayuda"
                   : ""
           }
+          triggerRef={triggerRef}
           type={modalType}
           isOpen={isOpen}
           onClose={() => closeModal()}
