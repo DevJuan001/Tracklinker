@@ -9,4 +9,4 @@ class ProductDetails(BaseModel):
 
 class UpdateProductDetails(BaseModel):
     model: int
-    product_details_id: str
+    product_details_id: int
