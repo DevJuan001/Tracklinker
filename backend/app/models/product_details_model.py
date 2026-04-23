@@ -8,5 +8,5 @@ class ProductDetails(BaseModel):
 
 
 class UpdateProductDetails(BaseModel):
-    product_brand_id: Optional[int] = None
-    product_details_id: Optional[str] = None
+    model: int
+    product_details_id: str
