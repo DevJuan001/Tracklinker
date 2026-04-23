@@ -1,5 +1,4 @@
 // Hooks
-import { useState, useRef } from "react";
 import { useRoles } from "../../hooks/useRoles";
 import { useCities } from "../../hooks/useCities";
 import { useCreateUser } from "../../hooks/useCreateUser";
@@ -11,13 +10,12 @@ import ConfirmCancelButtons from "../../../../globals/components/modals/ConfirmC
 // Modales
 import ErrorModal from "../../../../globals/components/modals/ErrorModal";
 import SuccessModal from "../../../../globals/components/modals/SuccessModal";
+import { useInnerModal } from "../../../../globals/hooks/useInnerModal";
 
 export default function AddUserModal({ onClose }) {
-  // Estado para las modales se abren encima de esta
-  const [innerModal, setInnerModal] = useState(null);
+  const { innerType, innerTrigger, openInnerModal } = useInnerModal();
   const { roles } = useRoles();
   const { cities } = useCities();
-  const containerRef = useRef(null);
   const { form, loading, handleSubmit, handleChange } = useCreateUser({
     rol_id: "",
     name: "",
@@ -30,7 +28,7 @@ export default function AddUserModal({ onClose }) {
   });
 
   return (
-    <section ref={containerRef} className="flex flex-col items-center">
+    <section className="flex flex-col items-center">
       {/* Formulario para la informacion del nuevo usuario */}
       <form action="" className="w-full flex flex-col gap-2.5">
         {/* Menú de roles */}
@@ -119,17 +117,14 @@ export default function AddUserModal({ onClose }) {
       <ConfirmCancelButtons
         confirmText={loading ? <Loader /> : "Crear"}
         cancelText={"Cancelar"}
-        confirmButtonOnClick={(e) => handleSubmit(e, setInnerModal)}
+        confirmButtonOnClick={(e) => handleSubmit(e, openInnerModal)}
         cancelButtonOnClick={onClose}
       />
 
       {/* Modales Internas */}
-      {innerModal === "success" && (
+      {innerType === "success" && (
         <SuccessModal
-          triggerRef={{
-            element: containerRef.current,
-            rect: null,
-          }}
+          triggerRef={innerTrigger}
           isOpen={true}
           confirmTitle={"Usuario creado con éxito!"}
           confirmText={
@@ -138,21 +133,18 @@ export default function AddUserModal({ onClose }) {
           confirmButtonText={"Volver a la pagina"}
           onClose={() => {
             onClose();
-            setInnerModal(null);
+            openInnerModal(null);
           }}
         />
       )}
-      {innerModal === "error" && (
+      {innerType === "error" && (
         <ErrorModal
-          triggerRef={{
-            element: containerRef.current,
-            rect: null,
-          }}
+          triggerRef={innerTrigger}
           isOpen={true}
           errorTitle="No se puedo completar el registro!"
           errorText="Verfica que todos los campos esten completos y que el correo electronico no este registrado"
           confirmButtonText="Volver a intentarlo"
-          onClose={() => setInnerModal(null)}
+          onClose={() => openInnerModal(null)}
         />
       )}
     </section>
