@@ -13,8 +13,9 @@ export function useEditProduct(product) {
     subcategory: product.subcategory_id || "",
     serial: product.product_serial || "",
     brand: product.brand_id || "",
-    model: product.product_details_id || "",
+    model: product.model_id || "",
     warranty_time: product.warranty_time || "",
+    product_details_id: product.product_details_id,
     status: product.status || "",
   });
   const [loading, setLoading] = useState(false);
@@ -53,6 +54,7 @@ export function useEditProduct(product) {
     try {
       const response = await editProductService({
         id: product.product_id,
+        product_details_id: product.product_details_id,
         ...changes,
       });
       if (response.success) {
