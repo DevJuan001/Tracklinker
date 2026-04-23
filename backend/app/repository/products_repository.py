@@ -51,6 +51,7 @@ class ProductsRepository:
             pb.product_brand_id,
             pb.product_brand_name,
             ps.product_garanty_input,
+            pd.product_details_id,
             p.product_status
             FROM SUPPLIERS AS s
             INNER JOIN INPUT_ORDERS AS io
@@ -136,7 +137,8 @@ class ProductsRepository:
                     "brand_id": item[12],
                     "brand": item[13],
                     "warranty_time": item[14],
-                    "status": item[15]
+                    "status": item[15],
+                    "product_details_id": item[16]
                 }
                 for item in result
             ]
@@ -257,7 +259,8 @@ class ProductsRepository:
                 if key in data
             }:
                 error, success, message = ProductDetailsRepository.update_product_details(
-                    UpdateProductDetails(**details_fields), cursor
+                    UpdateProductDetails(
+                        product_details_id=data["product_details_id"], **details_fields), cursor
                 )
                 if error is not None or not success:
                     return error, success, message
