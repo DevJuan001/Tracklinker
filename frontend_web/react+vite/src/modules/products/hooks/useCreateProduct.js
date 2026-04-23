@@ -1,19 +1,21 @@
 import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { createProductService } from "../services/createProductService";
+import { useFormValidation } from "../../../globals/hooks/useFormValidation";
 
 export function useCreateProduct() {
   const queryClient = useQueryClient();
   const [form, setForm] = useState({
-    input_order_id: "",
-    subcategory_id: "",
-    product_details_id: "",
-    product_serial: "",
-    product_brand_id: "",
-    product_garanty_input: "",
+    input_order: "",
+    subcategory: "",
+    model: "",
+    serial: "",
+    brand: "",
+    warranty_time: "",
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const { validate } = useFormValidation();
 
   function handleChange(e) {
     setForm((prev) => ({
@@ -27,17 +29,12 @@ export function useCreateProduct() {
 
     const buttonElement = e.currentTarget;
     const buttonRect = buttonElement.getBoundingClientRect();
+    const triggerData = { currentTarget: buttonElement, rect: buttonRect };
 
-    const requiredFields = Object.keys(form);
-    const isFormIncomplete = requiredFields.some(
-      (field) => !form[field] || form[field].toString().trim() === "",
-    );
+    const isValid = validate(form);
 
-    if (isFormIncomplete) {
-      openInnerModal("error", {
-        currentTarget: buttonElement,
-        rect: buttonRect,
-      });
+    if (!isValid) {
+      openInnerModal("error", triggerData);
       return;
     }
 
@@ -46,17 +43,11 @@ export function useCreateProduct() {
     try {
       const response = await createProductService(form);
       if (response.sucess) {
-        openInnerModal("success", {
-          currentTarget: buttonElement,
-          rect: buttonRect,
-        });
+        openInnerModal("success", triggerData);
         await queryClient.invalidateQueries({ queryKey: ["products"] });
       }
     } catch (error) {
-      openInnerModal("error", {
-        currentTarget: buttonElement,
-        rect: buttonRect,
-      });
+      openInnerModal("error", triggerData);
       setError(error);
     } finally {
       setLoading(false);
