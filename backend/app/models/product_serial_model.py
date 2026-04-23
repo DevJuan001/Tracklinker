@@ -4,10 +4,10 @@ from typing import Optional
 
 
 class ProductSerial(BaseModel):
-    product_serial: str
+    serial: str
     product_id: int
-    input_order_id: int
-    product_garanty_input: int
+    input_order: int
+    warranty_time: int
 
 
 class UpdateProductSerial(BaseModel):
