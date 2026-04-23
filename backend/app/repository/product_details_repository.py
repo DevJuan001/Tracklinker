@@ -6,35 +6,6 @@ logger = get_logger(__name__)
 
 
 class ProductDetailsRepository:
-
-    @staticmethod
-    def find_all_product_models():
-        connection = get_connection()
-        cursor = connection.cursor()
-        try:
-            cursor.execute("""
-            SELECT DISTINCT
-                pb.product_brand_id,
-                pd.product_details_id,
-                pd.product_detail_model
-            FROM PRODUCT_DETAILS as pd
-            INNER JOIN PRODUCT_BRANDS as pb
-                ON pd.product_brand_id = pb.product_brand_id
-            """)
-
-            data = [
-                {
-                    "brand": item[0],
-                    "id": item[1],
-                    "model": item[2]
-                }
-                for item in cursor.fetchall()
-            ]
-
-            return None, data
-        except Exception:
-            return f"Error al intentar obtener los modelos", None
-
     @staticmethod
     def create_product_details(details_data: ProductDetails):
         data = details_data.model_dump()
