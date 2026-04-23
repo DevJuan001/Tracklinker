@@ -1,26 +1,16 @@
-import { useState, useEffect } from "react";
 import { getSuppliersService } from "../services/getSuppliersService";
+import { useQuery } from "@tanstack/react-query";
 
 export function useSuppliers() {
-  const [suppliers, setSuppliers] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const suppliers = useQuery({
+    queryKey: ["suppliers"],
+    queryFn: getSuppliersService,
+    staleTime: 1000 * 60 * 10,
+  });
 
-  async function fetchSuppliers() {
-    setLoading(true)
-    try {
-        const response = await getSuppliersService()
-        setSuppliers(response)
-    } catch (error) {
-        setError(error)
-    } finally {
-        setLoading(false)
-    }
-  }
-
-  useEffect(() => {
-    fetchSuppliers()
-  }, [])
-
-  return { suppliers, loading, error, fetchSuppliers }
+  return {
+    suppliers: suppliers.data || [],
+    loading: suppliers.isLoading,
+    error: suppliers.error,
+  };
 }
