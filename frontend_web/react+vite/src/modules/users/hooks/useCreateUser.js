@@ -1,10 +1,12 @@
 import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { createUser } from "../services/createUserService";
 
 export function useCreateUser(formData) {
   const [form, setForm] = useState(formData);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const queryClient = useQueryClient();
 
   function handleChange(e) {
     setForm((prev) => ({
@@ -14,23 +16,28 @@ export function useCreateUser(formData) {
   }
 
   // Función que pasa los parametros al service y valida la respuesta
-  async function handleSubmit(e, setInnerModal) {
+  async function handleSubmit(e, openInnerModal) {
     e.preventDefault();
+
+    const buttonElement = e.currentTarget;
+    const buttonRect = buttonElement.getBoundingClientRect();
+    const triggerData = { currentTarget: buttonElement, rect: buttonRect };
 
     setLoading(true);
 
     try {
       const response = await createUser(form);
       if (response.success) {
-        setInnerModal("success");
+        queryClient.invalidateQueries({ queryKey: ["users"] });
+        openInnerModal("success", triggerData);
       }
     } catch (error) {
-      setInnerModal("error");
+      openInnerModal("error", triggerData);
       setError(error);
     } finally {
       setLoading(false);
     }
   }
 
-  return { form, loading, handleSubmit, handleChange };
+  return { form, loading, error, handleSubmit, handleChange };
 }
