@@ -2,6 +2,7 @@ from app.repository.products_repository import ProductsRepository
 from app.repository.product_details_repository import ProductDetailsRepository
 from app.repository.product_brands_repository import ProductBrandsRepository
 from app.repository.input_orders_repository import InputOrdersRepository
+from app.repository.product_models_repository import ProductModelsRepository
 from app.models.product_model import UpdateProduct, Product
 from fastapi import HTTPException
 
@@ -62,7 +63,7 @@ class ProductsController:
 
     @staticmethod
     def get_all_product_models():
-        error, models = ProductDetailsRepository.find_all_product_models()
+        error, models = ProductModelsRepository.find_all_product_models()
 
         if error:
             raise HTTPException(status_code=404, detail=error)
