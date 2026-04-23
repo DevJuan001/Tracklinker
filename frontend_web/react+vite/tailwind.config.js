@@ -85,6 +85,14 @@ export default {
             filter: "blur(0)",
           },
         },
+        toastIn: {
+          "0%": {
+            transform : "translateY(-80px) scale(0.80)"
+          },
+          "100%": {
+            transform: "translateY(0px) scale(1)"
+          },
+        },
       },
       animation: {
         fade: "fade 0.3s ease-out forwards",
@@ -96,6 +104,7 @@ export default {
         modalFadeIn: "modalFadeIn 0.3s cubic-bezier(.56,.27,0,1) forwards",
         modalFadeOut: "modalFadeOut 0.3s cubic-bezier(.56,.27,0,1) forwards",
         blurUp: "blurUp 0.3s ease-in forwards",
+        toastIn: "toastIn 0.2s cubic-bezier(.56,.27,0,1) forwards"
       },
     },
   },
