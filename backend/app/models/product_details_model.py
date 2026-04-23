@@ -4,11 +4,9 @@ from typing import Optional
 
 class ProductDetails(BaseModel):
     product_details_id: Optional[int] = None
-    product_brand_id: int
-    product_detail_model: str
-    product_detail_description: str
+    model: int
 
 
 class UpdateProductDetails(BaseModel):
-    product_brand_id: Optional[int] = None
-    product_details_id: Optional[str] = None
+    model: int
+    product_details_id: str

@@ -5,13 +5,16 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from app.utils.date_formatter import date_formatter
 from app.utils.periods import period_map, daily_periods
+from app.utils.logger import get_logger
 # Models
 from app.models.product_model import Product, UpdateProduct
-from app.models.product_details_model import UpdateProductDetails
+from app.models.product_details_model import UpdateProductDetails, ProductDetails
 from app.models.product_serial_model import ProductSerial, UpdateProductSerial
 # Repositories
 from app.repository.product_details_repository import ProductDetailsRepository
 from app.repository.product_serials_repository import ProductSerialsRepository
+
+logger = get_logger(__name__)
 
 
 class ProductsRepository:
@@ -42,9 +45,9 @@ class ProductsRepository:
             p.product_id,
             s.supplier_name,
             ps.product_serial,
-            pd.product_detail_model,
-            pd.product_details_id,
-            pd.product_detail_description,
+            pm.product_model_name,
+            pm.product_model_id,
+            pm.product_model_description,
             pb.product_brand_id,
             pb.product_brand_name,
             ps.product_garanty_input,
@@ -62,8 +65,10 @@ class ProductsRepository:
             ON sc.category_id = c.category_id
             INNER JOIN PRODUCT_DETAILS AS pd
             ON p.product_details_id = pd.product_details_id
+            INNER JOIN PRODUCT_MODELS AS pm
+            ON pd.product_model_id = pm.product_model_id
             INNER JOIN PRODUCT_BRANDS AS pb
-            ON pd.product_brand_id = pb.product_brand_id
+            ON pm.product_brand_id = pb.product_brand_id
             """
 
         filters = []
@@ -104,7 +109,7 @@ class ProductsRepository:
             values.append(brand)
 
         if product_model:
-            filters.append("pd.product_details_id")
+            filters.append("pd.product_details_id = %s")
             values.append(product_model)
 
         if filters:
@@ -126,7 +131,7 @@ class ProductsRepository:
                     "supplier": item[7],
                     "product_serial": item[8],
                     "model": item[9],
-                    "product_details_id": item[10],
+                    "model_id": item[10],
                     "description": item[11],
                     "brand_id": item[12],
                     "brand": item[13],
@@ -137,7 +142,8 @@ class ProductsRepository:
             ]
             return None, data
         except Exception as e:
-            return f"Error al ejecutar la consulta {e}", None
+            logger.error("Error en find_all_products: %s", e, exc_info=True)
+            return "Error al intentar obtener los productos", None
         finally:
             cursor.close()
             connection.close()
@@ -163,8 +169,13 @@ class ProductsRepository:
             ]
 
             return None, data
-        except Exception:
-            return f"Error al intentar obtener los estados", None
+        except Exception as e:
+            logger.error("Error en find_all_products_status: %s",
+                         e, exc_info=True)
+            return "Error al intentar obtener los estados", None
+        finally:
+            cursor.close()
+            connection.close()
 
     @staticmethod
     def create_product(product_data: Product):
@@ -173,38 +184,41 @@ class ProductsRepository:
         cursor = connection.cursor()
 
         try:
+            error, success, message, product_details_id = ProductDetailsRepository.create_product_details(ProductDetails(
+                model=data["model"],
+            ))
+
+            if error is not None or not success:
+                connection.rollback()
+                return error, success, message
+
             cursor.execute("""
             INSERT INTO PRODUCTS (
                 subcategory_id,
                 product_details_id
             ) VALUES (%s, %s)""",
-                           (data["subcategory_id"], data["product_details_id"]))
+                           (data["subcategory"], product_details_id))
             connection.commit()
 
             product_id = cursor.lastrowid
 
             error, success, message = ProductSerialsRepository.create_product_serial(ProductSerial(
-                product_serial=data["product_serial"],
+                serial=data["serial"],
                 product_id=product_id,
-                input_order_id=data["input_order_id"],
-                product_garanty_input=data["product_garanty_input"]
+                input_order=data["input_order"],
+                warranty_time=data["warranty_time"]
             ))
+
+            if error is not None or not success:
+                connection.rollback()
+                return error, success, message
 
             connection.commit()
 
-            if error is not None or not success:
-                # Eliminamos el producto insertado para evitar registros huérfanos
-                try:
-                    cursor.execute(
-                        "DELETE FROM PRODUCTS WHERE product_id = %s", (product_id,))
-                    connection.commit()
-                except Exception:
-                    pass
-                return error, success, message
-
-            return None, True, f"Producto creado correctamente"
+            return None, True, "Producto creado correctamente"
         except Exception as e:
-            return f"Error al crear el producto {e}", False, None
+            logger.error("Error en create_product: %s", e, exc_info=True)
+            return "Error al intentar crear el producto", False, None
         finally:
             cursor.close()
             connection.close()
@@ -218,6 +232,9 @@ class ProductsRepository:
             "status": "product_status",
             "model": "product_details_id",
         }
+
+        ALLOWED_COLUMNS = {"subcategory_id",
+                           "product_status", "product_details_id"}
 
         connection = get_connection()
         cursor = connection.cursor()
@@ -234,13 +251,11 @@ class ProductsRepository:
                 return "Producto no encontrado", False, None
 
             # Solo actualiza details si vino brand o model
-            details_fields = {
+            if details_fields := {
                 key: data[key]
                 for key in ["brand", "model"]
                 if key in data
-            }
-            
-            if details_fields:
+            }:
                 error, success, message = ProductDetailsRepository.update_product_details(
                     UpdateProductDetails(**details_fields), cursor
                 )
@@ -248,13 +263,11 @@ class ProductsRepository:
                     return error, success, message
 
             # Solo actualiza serial si vino alguno de estos campos
-            serial_fields = {
+            if serial_fields := {
                 key: data[key]
                 for key in ["serial", "input_order", "warranty_time"]
                 if key in data
-            }
-
-            if serial_fields:
+            }:
                 error, success, message = ProductSerialsRepository.update_product_serial(
                     UpdateProductSerial(
                         id=data["id"], **serial_fields), cursor
@@ -268,10 +281,19 @@ class ProductsRepository:
                 for key in ["subcategory", "status", "model"]
                 if key in data
             }
-            
+
             if product_fields:
                 mapped = {
-                    PRODUCT_FIELD_MAP[key]: value for key, value in product_fields.items()}
+                    PRODUCT_FIELD_MAP[key]: value
+                    for key, value in product_fields.items()
+                }
+
+                # Verificamos que todas las columnas estén en el whitelist antes de armar el query
+                invalid_columns = mapped.keys() - ALLOWED_COLUMNS
+                if invalid_columns:
+                    logger.error(
+                        "Columnas no permitidas en update_product: %s", invalid_columns)
+                    return "Campos de actualización no válidos", False, None
 
                 columns = ", ".join(f"{col} = %s" for col in mapped.keys())
                 values = list(mapped.values()) + [data["id"]]
@@ -282,11 +304,12 @@ class ProductsRepository:
                 )
 
             connection.commit()
-            return None, True, f"Producto actualizado correctamente"
+            return None, True, "Producto actualizado correctamente"
 
         except Exception as e:
             connection.rollback()
-            return f"Error al intentar actualizar el producto {e}", False, None
+            logger.error("Error en update_product: %s", e, exc_info=True)
+            return "Error al intentar actualizar el producto", False, None
         finally:
             cursor.close()
             connection.close()
@@ -305,14 +328,10 @@ class ProductsRepository:
             product = cursor.fetchone()
 
             if not product:
-                cursor.close()
-                connection.close()
                 return "Producto no encontrado", False, None
 
             if product[0] == 0 and (product_data["product_status"] == 2 or product_data["product_status"] == 3):
-                cursor.close()
-                connection.close()
-                return f"No puedes vender o crear una garantía con un producto deshabilitado", False, None
+                return "No puedes vender o crear una garantía con un producto deshabilitado", False, None
 
             cursor.execute("""
                 UPDATE PRODUCTS SET
@@ -323,10 +342,12 @@ class ProductsRepository:
 
             connection.commit()
 
-            return None, True, f"Estado del producto actualizado correctamente"
-        except Exception:
+            return None, True, "Estado del producto actualizado correctamente"
+        except Exception as e:
             connection.rollback()
-            return f"Error al intentar actualizar el estado del producto", False, None
+            logger.error("Error en update_product_status: %s",
+                         e, exc_info=True)
+            return "Error al intentar actualizar el estado del producto", False, None
         finally:
             cursor.close()
             connection.close()
@@ -352,7 +373,7 @@ class ProductsRepository:
         ON p.product_details_id = pd.product_details_id
         INNER JOIN PRODUCT_BRANDS as pb
         ON pd.product_brand_id = pb.product_brand_id
-        ORDER BY MONTH(pd.product_detail_date) DESC
+        ORDER BY pd.product_detail_date DESC
         LIMIT 6
         """
 
@@ -370,8 +391,9 @@ class ProductsRepository:
                 for item in results
             ]
             return None, data
-        except Exception:
-            return f"Error al ejecutar la consulta:", None
+        except Exception as e:
+            logger.error("Error en find_recent_products: %s", e, exc_info=True)
+            return "Error al intentar obtener los productos recientes", None
         finally:
             cursor.close()
             connection.close()
@@ -406,8 +428,10 @@ class ProductsRepository:
             cursor.execute(query)
             results = cursor.fetchall()
             return None, results
-        except Exception:
-            return f"Error al ejecutar la consulta:", None
+        except Exception as e:
+            logger.error("Error en find_products_by_status: %s",
+                         e, exc_info=True)
+            return "Error al intentar obtener los productos por estado", None
         finally:
             cursor.close()
             connection.close()
@@ -450,8 +474,9 @@ class ProductsRepository:
             cursor.execute(query)
             results = cursor.fetchall()
             return None, results
-        except Exception:
-            return f"Error al ejecutar la consulta:", None
+        except Exception as e:
+            logger.error("Error en find_products_growth: %s", e, exc_info=True)
+            return "Error al intentar obtener el crecimento de los productos", None
         finally:
             cursor.close()
             connection.close()
@@ -460,6 +485,9 @@ class ProductsRepository:
     def find_products_by_brand(period: str):
         connection = get_connection()
         cursor = connection.cursor(dictionary=True)
+
+        if period not in period_map:
+            period = "30d"
 
         interval = period_map.get(period, "30 DAY")
 
@@ -489,8 +517,10 @@ class ProductsRepository:
                 for item in results
             ]
             return None, data
-        except Exception:
-            return f"Error al ejecutar la consulta:", None
+        except Exception as e:
+            logger.error("Error en find_products_by_brand: %s",
+                         e, exc_info=True)
+            return "Error al intentar obtener las marcas", None
         finally:
             cursor.close()
             connection.close()
