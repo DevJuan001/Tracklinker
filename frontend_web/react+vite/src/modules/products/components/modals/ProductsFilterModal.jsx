@@ -77,7 +77,9 @@ export default function ProductsFilterModal({ setFilters, onCloseModal }) {
             .filter(
               (brand) =>
                 !form.subcategory_order ||
-                brand.subcategory_id === form.subcategory_order,
+                brand.subcategories
+                  .split(",")
+                  .includes(String(form.subcategory_order)),
             )
             .map((brand) => ({
               value: brand.id,
