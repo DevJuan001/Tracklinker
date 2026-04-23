@@ -3,14 +3,14 @@ import { getUsers } from "../services/getUsersService";
 import { useQuery } from "@tanstack/react-query";
 
 export function useUsers() {
-  const [filters, setFilters] = useState({});
+  const [filters, setFilters] = useState();
 
   const users = useQuery({
-    queryKey: ["users"],
+    queryKey: ["users", filters],
     queryFn: async ({ signal }) => {
       return getUsers(signal, filters);
     },
-    staleTime: 1000 * 60 * 30,
+    staleTime: 1000 * 60 * 10,
   });
 
   return {
