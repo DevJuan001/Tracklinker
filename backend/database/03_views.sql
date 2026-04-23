@@ -27,29 +27,30 @@ SELECT
     p.product_id,
     s.supplier_name,
     ps.product_serial,
-    pd.product_detail_model,
-    pd.product_details_id,
-    pd.product_detail_description,
+    pm.product_model_name,
+    pm.product_model_id,
+    pm.product_model_description,
     pb.product_brand_id,
     pb.product_brand_name,
     ps.product_garanty_input,
     p.product_status
     FROM SUPPLIERS AS s
     INNER JOIN INPUT_ORDERS AS io
-    ON s.supplier_id = io.supplier_id
+        ON s.supplier_id = io.supplier_id
     INNER JOIN PRODUCT_SERIALS AS ps
-    ON io.input_order_id = ps.input_order_id
+        ON io.input_order_id = ps.input_order_id
     INNER JOIN PRODUCTS as p
-    ON ps.product_id = p.product_id
+        ON ps.product_id = p.product_id
     INNER JOIN SUBCATEGORIES AS sc
-    ON p.subcategory_id = sc.subcategory_id
+        ON p.subcategory_id = sc.subcategory_id
     INNER JOIN CATEGORIES AS c
-    ON sc.category_id = c.category_id
+        ON sc.category_id = c.category_id
     INNER JOIN PRODUCT_DETAILS AS pd
-    ON p.product_details_id = pd.product_details_id
+        ON p.product_details_id = pd.product_details_id
+    INNER JOIN PRODUCT_MODELS AS pm
+        ON pd.product_model_id = pm.product_model_id
     INNER JOIN PRODUCT_BRANDS AS pb
-    ON pd.product_brand_id = pb.product_brand_id
-    ORDER BY p.product_id DESC;
+        ON pm.product_brand_id = pb.product_brand_id;
 
 -- Vista para obtener todas subcategorias con su categoria
 CREATE VIEW get_all_subcategories AS
@@ -108,8 +109,8 @@ CREATE VIEW get_output_products AS
     od.product_serial,
     od.out_product_garanty,
     od.product_transformation,
-    pd.product_detail_description,
-    pd.product_detail_model,
+    pm.product_model_description,
+    pm.product_model_name,
     pb.product_brand_name
     FROM OUTPUT_DETAILS AS od 
     INNER JOIN OUTPUT_ORDERS AS oo
@@ -120,8 +121,10 @@ CREATE VIEW get_output_products AS
     ON ps.product_id = p.product_id
     INNER JOIN PRODUCT_DETAILS AS pd
     ON p.product_details_id = pd.product_details_id
+    INNER JOIN PRODUCT_MODELS AS pm
+    ON pd.product_model_id = pm.product_model_id 
     INNER JOIN PRODUCT_BRANDS AS pb
-    ON pd.product_brand_id = pb.product_brand_id;
+    ON pm.product_brand_id = pb.product_brand_id;
     
 CREATE VIEW get_all_products_with_stock AS
 SELECT 
@@ -139,7 +142,6 @@ LEFT JOIN (
 ) AS stock
 ON v.product_id = stock.product_id;
 
-USE DB_TRACKLINKER;
 -- Vista para obtener todos los productos con sus categorias y subcategorias
 CREATE VIEW get_all_products_null AS
 SELECT
@@ -151,9 +153,9 @@ SELECT
     p.product_id,
     s.supplier_name,
     ps.product_serial,
-    pd.product_detail_model,
-    pd.product_details_id,
-    pd.product_detail_description,
+    pm.product_model_name,
+    pm.product_model_id,
+    pm.product_model_description,
     pb.product_brand_name,
     ps.product_garanty_input
     FROM SUPPLIERS AS s
@@ -169,6 +171,8 @@ SELECT
     ON sc.category_id = c.category_id
     LEFT JOIN PRODUCT_DETAILS AS pd
     ON p.product_details_id = pd.product_details_id
+    INNER JOIN PRODUCT_MODELS AS pm
+    ON pd.product_model_id = pm.product_model_id
     LEFT JOIN PRODUCT_BRANDS AS pb
-    ON pd.product_brand_id = pb.product_brand_id
+    ON pm.product_brand_id = pb.product_brand_id
     ORDER BY p.product_id;
