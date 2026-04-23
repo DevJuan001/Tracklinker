@@ -17,6 +17,9 @@ CREATE TABLE ROLES (
   UNIQUE INDEX rol_id_UNIQUE (rol_id ASC))
 ENGINE = InnoDB;
 
+-- -----------------------------------------------------
+-- Table CITIES
+-- -----------------------------------------------------
 
 CREATE TABLE CITIES (
   city_id INT NOT NULL AUTO_INCREMENT COMMENT 'Identificador autgenerado para cada rol',
@@ -62,9 +65,28 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE PRODUCT_BRANDS (
   product_brand_id INT NOT NULL AUTO_INCREMENT COMMENT 'Identificador de marca de producto\n.\nClave primaria única que identifica cada marca registrada en el sistema. Este campo se genera automáticamente de forma secuencial y no puede repetirse ni quedar vacío. Se utiliza para establecer una relación entre los productos y sus marcas correspondientes.',
-  product_brand_name VARCHAR(45) NOT NULL COMMENT 'Nombre de la marca del producto\n.\nNombre oficial o comercial de la marca asociada a un producto. Este campo permite identificar y categorizar los productos por su fabricante, proveedor o casa comercial. Es obligatorio para asegurar que cada marca registrada tenga un nombre definido.',
+  product_brand_name TEXT NOT NULL COMMENT 'Nombre de la marca del producto\n.\nNombre oficial o comercial de la marca asociada a un producto. Este campo permite identificar y categorizar los productos por su fabricante, proveedor o casa comercial. Es obligatorio para asegurar que cada marca registrada tenga un nombre definido.',
   PRIMARY KEY (product_brand_id),
   UNIQUE INDEX product_brand_id_UNIQUE (product_brand_id ASC))
+ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Table PRODUCT_MODELS
+-- -----------------------------------------------------
+CREATE TABLE PRODUCT_MODELS (
+  product_model_id INT NOT NULL AUTO_INCREMENT COMMENT 'Identificador del modelo de producto',
+  product_model_name TEXT NOT NULL COMMENT 'Nombre de la modelo del producto',
+  product_model_description TEXT NOT NULL COMMENT 'Descripcion detallada del producto',
+  product_brand_id INT NOT NULL COMMENT 'Marca a la que pertenece este modelo',
+  PRIMARY KEY (product_model_id),
+  UNIQUE INDEX product_model_id_UNIQUE (product_model_id ASC),
+  INDEX fk_product_models_product_brand_idx (product_brand_id ASC),
+  CONSTRAINT fk_product_details_product_brand
+    FOREIGN KEY (product_brand_id)
+    REFERENCES PRODUCT_BRANDS (product_brand_id)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+)
 ENGINE = InnoDB;
 
 
@@ -73,15 +95,13 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE PRODUCT_DETAILS (
   product_details_id INT NOT NULL AUTO_INCREMENT COMMENT 'Identificador de la lista de detalles del producto, llave primaria que identifica para lista de detalles (INT, Not null)',
-  product_brand_id INT NOT NULL COMMENT 'Identificador de marca de producto, Este campo se genera automáticamente de forma secuencial y no puede repetirse ni quedar vacío. Se utiliza para establecer una relación entre los productos y sus marcas correspondientes. (INT, Not null)',
-  product_detail_model VARCHAR(255) NOT NULL COMMENT 'Modelo que tiene o maneja el producto, Se utiliza para diferenciarlo de otros productos o indicar los productos similares (VARCHAR(45), Not null)',
-  product_detail_description TEXT NOT NULL COMMENT 'Descripción sobre el producto, Contiene un texto que detalla meticulosamente cada cualidad del producto (VARCHAR(100), Not null)',
+  product_model_id INT NOT NULL COMMENT 'Modelo que tiene o maneja el producto, Se utiliza para diferenciarlo de otros productos o indicar los productos similares',
   product_detail_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Fecha en la que se agrego el producto',
   PRIMARY KEY (product_details_id),
-  INDEX fk_product_details_product_brand_idx (product_brand_id ASC),
-  CONSTRAINT fk_product_details_product_brand
-    FOREIGN KEY (product_brand_id)
-    REFERENCES PRODUCT_BRANDS (product_brand_id)
+  INDEX fk_product_details_product_model_idx (product_model_id ASC),
+  CONSTRAINT fk_product_details_product_model
+    FOREIGN KEY (product_model_id)
+    REFERENCES PRODUCT_MODELS (product_model_id)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
