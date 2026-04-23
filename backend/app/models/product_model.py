@@ -13,6 +13,7 @@ class Product(BaseModel):
 
 class UpdateProduct(BaseModel):
     id: int
+    product_details_id: int
     input_order: Optional[int] = None
     subcategory: Optional[int] = None
     serial: Optional[str] = None
