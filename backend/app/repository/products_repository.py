@@ -8,7 +8,7 @@ from app.utils.periods import period_map, daily_periods
 from app.utils.logger import get_logger
 # Models
 from app.models.product_model import Product, UpdateProduct
-from app.models.product_details_model import UpdateProductDetails
+from app.models.product_details_model import UpdateProductDetails, ProductDetails
 from app.models.product_serial_model import ProductSerial, UpdateProductSerial
 # Repositories
 from app.repository.product_details_repository import ProductDetailsRepository
@@ -45,9 +45,9 @@ class ProductsRepository:
             p.product_id,
             s.supplier_name,
             ps.product_serial,
-            pd.product_detail_model,
-            pd.product_details_id,
-            pd.product_detail_description,
+            pm.product_model_name,
+            pm.product_model_id,
+            pm.product_model_description,
             pb.product_brand_id,
             pb.product_brand_name,
             ps.product_garanty_input,
@@ -65,8 +65,10 @@ class ProductsRepository:
             ON sc.category_id = c.category_id
             INNER JOIN PRODUCT_DETAILS AS pd
             ON p.product_details_id = pd.product_details_id
+            INNER JOIN PRODUCT_MODELS AS pm
+            ON pd.product_model_id = pm.product_model_id
             INNER JOIN PRODUCT_BRANDS AS pb
-            ON pd.product_brand_id = pb.product_brand_id
+            ON pm.product_brand_id = pb.product_brand_id
             """
 
         filters = []
@@ -129,7 +131,7 @@ class ProductsRepository:
                     "supplier": item[7],
                     "product_serial": item[8],
                     "model": item[9],
-                    "product_details_id": item[10],
+                    "model_id": item[10],
                     "description": item[11],
                     "brand_id": item[12],
                     "brand": item[13],
@@ -141,7 +143,7 @@ class ProductsRepository:
             return None, data
         except Exception as e:
             logger.error("Error en find_all_products: %s", e, exc_info=True)
-            return "Error al intentar obtener los usuarios", None
+            return "Error al intentar obtener los productos", None
         finally:
             cursor.close()
             connection.close()
@@ -182,21 +184,29 @@ class ProductsRepository:
         cursor = connection.cursor()
 
         try:
+            error, success, message, product_details_id = ProductDetailsRepository.create_product_details(ProductDetails(
+                model=data["model"],
+            ))
+
+            if error is not None or not success:
+                connection.rollback()
+                return error, success, message
+
             cursor.execute("""
             INSERT INTO PRODUCTS (
                 subcategory_id,
                 product_details_id
             ) VALUES (%s, %s)""",
-                           (data["subcategory_id"], data["product_details_id"]))
+                           (data["subcategory"], product_details_id))
             connection.commit()
 
             product_id = cursor.lastrowid
 
             error, success, message = ProductSerialsRepository.create_product_serial(ProductSerial(
-                product_serial=data["product_serial"],
+                serial=data["serial"],
                 product_id=product_id,
-                input_order_id=data["input_order_id"],
-                product_garanty_input=data["product_garanty_input"]
+                input_order=data["input_order"],
+                warranty_time=data["warranty_time"]
             ))
 
             if error is not None or not success:
