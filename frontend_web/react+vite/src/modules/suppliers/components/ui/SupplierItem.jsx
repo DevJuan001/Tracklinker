@@ -1,5 +1,6 @@
 import SupplierActions from "./SupplierActions";
 import { usersIcons } from "../../../../assets/icons/usersIcons";
+import { userStatus } from "../../../users/constants/userStatus";
 
 export default function SupplierItem({
   supplier,
@@ -12,37 +13,34 @@ export default function SupplierItem({
       className="flex items-center justify-between p-5 bg-[#96929213] rounded-lg transition duration-300 cursor-pointer
       hover:bg-[#96929231]
       dark:bg-[#0f0f11] dark:hover:bg-[#212125]"
-      hey={supplier.supplier_id}
+      hey={supplier.id}
       onClick={moreInfoOnClick}
-      id="user-field"
     >
       {/* Información del proveedor */}
       <article className="flex dark:text-white">
         <address className="flex gap-5 not-italic font-medium">
-          <p className="text-[22px]">{supplier.supplier_name}</p>
-          <div className="flex items-center">
+          <p className="text-[22px]">{supplier.name}</p>
+          <div className="hidden sm:flex md:flex lg:flex xl:flex items-center">
             <img
               src={usersIcons.phoneIcon}
               alt=""
               className="w-5 h-5 dark:invert"
             />
-            <p>{supplier.supplier_phone}</p>
+            <p>{supplier.phone}</p>
           </div>
-          <div className="flex items-center">
-            <img
-              src={usersIcons.rolIcon}
-              alt=""
-              className="w-5 h-5 dark:invert"
-            />
-            <p>{supplier.supplier_address}</p>
-          </div>
-          <div className="flex items-center">
+          <div className="hidden md:flex lg:flex xl:flex items-center">
             <img
               src={usersIcons.cityIcon}
               alt=""
               className="invert brightness-200 dark:invert-0"
             />
-            <p>{supplier.supplier_city}</p>
+            <p>{supplier.city}</p>
+          </div>
+          <div
+            className={`flex items-center px-2 gap-1 rounded-full border text-xs ${userStatus[supplier.status]?.styles}`}
+          >
+            <img src={userStatus[supplier.status]?.icon} alt="" />
+            <span>{userStatus[supplier.status]?.text}</span>
           </div>
         </address>
       </article>
