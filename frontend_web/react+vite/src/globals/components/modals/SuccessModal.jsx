@@ -8,6 +8,7 @@ export default function SuccessModal({
   confirmTitle,
   triggerRef,
   confirmText,
+  growDirection,
   confirmButtonText,
   location = "center",
 }) {
@@ -19,6 +20,7 @@ export default function SuccessModal({
       type="innerModal"
       triggerRef={triggerRef}
       location={location}
+      growDirection={growDirection}
     >
       <section className="flex flex-col items-center gap-1">
         <div className="flex flex-col items-center gap-3">
