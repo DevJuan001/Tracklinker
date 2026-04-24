@@ -1,13 +1,9 @@
 import SupplierItem from "./SupplierItem";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import { userStatus } from "../../../users/constants/userStatus";
 
-export default function SuppliersList({
-  suppliers,
-  loading,
-  refetch,
-  openModal,
-}) {
+export default function SuppliersList({ suppliers, loading, openModal }) {
   const noSuppliers = suppliers.length === 0 && !loading;
   const isFirstLoad = suppliers.length === 0 && loading;
 
@@ -28,19 +24,24 @@ export default function SuppliersList({
         ) : (
           suppliers.map((supplier) => (
             <SupplierItem
-              key={supplier.supplier_id}
+              key={supplier.id}
               supplier={supplier}
               moreInfoOnClick={(e) => {
                 e.stopPropagation();
-                openModal(supplier, "info", refetch);
+                openModal(supplier, "info", null, e.currentTarget);
               }}
               editButtonOnClick={(e) => {
                 e.stopPropagation();
-                openModal(supplier, "edit", refetch);
+                openModal(supplier, "edit", null, e.currentTarget);
               }}
               deleteButtonOnClick={(e) => {
                 e.stopPropagation();
-                openModal(supplier, "delete", refetch);
+                openModal(
+                  supplier,
+                  userStatus[supplier.status]?.modalType,
+                  null,
+                  e.currentTarget,
+                );
               }}
             />
           ))
