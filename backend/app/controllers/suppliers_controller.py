@@ -12,7 +12,6 @@ class SuppliersController:
         if error:
             raise HTTPException(status_code=404, detail=error)
         return {
-            "success": True,
             "data": data
         }
 
@@ -22,13 +21,13 @@ class SuppliersController:
         if error:
             raise HTTPException(status_code=404, detail=error)
         return {
-            "success": True,
             "data": data
         }
 
     @staticmethod
     def create_supplier(supplier_data: Supplier):
-        error, success, message = SuppliersRepository.create_supplier(supplier_data)
+        error, success, message = SuppliersRepository.create_supplier(
+            supplier_data)
         if error:
             raise HTTPException(status_code=404, detail=error)
         return {
@@ -38,18 +37,30 @@ class SuppliersController:
 
     @staticmethod
     def update_supplier(supplier_id: int, supplier_data: dict):
-        error, message, data = SuppliersRepository.update_supplier(supplier_id, supplier_data)
+        error, success, message = SuppliersRepository.update_supplier(
+            supplier_id, supplier_data)
         if error:
             raise HTTPException(status_code=404, detail=error)
         return {
-            "success": True,
+            "success": success,
             "message": message,
-            "data": data
+        }
+
+    @staticmethod
+    def disable_supplier(supplier_id: int):
+        error, success, message = SuppliersRepository.disable_supplier(
+            supplier_id)
+        if error:
+            raise HTTPException(status_code=404, detail=error)
+        return {
+            "success": success,
+            "message": message
         }
     
     @staticmethod
-    def delete_supplier(supplier_id: int):
-        error, success, message = SuppliersRepository.delete_supplier(supplier_id)
+    def enable_supplier(supplier_id: int):
+        error, success, message = SuppliersRepository.enable_supplier(
+            supplier_id)
         if error:
             raise HTTPException(status_code=404, detail=error)
         return {
