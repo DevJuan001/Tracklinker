@@ -10,6 +10,7 @@ export default function Modal({
   onClose,
   type,
   location = "anchored",
+  growDirection = "bottom-right",
   triggerRef,
   z_index = "50",
   disableClose = false,
@@ -25,6 +26,10 @@ export default function Modal({
     location = "center";
   }
 
+  if (type === "filter") {
+    growDirection = "bottom-center"
+  } 
+
   const { closeModal } = useFlipModal({
     isOpen,
     modalRef,
@@ -33,6 +38,7 @@ export default function Modal({
     overlayRef,
     onClose,
     location,
+    growDirection,
     id: modalId,
   });
 
