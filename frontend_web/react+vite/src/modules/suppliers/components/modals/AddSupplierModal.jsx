@@ -11,62 +11,54 @@ import SuccessModal from "../../../../globals/components/modals/SuccessModal";
 
 export default function AddSupplierModal({ onClose }) {
   const [innerModal, setInnerModal] = useState(null);
-  const { form, loading, handleChange, handleSubmit } = useCreateSupplier({
-    supplier_name: "",
-    supplier_city: "",
-    supplier_address: "",
-    supplier_email: "",
-    supplier_phone: "",
-  });
+  const { form, loading, handleChange, handleSubmit } = useCreateSupplier();
   return (
-    <section className="flex flex-col items-center">
-      <form action="" className="w-full flex flex-col gap-1">
-        <FormField
-          onChange={handleChange}
-          name={"supplier_name"}
-          value={form.supplier_name}
-          labelText={"Nombre"}
-          placeholder={"Lenovo"}
-          id={"name"}
-          autoComplete="given-name"
-        />
-        <FormField
-          onChange={handleChange}
-          value={form.supplier_email}
-          name={"supplier_email"}
-          labelText={"Correo Electrónico"}
-          placeholder={"asus@asus.com"}
-          id={"email"}
-          autoComplete="email"
-        />
-        <FormField
-          onChange={handleChange}
-          value={form.supplier_phone}
-          name={"supplier_phone"}
-          labelText={"Número"}
-          placeholder={"300012124"}
-          id={"phone"}
-          autoComplete="tel"
-        />
-        <FormField
-          onChange={handleChange}
-          name={"supplier_city"}
-          value={form.supplier_city}
-          labelText={"Ciudad"}
-          placeholder={"Miami"}
-          id={"city"}
-          autoComplete="city"
-        />
-        <FormField
-          onChange={handleChange}
-          name={"supplier_address"}
-          value={form.supplier_address}
-          labelText={"Dirección"}
-          placeholder={"KR 124 # 12-124"}
-          id={"address"}
-          autoComplete="street-address"
-        />
-      </form>
+    <section className="flex flex-col items-center gap-2">
+      <FormField
+        onChange={handleChange}
+        name={"supplier_name"}
+        value={form.supplier_name}
+        labelText={"Nombre"}
+        placeholder={"Lenovo"}
+        id={"name"}
+        autoComplete="given-name"
+      />
+      <FormField
+        onChange={handleChange}
+        value={form.supplier_email}
+        name={"supplier_email"}
+        labelText={"Correo Electrónico"}
+        placeholder={"asus@asus.com"}
+        id={"email"}
+        autoComplete="email"
+      />
+      <FormField
+        onChange={handleChange}
+        value={form.supplier_phone}
+        name={"supplier_phone"}
+        labelText={"Número"}
+        placeholder={"300012124"}
+        id={"phone"}
+        autoComplete="tel"
+      />
+      <FormField
+        onChange={handleChange}
+        name={"supplier_city"}
+        value={form.supplier_city}
+        labelText={"Ciudad"}
+        placeholder={"Miami"}
+        id={"city"}
+        autoComplete="city"
+      />
+      <FormField
+        onChange={handleChange}
+        name={"supplier_address"}
+        value={form.supplier_address}
+        labelText={"Dirección"}
+        placeholder={"KR 124 # 12-124"}
+        id={"address"}
+        autoComplete="street-address"
+      />
 
       {/* Botones */}
       <ConfirmCancelButtons
