@@ -11,34 +11,36 @@ import Layout from "../../globals/components/Layout/Layout";
 import TopSection from "../../globals/components/ui/TopSection";
 // Modales
 import Modal from "../../globals/components/modals/Modal";
+import SearchBar from "../../globals/components/ui/SearchBar";
 import HelpModal from "../../globals/components/modals/HelpModal";
 import AddSupplierModal from "./components/modals/AddSupplierModal";
 import FilterModal from "../../globals/components/modals/FilterModal";
-import DeleteSupplierModal from "./components/modals/DeleteSupplierModal";
+import EnableSupplierModal from "./components/modals/EnableSupplierModal";
+import DisableSupplierModal from "./components/modals/DisableSupplierModal";
 import MoreInfoSupplierModal from "./components/modals/MoreInfoSupplierModal";
 import EditSupplierInfoModal from "./components/modals/EditSupplierInfoModal";
 import ProfileModal from "../../globals/components/modals/profileModal/ProfileModal";
-import SearchBar from "../../globals/components/ui/SearchBar";
 
 export default function SuppliersPage() {
-  const { modalType, isOpen, modalData, openModal, closeModal } = useModal();
-  const { suppliers, loading, error, fetchSuppliers } = useSuppliers();
+  const { modalType, triggerRef, isOpen, modalData, openModal, closeModal } =
+    useModal();
+  const { suppliers, loading, error } = useSuppliers();
   const [search, setSearch] = useState("");
   const filteredSuppliers = useSearch(suppliers, search);
 
   return (
     <Layout
-      avatarOnClick={() => openModal(null, "user")}
-      helpOnClick={() => {
-        openModal(null, "help");
+      avatarOnClick={(e) => openModal(null, "user", null, e.currentTarget)}
+      helpOnClick={(e) => {
+        openModal(null, "help", null, e.currentTarget);
       }}
     >
       <TopSection
         sectionName={"Proveedores"}
         addButtonIcon={actionsIcons.addIcon}
         addButtonText={"Agregar Proveedor"}
-        createOnClick={() => openModal(null, "add", fetchSuppliers)}
-        filterOnClick={() => openModal(null, "filter", fetchSuppliers)}
+        createOnClick={(e) => openModal(null, "add", null, e.currentTarget)}
+        filterOnClick={(e) => openModal(null, "filter", null, e.currentTarget)}
       >
         <SearchBar value={search} onChange={setSearch} />
       </TopSection>
@@ -47,7 +49,6 @@ export default function SuppliersPage() {
         suppliers={filteredSuppliers}
         loading={loading}
         error={error}
-        refetch={fetchSuppliers}
         openModal={openModal}
       />
 
@@ -65,13 +66,18 @@ export default function SuppliersPage() {
                     ? "Información del Proveedor"
                     : modalType === "edit"
                       ? "Editar Proveedor"
-                      : modalType === "delete"
-                        ? "Eliminar Proveedor"
-                        : "Ayuda"
+                      : modalType === "disable"
+                        ? "Deshabilitar Proveedor"
+                        : modalType === "enable"
+                          ? "Habilitar Proveedor"
+                          : "Ayuda"
           }
           type={modalType}
           isOpen={isOpen}
           onClose={() => closeModal()}
+          triggerRef={triggerRef}
+          location={modalType === "info" ? "center" : "anchored"}
+          z_index={modalType === "edit" ? 300 : 100}
         >
           {modalType === "user" && <ProfileModal />}
           {modalType === "filter" && (
@@ -83,7 +89,10 @@ export default function SuppliersPage() {
           )}
           {/* Modal para mas información del Proveedor */}
           {modalType === "info" && (
-            <MoreInfoSupplierModal supplier={modalData} />
+            <MoreInfoSupplierModal
+              supplier={modalData}
+              onClose={() => closeModal()}
+            />
           )}
 
           {/* Modal para editar el Proveedor */}
@@ -95,8 +104,16 @@ export default function SuppliersPage() {
           )}
 
           {/* Modal para eliminar el Proveedor */}
-          {modalType === "delete" && (
-            <DeleteSupplierModal
+          {modalType === "disable" && (
+            <DisableSupplierModal
+              supplier={modalData}
+              onClose={() => closeModal()}
+            />
+          )}
+
+          {/* Modal para eliminar el Proveedor */}
+          {modalType === "enable" && (
+            <EnableSupplierModal
               supplier={modalData}
               onClose={() => closeModal()}
             />
