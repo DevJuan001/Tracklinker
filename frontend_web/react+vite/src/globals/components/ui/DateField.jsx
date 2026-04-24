@@ -13,7 +13,7 @@ export default function DateField({
     <div
       tabIndex={0}
       onClick={onClick}
-      className="relative w-full h-14 flex items-center px-4 rounded-lg border border-[#a1a1a154] outline-[#00000028] text-center cursor-pointer
+      className="relative w-full h-[60px] flex px-4 rounded-xl border outline-[#00000028] text-center cursor-pointer
     dark:border-[#28282b] text-sm dark:text-white focus:shadow-[0_0_2px_1px_#e5e7eb]"
     >
       <div className="min-w-full flex items-center pr-1.5">
