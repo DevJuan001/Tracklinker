@@ -14,6 +14,7 @@ export const useFlipModal = ({
   overlayRef,
   onClose,
   location,
+  growDirection = "bottom-right",
   id,
 }) => {
   useEffect(() => {
@@ -80,18 +81,91 @@ export const useFlipModal = ({
 
       const vw = window.innerWidth;
       const vh = window.innerHeight;
+      const margin = 20;
+      let finalLeft;
+      let finalTop;
 
-      let finalLeft = Math.round((vw - fullWidth) / 2);
-      let finalTop = Math.round((vh - fullHeight) / 2);
+      // Este switch lo usamos para darle una posicion personalizable a la modal
+      switch (location) {
+        case "top":
+          finalLeft = Math.round((vw - fullWidth) / 2);
+          finalTop = margin;
+          break;
+        case "bottom":
+          finalLeft = Math.round((vw - fullWidth) / 2);
+          finalTop = vh - fullHeight - margin;
+          break;
+        case "left":
+          finalLeft = margin;
+          finalTop = Math.round((vh - fullHeight) / 2);
+          break;
+        case "right":
+          finalLeft = vw - fullWidth - margin;
+          finalTop = Math.round((vh - fullHeight) / 2);
+          break;
+        case "top-left":
+          finalLeft = margin;
+          finalTop = margin;
+          break;
+        case "top-right":
+          finalLeft = vw - fullWidth - margin;
+          finalTop = margin;
+          break;
+        case "bottom-left":
+          finalLeft = margin;
+          finalTop = vh - fullHeight - margin;
+          break;
+        case "bottom-right":
+          finalLeft = vw - fullWidth - margin;
+          finalTop = vh - fullHeight - margin;
+          break;
+        case "center":
+          finalLeft = Math.round((vw - fullWidth) / 2);
+          finalTop = Math.round((vh - fullHeight) / 2);
+          break;
+        case "anchored":
+        default:
+          if (triggerRef?.rect || rect) {
+            const r = triggerRef.rect || rect;
 
-      if (location !== "center" && (triggerRef?.rect || rect)) {
-        const r = triggerRef.rect || rect;
-        finalLeft = Math.round(Math.min(r.left, vw - fullWidth - 20));
-        finalTop = Math.round(Math.min(r.top, vh - fullHeight - 20));
+            // Lógica de alineación basada en growDirection, osea como hacia donde va a crecer o salir la modal
+            if (growDirection === "center") {
+              finalLeft = r.left + (r.width - fullWidth) / 2;
+              finalTop = r.top + (r.height - fullHeight) / 2;
+            } else {
+              if (growDirection.includes("right")) {
+                finalLeft = r.left;
+              } else if (growDirection.includes("left")) {
+                finalLeft = r.right - fullWidth;
+              } else {
+                finalLeft = r.left + (r.width - fullWidth) / 2;
+              }
+
+              if (growDirection.includes("bottom")) {
+                finalTop = r.top;
+              } else if (growDirection.includes("top")) {
+                finalTop = r.bottom - fullHeight;
+              } else {
+                finalTop = r.top + (r.height - fullHeight) / 2;
+              }
+            }
+
+            // Clamping para asegurar que no se salga de la pantalla (usando el margen)
+            finalLeft = Math.max(
+              margin,
+              Math.min(finalLeft, vw - fullWidth - margin),
+            );
+            finalTop = Math.max(
+              margin,
+              Math.min(finalTop, vh - fullHeight - margin),
+            );
+          } else {
+            // Fallback a center
+            finalLeft = Math.round((vw - fullWidth) / 2);
+            finalTop = Math.round((vh - fullHeight) / 2);
+          }
+          break;
       }
-
-      finalLeft = Math.max(20, finalLeft);
-      finalTop = Math.max(20, finalTop);
 
       gsap.set(modal, {
         visibility: "visible",
@@ -153,7 +227,16 @@ export const useFlipModal = ({
         });
       }
     };
-  }, [isOpen, triggerRef, location, modalRef, contentRef, overlayRef, id]);
+  }, [
+    isOpen,
+    triggerRef,
+    location,
+    modalRef,
+    contentRef,
+    overlayRef,
+    id,
+    growDirection,
+  ]);
 
   const closeModal = useCallback(
     (e) => {
