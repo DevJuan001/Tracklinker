@@ -1,10 +1,18 @@
 import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { createSupplierService } from "../services/createSupplierService";
 
-export function useCreateSupplier(supplier_data) {
-  const [form, setForm] = useState(supplier_data);
+export function useCreateSupplier() {
+  const [form, setForm] = useState({
+    supplier_name: "",
+    supplier_city: "",
+    supplier_address: "",
+    supplier_email: "",
+    supplier_phone: "",
+  });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const queryClient = useQueryClient();
 
   function handleChange(e) {
     setForm((prev) => ({
@@ -21,6 +29,7 @@ export function useCreateSupplier(supplier_data) {
       const response = await createSupplierService(form);
       if (response.success) {
         setInnerModal("success");
+        queryClient.invalidateQueries({ queryKey: ["suppliers"] });
       }
     } catch (error) {
       setInnerModal("error");
