@@ -1,6 +1,6 @@
 // Hooks
-import { useState } from "react";
 import { useEditSupplier } from "../../hooks/useEditSupplier";
+import { useInnerModal } from "../../../../globals/hooks/useInnerModal";
 // Componentes
 import Loader from "../../../../globals/components/ui/Loader";
 import FormField from "../../../../globals/components/ui/FormField";
@@ -10,32 +10,24 @@ import ErrorModal from "../../../../globals/components/modals/ErrorModal";
 import SuccessModal from "../../../../globals/components/modals/SuccessModal";
 
 export default function EditSupplierInfoModal({ supplier, onClose }) {
-  const [innerModal, setInnerModal] = useState(null);
-  const { form, loading, handleChange, handleSubmit } = useEditSupplier(
-    supplier.supplier_id,
-    {
-      supplier_name: supplier.supplier_name || "",
-      supplier_email: supplier.supplier_email || "",
-      supplier_phone: supplier.supplier_phone || "",
-      supplier_city: supplier.supplier_city || "",
-      supplier_address: supplier.supplier_address || "",
-    }
-  );
+  const { innerType, innerTrigger, openInnerModal } = useInnerModal();
+  const { form, loading, handleChange, handleSubmit } =
+    useEditSupplier(supplier);
+
   return (
     <section className="flex flex-col items-center">
       <form action="" className="w-full flex flex-col gap-2">
         <FormField
           onChange={handleChange}
           name={"supplier_name"}
-          value={form.supplier_name}
+          value={form.name}
           labelText={"Nombre"}
-          placeholder={supplier.supplier_name}
           id={"name"}
         />
         <FormField
           onChange={handleChange}
           name={"supplier_email"}
-          value={form.supplier_email}
+          value={form.email}
           labelText={"Correo Electrónico"}
           id={"email"}
           autoComplete="email"
@@ -43,14 +35,14 @@ export default function EditSupplierInfoModal({ supplier, onClose }) {
         <FormField
           onChange={handleChange}
           name={"supplier_city"}
-          value={form.supplier_city}
+          value={form.city}
           labelText={"Ciudad"}
           id={"city"}
           autoComplete="city"
         />
         <FormField
           onChange={handleChange}
-          value={form.supplier_phone}
+          value={form.phone}
           labelText={"Número"}
           id={"phone"}
           name={"supplier_phone"}
@@ -59,7 +51,7 @@ export default function EditSupplierInfoModal({ supplier, onClose }) {
         <FormField
           onChange={handleChange}
           name={"supplier_address"}
-          value={form.supplier_address}
+          value={form.address}
           labelText={"Dirección"}
           id={"address"}
         />
@@ -68,12 +60,13 @@ export default function EditSupplierInfoModal({ supplier, onClose }) {
       {/* Botones */}
       <ConfirmCancelButtons
         confirmText={loading ? <Loader /> : "Editar"}
-        confirmButtonOnClick={(e) => handleSubmit(e, setInnerModal)}
+        confirmButtonOnClick={(e) => handleSubmit(e, openInnerModal)}
         cancelButtonOnClick={onClose}
       />
       {/* Modales internas */}
-      {innerModal === "success" && (
+      {innerType === "success" && (
         <SuccessModal
+          triggerRef={innerTrigger}
           isOpen={true}
           confirmTitle={"Proveedor editado con éxito!"}
           confirmText={
@@ -81,18 +74,19 @@ export default function EditSupplierInfoModal({ supplier, onClose }) {
           }
           confirmButtonText={"Volver a la pagina"}
           onClose={() => {
-            setInnerModal(null);
+            openInnerModal(null);
             onClose();
           }}
         />
       )}
-      {innerModal === "error" && (
+      {innerType === "error" && (
         <ErrorModal
+          triggerRef={innerTrigger}
           isOpen={true}
           errorTitle="¡No se puedo editar el proveedor!"
           errorText="Verfica que todos los campos esten completos"
           confirmButtonText="Volver a intentarlo"
-          onClose={() => setInnerModal(null)}
+          onClose={() => openInnerModal(null)}
         />
       )}
     </section>

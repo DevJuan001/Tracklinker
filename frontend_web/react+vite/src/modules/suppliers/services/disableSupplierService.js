@@ -1,11 +1,11 @@
 import { apiRoutes } from "../../../config/apiRoutes";
 import { fetchWithAuth } from "../../../utils/fetchWithAuth";
 
-export async function deleteSupplierService(supplier_id) {
+export async function disableSupplierService(supplier_id) {
   const res = await fetchWithAuth(
-    `${apiRoutes.apiUrl}${apiRoutes.suppliers}/delete/${supplier_id}`,
+    `${apiRoutes.apiUrl}${apiRoutes.suppliers}/disable/${supplier_id}`,
     {
-      method: "DELETE",
+      method: "PUT",
     },
   );
 
