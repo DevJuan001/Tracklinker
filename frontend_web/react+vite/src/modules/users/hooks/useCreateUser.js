@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { createUser } from "../services/createUserService";
+import { useFormValidation } from "../../../globals/hooks/useFormValidation";
 
 export function useCreateUser(formData) {
   const [form, setForm] = useState(formData);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const queryClient = useQueryClient();
+  const { validate } = useFormValidation();
 
   function handleChange(e) {
     setForm((prev) => ({
@@ -22,6 +24,13 @@ export function useCreateUser(formData) {
     const buttonElement = e.currentTarget;
     const buttonRect = buttonElement.getBoundingClientRect();
     const triggerData = { currentTarget: buttonElement, rect: buttonRect };
+
+    const isValid = validate(form);
+
+    if (!isValid) {
+      openInnerModal("error", triggerData);
+      return;
+    }
 
     setLoading(true);
 
