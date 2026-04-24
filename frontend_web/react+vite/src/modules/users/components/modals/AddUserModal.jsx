@@ -124,6 +124,8 @@ export default function AddUserModal({ onClose }) {
       {/* Modales Internas */}
       {innerType === "success" && (
         <SuccessModal
+          location="anchored"
+          growDirection={"top-right"}
           triggerRef={innerTrigger}
           isOpen={true}
           confirmTitle={"Usuario creado con éxito!"}
@@ -139,6 +141,8 @@ export default function AddUserModal({ onClose }) {
       )}
       {innerType === "error" && (
         <ErrorModal
+          location="anchored"
+          growDirection={"top-right"}
           triggerRef={innerTrigger}
           isOpen={true}
           errorTitle="No se puedo completar el registro!"
