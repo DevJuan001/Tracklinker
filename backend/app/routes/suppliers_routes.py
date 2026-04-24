@@ -27,7 +27,12 @@ def create_supplier(supplier_data: Supplier):
 def update_supplier(supplier_id: int, supplier_data: dict):
     return SuppliersController.update_supplier(supplier_id, supplier_data)
 
-# Endpoint para eliminar un proveedor mediante el id
-@router.delete("/delete/{supplier_id}")
-def delete_supplier(supplier_id: int):
-    return SuppliersController.delete_supplier(supplier_id)
+# Endpoint para deshabilitar un proveedor mediante el id
+@router.put("/disable/{supplier_id}")
+def disable_supplier(supplier_id: int):
+    return SuppliersController.disable_supplier(supplier_id)
+
+# Endpoint para habilitar un proveedor mediante el id
+@router.put("/enable/{supplier_id}")
+def enable_supplier(supplier_id: int):
+    return SuppliersController.enable_supplier(supplier_id)
