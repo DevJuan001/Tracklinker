@@ -74,7 +74,7 @@ export default function Modal({
             type === "user"
               ? "max-w-full min-h-screen md:min-w-[650px] md:max-w-[650px] md:min-h-[550px] md:max-h-[550px]"
               : type === "help"
-                ? "md:max-w-[600px]"
+                ? "md:max-w-[600px] md:min-h-max"
                 : type === "filter"
                   ? "md:min-w-[400px] md:max-w-[400px]"
                   : type === "calendar"
