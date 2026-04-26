@@ -13,7 +13,7 @@ export default function SubcategoriesItem({
     <li
       className="flex items-center justify-between p-5 bg-[#F5F3F6] rounded-lg transition duration-300 cursor-pointer
       hover:bg-[#96929231]
-      dark:bg-[#0f0f11] dark:hover:bg-[#212125]"
+      dark:bg-[#101012] dark:hover:bg-[#17171a]"
       key={subcategory.subcategory_id}
       onClick={moreInfoOnClick}
     >
