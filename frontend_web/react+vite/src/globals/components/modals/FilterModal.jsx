@@ -40,7 +40,7 @@ export default function FilterModal({
           >
             {showCalendarStartDate && (
               <Calendar
-                growDirection={"bottom-right"}
+                growDirection={"center"}
                 triggerRef={startInputRef}
                 value={orderByStartDateValue}
                 onClose={() => setShowCalendarStartDate(false)}
@@ -71,7 +71,7 @@ export default function FilterModal({
           >
             {showCalendarFinishDate && (
               <Calendar
-                growDirection={"bottom-left"}
+                growDirection={"center"}
                 triggerRef={finishInputRef}
                 value={orderByFinishDateValue}
                 onClose={() => setShowCalendarFinishDate(false)}
