@@ -245,7 +245,7 @@ export const useFlipModal = ({
         e.stopPropagation();
       }
 
-      const element = triggerRef?.element;
+      const element = triggerRef?.element || triggerRef?.current;
       const modal = modalRef.current;
       const content = contentRef.current;
       const overlay = overlayRef?.current;
