@@ -10,6 +10,7 @@ export function useEditSupplier(supplier) {
     phone: supplier.phone || "",
     city: supplier.city || "",
     address: supplier.address || "",
+    status: supplier.status || "",
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -48,7 +49,7 @@ export function useEditSupplier(supplier) {
 
     try {
       const response = await editSupplierService(supplier.id, changes);
-      if (response.success) {
+      if (response.success === true) {
         quertyClient.invalidateQueries({ queryKey: ["suppliers"] });
         openInnerModal("success", triggerData);
       }
