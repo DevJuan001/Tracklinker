@@ -63,7 +63,7 @@ export default function SuppliersPage() {
                 : modalType === "add"
                   ? "Agregar Proveedor"
                   : modalType === "info"
-                    ? "Información del Proveedor"
+                    ? ""
                     : modalType === "edit"
                       ? "Editar Proveedor"
                       : modalType === "disable"
