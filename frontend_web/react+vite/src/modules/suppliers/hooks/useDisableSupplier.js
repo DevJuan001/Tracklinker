@@ -11,7 +11,7 @@ export function useDisableSupplier(supplier_id, onClose) {
     setLoading(true);
     try {
       const response = await disableSupplierService(supplier_id);
-      if (response.success) {
+      if (response.success === true) {
         onClose();
         queryClient.invalidateQueries({ queryKey: ["suppliers"] });
       }
