@@ -1,7 +1,11 @@
 import { useState } from "react";
 
-export function useFilterCategories(filters, refetch) {
-  const [form, setForm] = useState(filters);
+export function useFilterCategories() {
+  const [form, setForm] = useState({
+    start_date: "",
+    end_date: "",
+    name_order: "",
+  });
 
   function handleChange(e) {
     setForm((prev) => ({
@@ -10,13 +14,8 @@ export function useFilterCategories(filters, refetch) {
     }));
   }
 
-  function handleApply() {
-    refetch(form);
-  }
-
   return {
     form,
     handleChange,
-    handleApply,
   };
 }
