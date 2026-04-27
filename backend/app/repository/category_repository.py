@@ -1,7 +1,11 @@
 from app.core.database import get_connection
 from app.models.category_model import CategoryUpdate
 from app.utils.date_formatter import date_formatter
+from app.utils.logger import get_logger
 from app.utils.periods import period_map, daily_periods
+
+logger = get_logger(__name__)
+
 
 class CategoryRepository:
 
@@ -45,7 +49,7 @@ class CategoryRepository:
         if status:
             filters.append("category_status = %s")
             values.append(status)
-        
+
         if filters:
             query += " WHERE " + " AND ".join(filters)
 
@@ -54,17 +58,18 @@ class CategoryRepository:
             result = cursor.fetchall()
             data = [
                 {
-                    "category_id": item["category_id"],
-                    "category_name": item["category_name"],
-                    "category_description": item["category_description"],
-                    "category_date": date_formatter(item["category_date"]),
-                    "category_status": item["category_status"]
+                    "id": item["category_id"],
+                    "name": item["category_name"],
+                    "description": item["category_description"],
+                    "date": date_formatter(item["category_date"]),
+                    "status": item["category_status"]
                 }
                 for item in result
             ]
             return None, data
-        except Exception:
-            return f"Error al ejecutar la consulta", None
+        except Exception as e:
+            logger.error("Error en find_all_categories: %s", e, exc_info=True)
+            return "Error al intentar obtener las categorias", None
         finally:
             cursor.close()
             connection.close()
@@ -75,102 +80,126 @@ class CategoryRepository:
         connection = get_connection()
         cursor = connection.cursor(dictionary=True)
 
-        query = "SELECT * FROM categories WHERE category_id = %s"
+        query = """
+        SELECT
+            category_id,
+            category_name,
+            category_description,
+            category_date,
+            category_status
+        FROM CATEGORIES
+        WHERE category_id = %s"""
 
         try:
             cursor.execute(query, (category_id,))
             result = cursor.fetchone()
             return None, result
-        except Exception:
-            return f"Error al ejecutar la consulta", None
+        except Exception as e:
+            logger.error("Error en find_by_id: %s", e, exc_info=True)
+            return "Error al intentar obtener la categoría", None
         finally:
             cursor.close()
             connection.close()
 
     @staticmethod
-    def create(category_data: dict):
+    def create_category(category_data: dict):
         connection = get_connection()
         cursor = connection.cursor(dictionary=True)
 
         try:
             # Validar nombre duplicado
             cursor.execute(
-                "SELECT COUNT(*) as count FROM categories WHERE category_name = %s", (category_data["name"],))
-            count_result = cursor.fetchone()
+                """
+            SELECT
+                category_name
+            FROM CATEGORIES
+            WHERE category_name = %s
+            """, (category_data["name"],))
 
-            if count_result["count"] > 0:
-                cursor.close()
-                connection.close()
+            category_exist = cursor.fetchone()
+
+            if category_exist:
                 return "La categoría ya existe", None, None
 
             query = "INSERT INTO categories (category_name, category_description) VALUES (%s, %s)"
 
-            cursor.execute(query, (category_data["name"], category_data["description"]))
+            cursor.execute(
+                query, (category_data["name"], category_data["description"]))
             connection.commit()
 
             return None, True, "Categoría creada correctamente"
 
-        except Exception:
+        except Exception as e:
             connection.rollback()
-            return f"Error al ejecutar la consulta", None, None
+            logger.error("Error en create_category: %s", e, exc_info=True)
+            return "Error al intentar crear la categoría", None, None
 
         finally:
             cursor.close()
             connection.close()
 
     @staticmethod
-    def update(category_id: int, category_data: CategoryUpdate):
+    def update_category(category_id: int, category_data: CategoryUpdate):
         data = category_data.model_dump()
+
+        CATEGORY_FIELDS = {
+            "name": "category_name",
+            "description": "category_description"
+        }
 
         connection = get_connection()
         cursor = connection.cursor(dictionary=True)
 
         # Verificar si existe la categoría
         cursor.execute(
-            "SELECT * FROM categories WHERE category_id = %s", (category_id,))
+            "SELECT category_name FROM categories WHERE category_id = %s", (category_id,))
         category = cursor.fetchone()
 
         if not category:
-            cursor.close()
-            connection.close()
             return "Categoría no encontrada", None, None
 
         if not category_data:
-            cursor.close()
-            connection.close()
             return "No se proporcionaron datos para actualizar", None, None
 
-        query = """
-        UPDATE CATEGORIES SET
-            category_name = %s,
-            category_description = %s
-        WHERE category_id = %s"""
-
         try:
-            cursor.execute(query, (
-                data["name"],
-                data["description"],
-                category_id,
-                ))
+            category_fields = {
+                key: data[key]
+                for key in CATEGORY_FIELDS.keys()
+                if key in data
+            }
+
+            if category_fields:
+                mapped = {
+                    CATEGORY_FIELDS[key]: value for key, value in category_fields.items()}
+
+                columns = ", ".join(f"{col} = %s" for col in mapped.keys())
+                values = list(mapped.values()) + [category_id]
+
+                cursor.execute(
+                    f"UPDATE CATEGORIES SET {columns} WHERE category_id = %s",
+                    values
+                )
             connection.commit()
 
             return None, True, "Categoría actualizada correctamente"
 
-        except Exception:
+        except Exception as e:
             connection.rollback()
-            return f"Error al ejecutar la consulta", None, None
+            logger.error("Error en update_category: %s", e, exc_info=True)
+            return "Error al intentar actualizar la categoría", None, None
 
         finally:
             cursor.close()
             connection.close()
 
     @staticmethod
-    def disable(category_id: int):
+    def disable_category(category_id: int):
         connection = get_connection()
         cursor = connection.cursor()
 
         cursor.execute(
-            "SELECT * FROM CATEGORIES WHERE category_id = %s", (category_id,))
+            "SELECT category_name FROM CATEGORIES WHERE category_id = %s", (category_id,))
+
         category = cursor.fetchone()
         if not category:
             cursor.close()
@@ -185,21 +214,25 @@ class CategoryRepository:
         try:
             cursor.execute(query, (category_id,))
             connection.commit()
+
             return None, True, "Categoría deshabilitada correctamente"
-        except Exception:
-            return f"Error al intentar ejecutar la consulta", False, None
+        except Exception as e:
+            logger.error("Error en disable_category: %s", e, exc_info=True)
+            return "Error al intentar deshabilitar la categoría", False, None
         finally:
             cursor.close()
             connection.close()
 
     @staticmethod
-    def enable(category_id: int):
+    def enable_category(category_id: int):
         connection = get_connection()
         cursor = connection.cursor()
 
         cursor.execute(
-            "SELECT * FROM CATEGORIES WHERE category_id = %s", (category_id,))
+            "SELECT category_name FROM CATEGORIES WHERE category_id = %s", (category_id,))
+
         category = cursor.fetchone()
+
         if not category:
             cursor.close()
             connection.close()
@@ -214,65 +247,14 @@ class CategoryRepository:
             cursor.execute(query, (category_id,))
             connection.commit()
             return None, True, "Categoría habilitada correctamente"
-        except Exception:
-            return f"Error al intentar ejecutar la consulta", False, None
-        finally:
-            cursor.close()
-            connection.close()
-
-    @staticmethod
-    def find_categories_by_date_range(start_date: str, end_date: str):
-        connection  = get_connection()
-        cursor = connection.cursor(dictionary=True)
-
-        query = "SELECT * FROM CATEGORIES WHERE CATEGORY_DATE BETWEEN %s AND %s"
-
-        try:
-            cursor.execute(query, (start_date, end_date))
-            result = cursor.fetchall()
-            return None, result
-        except Exception:
-            return f"Error al ejecutar la consulta", None
-        finally:
-            cursor.close()
-            connection.close()
-
-    @staticmethod
-    def find_deleted_categories_by_date_range(start_date: str, end_date: str):
-        connection  = get_connection()
-        cursor = connection.cursor(dictionary=True)
-
-        query = "SELECT * FROM CATEGORIES WHERE DELETION_DATE BETWEEN %s AND %s"
-
-        try:
-            cursor.execute(query, (start_date, end_date))
-            result = cursor.fetchall()
-            return None, result
-        except Exception:
-            return f"Error al ejecutar la consulta", None
-        finally:
-            cursor.close()
-            connection.close()
-
-    @staticmethod
-    def find_disabled_categories():
-        connection  = get_connection()
-        cursor = connection.cursor(dictionary=True)
-
-        query = "SELECT * FROM CATEGORIES WHERE STATUS = 'DISABLED'"
-
-        try:
-            cursor.execute(query)
-            result = cursor.fetchall()
-            return None, result
-        except Exception:
-            return f"Error al ejecutar la consulta", None
+        except Exception as e:
+            logger.error("Error en enable_category: %s", e, exc_info=True)
+            return "Error al intentar habilitar la categoría", False, None
         finally:
             cursor.close()
             connection.close()
 
 #   ------------ REPORTES DE CATEGORIAS ------------
-
 
     @staticmethod
     def find_recent_categories():
