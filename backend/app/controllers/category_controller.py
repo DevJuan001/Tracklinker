@@ -2,6 +2,7 @@ from app.repository.category_repository import CategoryRepository
 from app.models.category_model import CategoryCreate, CategoryUpdate
 from fastapi import HTTPException
 
+
 class CategoryController:
 
     @staticmethod
@@ -38,8 +39,8 @@ class CategoryController:
     @staticmethod
     def create_category(category_data: CategoryCreate):
         data_dict = category_data.dict()
-        
-        error, success, message = CategoryRepository.create(data_dict)
+
+        error, success, message = CategoryRepository.create_category(data_dict)
         if error:
             raise HTTPException(status_code=400, detail=error)
         return {
@@ -49,62 +50,33 @@ class CategoryController:
 
     @staticmethod
     def update_category(category_id: int, category_data: CategoryUpdate):
-        error, success, message = CategoryRepository.update(category_id, category_data)
+        error, success, message = CategoryRepository.update_category(
+            category_id, category_data)
         if error:
             raise HTTPException(status_code=400, detail=error)
         return {
             "success": success,
             "message": message
         }
-    
+
     @staticmethod
     def enable_category(category_id: int):
-        error, success, message = CategoryRepository.enable(category_id)
+        error, success, message = CategoryRepository.enable_category(
+            category_id)
         if error:
             raise HTTPException(status_code=400, detail=error)
         return {
             "success": success,
             "message": message
         }
-    
+
     @staticmethod
     def disable_category(category_id: int):
-        error, success, message = CategoryRepository.disable(category_id)
+        error, success, message = CategoryRepository.disable_category(
+            category_id)
         if error:
             raise HTTPException(status_code=400, detail=error)
         return {
             "success": success,
             "message": message
         }
-    
-    @staticmethod
-    def get_categories_by_date_range(start_date: str, end_date: str):
-        error, categories = CategoryRepository.find_categories_by_date_range(start_date, end_date)
-
-        if error:
-            raise HTTPException(status_code=404, detail=error)
-        
-        return{
-            "data": categories
-        }
-    
-    @staticmethod
-    def get_deleted_categories_by_date_range(start_date: str, end_date: str):
-        error, categories = CategoryRepository.find_deleted_categories_by_date_range(start_date, end_date)
-
-        if error:
-            raise HTTPException(status_code=404, detail=error)
-        
-        return{
-            "data": categories
-        }
-    @staticmethod
-    def  get_disabled_categories():
-        error, categories = CategoryRepository.find_disabled_categories()
-
-        if error:
-            raise HTTPException(status_code=404, detail=error)
-        
-        return{
-            "data": categories
-        }   
