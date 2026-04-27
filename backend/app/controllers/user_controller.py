@@ -8,6 +8,7 @@ from fastapi_mail import FastMail, MessageSchema
 from app.core.security import create_access_token, generate_temporal_password
 from app.core.config import settings
 
+
 class UserController:
 
     @staticmethod
@@ -15,18 +16,19 @@ class UserController:
         error, email = UserRepository.find_by_email(form_data.email)
 
         expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE)
-        token = create_access_token({"sub": form_data.email}, expires_delta=expires)
+        token = create_access_token(
+            {"sub": form_data.email}, expires_delta=expires)
 
         if error:
             raise HTTPException(status_code=404, detail=error)
-        
-        if email:
-            raise 
 
-        return{
+        if email:
+            raise
+
+        return {
             "token": token
         }
-    
+
     @staticmethod
     def get_all_users(
         role_order: int = None,
@@ -50,13 +52,12 @@ class UserController:
 
     @staticmethod
     def get_user_by_id(user_id: int):
-        error, user = UserRepository.find_by_id(user_id)
+        error, user = UserRepository.find_user_by_id(user_id)
         if error:
             raise HTTPException(status_code=404, detail=error)
         return {
-           "data": user
+            "data": user
         }
-    
 
     @staticmethod
     def get_all_cities():
@@ -64,16 +65,16 @@ class UserController:
         if error:
             raise HTTPException(status_code=404, detail=error)
         return {
-           "data": cities
+            "data": cities
         }
-    
-    
+
     @staticmethod
     async def create_user(user_data: User):
         data = user_data.model_dump()
         temporal_password = generate_temporal_password()
 
-        error, success, message = UserRepository.create(user_data, temporal_password)
+        error, success, message = UserRepository.create(
+            user_data, temporal_password)
 
         if error:
             raise HTTPException(status_code=400, detail=error)
@@ -97,7 +98,7 @@ class UserController:
             "success": success,
             "message": message
         }
-    
+
     @staticmethod
     def update_user(user_id: int, user_data: dict):
         error, success, message = UserRepository.update(user_id, user_data)
@@ -107,7 +108,7 @@ class UserController:
             "success": success,
             "message": message,
         }
-    
+
     @staticmethod
     def disable_user(user_id: int):
         error, success, message = UserRepository.disable(user_id)
@@ -117,7 +118,7 @@ class UserController:
             "success": success,
             "message": message
         }
-    
+
     @staticmethod
     def enable_user(user_id: int):
         error, success, message = UserRepository.enable(user_id)
@@ -127,7 +128,7 @@ class UserController:
             "success": success,
             "message": message
         }
-    
+
     @staticmethod
     def get_all_roles():
         error, data = UserRepository.find_all_roles()
