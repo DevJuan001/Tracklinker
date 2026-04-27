@@ -27,7 +27,7 @@ export function useCreateSupplier() {
 
     try {
       const response = await createSupplierService(form);
-      if (response.success) {
+      if (response.success === true) {
         setInnerModal("success");
         queryClient.invalidateQueries({ queryKey: ["suppliers"] });
       }

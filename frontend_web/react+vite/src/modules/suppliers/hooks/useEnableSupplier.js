@@ -11,7 +11,7 @@ export function useEnableSupplier(supplier_id, onClose) {
     setLoading(true);
     try {
       const response = await enableSupplierService(supplier_id);
-      if (response.success) {
+      if (response.success === true) {
         queryClient.invalidateQueries({ queryKey: ["suppliers"] });
         onClose();
       }

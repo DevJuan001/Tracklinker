@@ -14,9 +14,9 @@ import Modal from "../../globals/components/modals/Modal";
 import SearchBar from "../../globals/components/ui/SearchBar";
 import HelpModal from "../../globals/components/modals/HelpModal";
 import AddSupplierModal from "./components/modals/AddSupplierModal";
-import FilterModal from "../../globals/components/modals/FilterModal";
 import EnableSupplierModal from "./components/modals/EnableSupplierModal";
 import DisableSupplierModal from "./components/modals/DisableSupplierModal";
+import FilterSuppliersModal from "./components/modals/FilterSuppliersModal";
 import MoreInfoSupplierModal from "./components/modals/MoreInfoSupplierModal";
 import EditSupplierInfoModal from "./components/modals/EditSupplierInfoModal";
 import ProfileModal from "../../globals/components/modals/profileModal/ProfileModal";
@@ -24,7 +24,7 @@ import ProfileModal from "../../globals/components/modals/profileModal/ProfileMo
 export default function SuppliersPage() {
   const { modalType, triggerRef, isOpen, modalData, openModal, closeModal } =
     useModal();
-  const { suppliers, loading, error } = useSuppliers();
+  const { suppliers, loading, error, setFilters } = useSuppliers();
   const [search, setSearch] = useState("");
   const filteredSuppliers = useSearch(suppliers, search);
 
@@ -63,7 +63,7 @@ export default function SuppliersPage() {
                 : modalType === "add"
                   ? "Agregar Proveedor"
                   : modalType === "info"
-                    ? "Información del Proveedor"
+                    ? ""
                     : modalType === "edit"
                       ? "Editar Proveedor"
                       : modalType === "disable"
@@ -81,7 +81,10 @@ export default function SuppliersPage() {
         >
           {modalType === "user" && <ProfileModal />}
           {modalType === "filter" && (
-            <FilterModal onClose={() => closeModal()} />
+            <FilterSuppliersModal
+              setFilters={setFilters}
+              onClose={() => closeModal()}
+            />
           )}
           {modalType === "help" && <HelpModal onClose={() => closeModal()} />}
           {modalType === "add" && (

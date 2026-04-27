@@ -8,6 +8,7 @@ import ConfirmCancelButtons from "../../../../globals/components/modals/ConfirmC
 // Modales
 import ErrorModal from "../../../../globals/components/modals/ErrorModal";
 import SuccessModal from "../../../../globals/components/modals/SuccessModal";
+import SelectMenu from "../../../../globals/components/modals/SelectMenu";
 
 export default function EditSupplierInfoModal({ supplier, onClose }) {
   const { innerType, innerTrigger, openInnerModal } = useInnerModal();
@@ -19,14 +20,14 @@ export default function EditSupplierInfoModal({ supplier, onClose }) {
       <form action="" className="w-full flex flex-col gap-2">
         <FormField
           onChange={handleChange}
-          name={"supplier_name"}
+          name={"name"}
           value={form.name}
           labelText={"Nombre"}
           id={"name"}
         />
         <FormField
           onChange={handleChange}
-          name={"supplier_email"}
+          name={"email"}
           value={form.email}
           labelText={"Correo Electrónico"}
           id={"email"}
@@ -34,7 +35,7 @@ export default function EditSupplierInfoModal({ supplier, onClose }) {
         />
         <FormField
           onChange={handleChange}
-          name={"supplier_city"}
+          name={"city"}
           value={form.city}
           labelText={"Ciudad"}
           id={"city"}
@@ -45,15 +46,26 @@ export default function EditSupplierInfoModal({ supplier, onClose }) {
           value={form.phone}
           labelText={"Número"}
           id={"phone"}
-          name={"supplier_phone"}
+          name={"phone"}
           autoComplete="tel"
         />
         <FormField
           onChange={handleChange}
-          name={"supplier_address"}
+          name={"address"}
           value={form.address}
           labelText={"Dirección"}
           id={"address"}
+        />
+
+        <SelectMenu
+          spanText={"Estado"}
+          name={"status"}
+          value={form.status}
+          onChange={handleChange}
+          options={[
+            { value: 1, label: "Deshabilitado" },
+            { value: 2, label: "Activo" },
+          ]}
         />
       </form>
 
