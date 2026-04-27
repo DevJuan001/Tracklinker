@@ -2,12 +2,7 @@ import CategoryItem from "./CategoryItem";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
-export default function CategoriesList({
-  categories,
-  loading,
-  openModal,
-  refetch,
-}) {
+export default function CategoriesList({ categories, loading, openModal }) {
   const noCategories = categories.length === 0 && !loading;
   const isFirstLoad = categories.length === 0 && loading;
 
@@ -29,17 +24,16 @@ export default function CategoriesList({
         ) : (
           categories.map((category) => (
             <CategoryItem
-              key={category.category_id}
+              key={category.id}
               category={category}
               openModal={openModal}
-              refetch={refetch}
               moreInfoOnClick={(e) => {
                 e.stopPropagation();
-                openModal(category, "info", refetch);
+                openModal(category, "info", null, e.currentTarget);
               }}
               editButtonOnClick={(e) => {
                 e.stopPropagation();
-                openModal(category, "edit", refetch);
+                openModal(category, "edit", null, e.currentTarget);
               }}
             />
           ))
