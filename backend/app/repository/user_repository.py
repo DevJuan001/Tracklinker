@@ -2,7 +2,10 @@ from app.core.database import get_connection
 from app.models.user_model import User, UpdateUser, UpdateCurrentUser
 from app.utils.date_formatter import date_formatter
 from app.utils.periods import period_map, daily_periods
+from app.utils.logger import get_logger
 import bcrypt
+
+logger = get_logger(__name__)
 
 
 class UserRepository:
@@ -88,14 +91,15 @@ class UserRepository:
             ]
             return None, data
         except Exception as e:
-            return f"Error al ejecutar la consulta: {e}", None
+            logger.error("Error en find_all_users: %s", e, exc_info=True)
+            return "Error al intentar obtener todos los usuarios", None
         finally:
             cursor.close()
             connection.close()
 
     # Obtener un usuario por el ID
     @staticmethod
-    def find_by_id(user_id: int):
+    def find_user_by_id(user_id: int):
         connection = get_connection()
         cursor = connection.cursor(dictionary=True)
 
@@ -138,7 +142,8 @@ class UserRepository:
             ]
             return None, data
         except Exception as e:
-            return f"Error al ejecutar la consulta: {e}", None
+            logger.error("Error en find_user_by_id: %s", e, exc_info=True)
+            return "Error al intentar obtener el usuario", None
         finally:
             cursor.close()
             connection.close()
@@ -165,14 +170,16 @@ class UserRepository:
 
             return None, result
         except Exception as e:
-            return f"Error al ejecutar la consulta: {e}", None
+            logger.error("Error en find_user_password_by_id: %s",
+                         e, exc_info=True)
+            return "Error al intentar obtener el usuario", None
         finally:
             cursor.close()
             connection.close()
 
     # Obtener un usuario mediante el correo
     @staticmethod
-    def find_by_email(user_email: str):
+    def find_user_by_email(user_email: str):
         connection = get_connection()
         cursor = connection.cursor(dictionary=True)
 
@@ -197,7 +204,8 @@ class UserRepository:
             result = cursor.fetchone()
             return result
         except Exception as e:
-            return f"Error al ejecutar la consulta: {e}"
+            logger.error("Error en find_user_by_email: %s", e, exc_info=True)
+            return "Error al intentar obtener el usuario"
         finally:
             cursor.close()
             connection.close()
@@ -222,15 +230,16 @@ class UserRepository:
             result = cursor.fetchall()
 
             return None, result
-        except Exception:
-            return f"Error al ejecutar la consulta", None
+        except Exception as e:
+            logger.error("Error en find_all_cities: %s", e, exc_info=True)
+            return "Error al intentar obtener las ciudades", None
         finally:
             cursor.close()
             connection.close()
 
     # Crear un usuario
     @staticmethod
-    def create(user_data: User, temporal_password: str):
+    def create_user(user_data: User, temporal_password: str):
         data = user_data.model_dump()
 
         connection = get_connection()
@@ -273,17 +282,20 @@ class UserRepository:
                 hash_password,
                 data["email"],
                 data["phone"]))
+
             connection.commit()
+
             return None, True, "Usuario creado correctamente"
         except Exception as e:
-            return f"Error al ejecutar la consulta: {e}", False, None
+            logger.error("Error en create_user: %s", e, exc_info=True)
+            return "Error al intentar crear el usuario", False, None
         finally:
             cursor.close()
             connection.close()
 
     # Actualizar la información de un usuario
     @staticmethod
-    def update(user_id: int, user_data: UpdateUser):
+    def update_user(user_id: int, user_data: UpdateUser):
         data = user_data.model_dump(exclude_none=True)
 
         USER_FIELDS = {
@@ -303,7 +315,7 @@ class UserRepository:
         try:
             # Verificar si existe el usuario
             cursor.execute(
-                "SELECT * FROM USERS WHERE user_id = %s", (user_id,))
+                "SELECT user_name FROM USERS WHERE user_id = %s", (user_id,))
             user = cursor.fetchone()
 
             if not user:
@@ -342,7 +354,8 @@ class UserRepository:
             return None, True, "Usuario actualizado correctamente"
         except Exception as e:
             connection.rollback()
-            return f"Error al ejecutar la consulta: {e}", False, None
+            logger.error("Error en update_user: %s", e, exc_info=True)
+            return "Error al intentar actualizar el usuario", False, None
         finally:
             cursor.close()
             connection.close()
@@ -367,12 +380,11 @@ class UserRepository:
         cursor = connection.cursor(dictionary=True)
 
         # Verificar si existe el usuario
-        cursor.execute("SELECT * FROM USERS WHERE user_id = %s", (user_id,))
+        cursor.execute(
+            "SELECT user_name FROM USERS WHERE user_id = %s", (user_id,))
         user = cursor.fetchone()
 
         if not user:
-            cursor.close()
-            connection.close()
             return "Usuario no encontrado", None, None
 
         # Verificar si existe el correo y no duplicarlo
@@ -407,9 +419,10 @@ class UserRepository:
             connection.commit()
 
             return None, True, "Usuario actualizado correctamente"
-        except Exception:
+        except Exception as e:
             connection.rollback()
-            return f"Error al ejecutar la consulta", False, None
+            logger.error("Error en update_current_user: %s", e, exc_info=True)
+            return "Error al intentar actualizar el usuario", False, None
         finally:
             cursor.close()
             connection.close()
@@ -444,7 +457,7 @@ class UserRepository:
 
     # Deshabilitar un usuario
     @staticmethod
-    def disable(user_id: int):
+    def disable_user(user_id: int):
         connection = get_connection()
         cursor = connection.cursor()
 
@@ -461,7 +474,8 @@ class UserRepository:
             cursor.execute(query, (user_id,))
             connection.commit()
             return None, True, "Usuario deshabilitado correctamente"
-        except Exception:
+        except Exception as e:
+            logger.error("Error en disable_user: %s", e, exc_info=True)
             return "Error la intentar deshabilitar el usuario", False, None
         finally:
             cursor.close()
@@ -469,7 +483,7 @@ class UserRepository:
 
     # Habilitar un usuario
     @staticmethod
-    def enable(user_id: int):
+    def enable_user(user_id: int):
         connection = get_connection()
         cursor = connection.cursor()
 
@@ -486,7 +500,8 @@ class UserRepository:
             cursor.execute(query, (user_id,))
             connection.commit()
             return None, True, "Usuario habilitado correctamente"
-        except Exception:
+        except Exception as e:
+            logger.error("Error en enable_user: %s", e, exc_info=True)
             return "Error la intentar habilitar el usuario", False, None
         finally:
             cursor.close()
@@ -512,7 +527,8 @@ class UserRepository:
             ]
             return None, data
         except Exception as e:
-            return f"Error al ejecutar la consulta: {e}"
+            logger.error("Error en find_all_roles: %s", e, exc_info=True)
+            return "Error al intentar obtener los roles"
         finally:
             connection.close()
             cursor.close()
@@ -556,7 +572,8 @@ class UserRepository:
             return None, data
 
         except Exception as e:
-            return f"Error al ejecutar la consulta: {e}", None
+            logger.error("Error en find_recent_users: %s", e, exc_info=True)
+            return "Error al intentar obtener los usuarios recientes", None
 
         finally:
             cursor.close()
@@ -589,7 +606,8 @@ class UserRepository:
             return None, result
 
         except Exception as e:
-            return f"Error al ejecutar la consulta: {e}", None
+            logger.error("Error en find_users_by_rol: %s", e, exc_info=True)
+            return "Error al intentar obtener los usuarios por rol", None
 
         finally:
             cursor.close()
@@ -628,7 +646,8 @@ class UserRepository:
             results = cursor.fetchall()
             return None, results
         except Exception as e:
-            return f"Error al ejecutar la consulta: {e}", None
+            logger.error("Error en find_users_growth: %s", e, exc_info=True)
+            return "Error al intentar obtener el crecimiento de los usuarios", None
         finally:
             cursor.close()
             connection.close()
@@ -652,7 +671,8 @@ class UserRepository:
             results = cursor.fetchall()
             return None, results
         except Exception as e:
-            return f"Error al ejecutar la consulta: {e}", None
+            logger.error("Error en find_users_by_status: %s", e, exc_info=True)
+            return "Error al intentar obtener los usuarios por estado", None
         finally:
             cursor.close()
             connection.close()
