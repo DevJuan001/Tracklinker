@@ -22,24 +22,25 @@ import SearchBar from "../../globals/components/ui/SearchBar";
 import EnableCategoryModal from "./components/modals/EnableCategoryModal";
 
 export default function CategoriesPage() {
-  const { categories, loading, error, fetchCategories } = useCategories();
-  const { modalType, isOpen, modalData, openModal, closeModal } = useModal();
+  const { categories, loading, error, setFilters } = useCategories();
+  const { modalType, isOpen, modalData, triggerRef, openModal, closeModal } =
+    useModal();
   const [search, setSearch] = useState("");
   const filteredCategories = useSearch(categories, search);
 
   return (
     <Layout
-      avatarOnClick={() => openModal(null, "user")}
-      helpOnClick={() => {
-        openModal(null, "help");
+      avatarOnClick={(e) => openModal(null, "user", null, e.currentTarget)}
+      helpOnClick={(e) => {
+        openModal(null, "help", null, e.currentTarget);
       }}
     >
       <TopSection
         sectionName={"Categorias"}
         addButtonIcon={actionsIcons.addIcon}
-        addButtonText={"Agregar Categoria"}
-        createOnClick={() => openModal(null, "add", fetchCategories)}
-        filterOnClick={() => openModal(null, "filter", fetchCategories)}
+        addButtonText={"Crear Categoria"}
+        createOnClick={(e) => openModal(null, "add", null, e.currentTarget)}
+        filterOnClick={(e) => openModal(null, "filter", null, e.currentTarget)}
       >
         <SearchBar value={search} onChange={setSearch} />
       </TopSection>
@@ -50,7 +51,6 @@ export default function CategoriesPage() {
         openModal={openModal}
         loading={loading}
         error={error}
-        refetch={fetchCategories}
       />
 
       {/* Modales */}
@@ -66,21 +66,25 @@ export default function CategoriesPage() {
                   : modalType === "help"
                     ? "Ayuda"
                     : modalType === "info"
-                      ? "Información de la categoría"
+                      ? ""
                       : modalType === "edit"
                         ? "Editar Categoria"
                         : modalType === "disable"
                           ? "Deshabilitar Categoria"
-                          : "Habilitar Categoria"
+                          : modalType === "enable"
+                            ? "Habilitar Categoria"
+                            : "Ayuda"
           }
           type={modalType}
           isOpen={isOpen}
           onClose={() => closeModal()}
+          triggerRef={triggerRef}
+          location={modalType === "info" ? "center" : "anchored"}
         >
           {modalType === "user" && <ProfileModal />}
           {modalType === "filter" && (
             <FilterCategoryModal
-              refetch={fetchCategories}
+              setFilters={setFilters}
               onClose={() => closeModal()}
             />
           )}

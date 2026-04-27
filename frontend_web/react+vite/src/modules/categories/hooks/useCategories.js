@@ -1,24 +1,20 @@
-import { useEffect, useState } from "react";
-import { getCategoriesService } from "../services/getCategoriesService"
+import { useQuery } from "@tanstack/react-query";
+import { getCategoriesService } from "../services/getCategoriesService";
+import { useState } from "react";
 
 export function useCategories() {
-  const [categories, setCategories] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [filters, setFilters] = useState([]);
 
-  // Esta función llama al service getCategories para obtener las categorías
-  async function fetchCategories(filters) {
-    try {
-      const data = await getCategoriesService(filters);
-      setCategories(data);
-      setLoading(false);
-    } catch (error) {
-      setError(error.message);
-    }
-  }
-  useEffect(() => {
-    fetchCategories();
-  }, []);
+  const categories = useQuery({
+    queryKey: ["categories", filters],
+    queryFn: () => getCategoriesService(filters),
+    staleTime: 1000 * 60 * 10,
+  });
 
-  return { fetchCategories, categories, loading, error };
+  return {
+    categories: categories.data || [],
+    loading: categories.isLoading,
+    error: categories.error,
+    setFilters,
+  };
 }

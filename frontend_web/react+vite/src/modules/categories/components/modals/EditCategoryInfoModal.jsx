@@ -1,6 +1,6 @@
 // Hooks
-import { useState } from "react";
 import { useEditCategory } from "../../hooks/useEditCategory";
+import { useInnerModal } from "../../../../globals/hooks/useInnerModal";
 // Componenetes
 import Loader from "../../../../globals/components/ui/Loader";
 import FormField from "../../../../globals/components/ui/FormField";
@@ -9,44 +9,39 @@ import ConfirmCancelButtons from "../../../../globals/components/modals/ConfirmC
 import ErrorModal from "../../../../globals/components/modals/ErrorModal";
 import SuccessModal from "../../../../globals/components/modals/SuccessModal";
 
-export default function EditCategoryInfoModal({ category, onClose}) {
-  const [innerModal, setInnerModal] = useState(null);
-  const { form, loading, handleChange, handleSubmit } = useEditCategory(
-    category.category_id,
-    {
-      name: category.category_name || "",
-      description: category.category_description || "",
-    }
-  );
+export default function EditCategoryInfoModal({ category, onClose }) {
+  const { innerType, innerTrigger, openInnerModal } = useInnerModal();
+  const { form, loading, handleChange, handleSubmit } =
+    useEditCategory(category);
+
   return (
-    <section className="w-full flex flex-col items-center">
-      <form action="" className="w-full flex flex-col gap-2">
-        <FormField
-          onChange={handleChange}
-          value={form.name}
-          name={"name"}
-          labelText={"Nombre de la Categoría"}
-          id={"category_name"}
-        />
-        <FormField
-          onChange={handleChange}
-          value={form.description}
-          name={"description"}
-          labelText={"Descripción de la Categoría"}
-          id={"category_description"}
-        />
-      </form>
+    <section className="w-full flex flex-col items-center gap-2">
+      <FormField
+        onChange={handleChange}
+        value={form.name}
+        name={"name"}
+        labelText={"Nombre de la Categoría"}
+        id={"category_name"}
+      />
+      <FormField
+        onChange={handleChange}
+        value={form.description}
+        name={"description"}
+        labelText={"Descripción de la Categoría"}
+        id={"category_description"}
+      />
 
       {/* Botones */}
       <ConfirmCancelButtons
         confirmText={loading ? <Loader /> : "Confirmar"}
         cancelText={"Cancelar"}
-        confirmButtonOnClick={(e) => handleSubmit(e, setInnerModal)}
+        confirmButtonOnClick={(e) => handleSubmit(e, openInnerModal)}
         cancelButtonOnClick={onClose}
       />
       {/* Modales Internas */}
-      {innerModal === "success" && (
+      {innerType === "success" && (
         <SuccessModal
+          triggerRef={innerTrigger}
           isOpen={true}
           confirmTitle={"Categoría editada con éxito!"}
           confirmText={
@@ -54,19 +49,20 @@ export default function EditCategoryInfoModal({ category, onClose}) {
           }
           confirmButtonText={"Volver a la página"}
           onClose={() => {
-            setInnerModal(null);
+            openInnerModal(null);
             onClose();
           }}
         />
       )}
 
-      {innerModal === "error" && (
+      {innerType === "error" && (
         <ErrorModal
+          triggerRef={innerTrigger}
           isOpen={true}
           errorTitle="No se pudo completar el registro"
           errorText="Verifica que todos los campos estén completos"
           confirmButtonText="Volver a intentarlo"
-          onClose={() => setInnerModal(null)}
+          onClose={() => openInnerModal(null)}
         />
       )}
     </section>
