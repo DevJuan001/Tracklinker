@@ -46,7 +46,7 @@ export function useEditCategory(category) {
     setLoading(true);
 
     try {
-      const response = await editCategoryService(category.category_id, changes);
+      const response = await editCategoryService(category.id, changes);
       if (response.success === true) {
         queryClient.invalidateQueries({ queryKey: ["categories"] });
         openInnerModal("success", triggerData);
