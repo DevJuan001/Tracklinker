@@ -28,7 +28,7 @@ class AuthController:
     """
     @staticmethod
     def login(email: str, password: str, response: Response):
-        user = UserRepository.find_by_email(email)
+        user = UserRepository.find_user_by_email(email)
 
         # Validación de lo que retorna la función find_by_email
         if not user:
@@ -133,7 +133,7 @@ class AuthController:
                 settings.ACCESS_TOKEN_SECRET_KEY,
                 algorithms=[settings.ALGORITHM]
             )
-            error, data = UserRepository.find_by_id(payload["sub"])
+            error, data = UserRepository.find_user_by_id(payload["sub"])
 
             if error:
                 raise HTTPException(status_code=404, detail=error)
@@ -188,7 +188,7 @@ class AuthController:
 
     @staticmethod
     async def recover_user_password(email: str):
-        user = UserRepository.find_by_email(email)
+        user = UserRepository.find_user_by_email(email)
 
         if not user:
             raise HTTPException(status_code=400, detail="Correo inválido")
