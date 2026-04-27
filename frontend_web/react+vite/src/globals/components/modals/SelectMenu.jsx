@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { modalIcons } from "../../../assets/icons/modalIcons";
 import { actionsIcons } from "../../../assets/icons/actionsIcons";
+import Modal from "./Modal";
 
 export default function SelectMenu({
   name,
@@ -13,6 +14,7 @@ export default function SelectMenu({
   addButtonInvisible = true,
 }) {
   const [open, setOpen] = useState(false);
+  const triggerRef = useRef(null);
 
   const handleSelect = (option) => {
     const parsed =
@@ -27,6 +29,7 @@ export default function SelectMenu({
     <section className="relative w-full flex flex-col gap-1">
       <div className="w-full flex items-center gap-1.5">
         <div
+          ref={triggerRef}
           tabIndex={0}
           onClick={() => setOpen(!open)}
           className="relative w-full h-16 pr-2 pt-2 flex items-center border border-[#a1a1a131] 
@@ -71,21 +74,32 @@ export default function SelectMenu({
       </div>
 
       {open && (
-        <div
-          onClick={() => setOpen(false)}
-          className="absolute top-full left-0 w-full max-h-96 overflow-y-auto rounded-2xl border bg-white shadow-lg z-[400]
-        dark:bg-black dark:text-white dark:border-none"
+        <Modal
+          isOpen={open}
+          onClose={() => setOpen(false)}
+          triggerRef={triggerRef}
+          growDirection="center"
+          type="select"
+          z_index="600"
         >
-          {options.map((option) => (
-            <div
-              key={option.value}
-              onClick={() => handleSelect(option)}
-              className="h-12 flex items-center px-3 py-2 cursor-pointer text-sm hover:bg-[#efedf0] dark:hover:bg-[#333]"
-            >
-              <span>{option.label}</span>
-            </div>
-          ))}
-        </div>
+          <div
+            className="w-full max-h-96 overflow-y-auto rounded-[32px] bg-white 
+            dark:bg-black dark:text-white"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {options.map((option) => (
+              <div
+                key={option.value}
+                onClick={() => handleSelect(option)}
+                className="h-14 flex items-center px-6 cursor-pointer text-sm rounded-full transition-colors
+                hover:bg-[#efedf0] hover:font-medium  
+                dark:hover:bg-[#ffffff15]"
+              >
+                <span>{option.label}</span>
+              </div>
+            ))}
+          </div>
+        </Modal>
       )}
     </section>
   );

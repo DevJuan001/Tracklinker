@@ -38,7 +38,7 @@ export default function SubcategoriesPage() {
       <TopSection
         sectionName={"Subcategorias"}
         addButtonIcon={actionsIcons.addIcon}
-        addButtonText={"Agregar Subcategoria"}
+        addButtonText={"Crear Subcategoria"}
         createOnClick={(e) => openModal(null, "add", null, e.currentTarget)}
         filterOnClick={(e) => openModal(null, "filter", null, e.currentTarget)}
       >
@@ -62,7 +62,7 @@ export default function SubcategoriesPage() {
                 : modalType === "add"
                   ? "Agregar Subcategoria"
                   : modalType === "info"
-                    ? "Información de la subcategoría"
+                    ? ""
                     : modalType === "edit"
                       ? "Editar Subcategoria"
                       : modalType === "disable"

@@ -13,20 +13,20 @@ export default function SubcategoriesItem({
     <li
       className="flex items-center justify-between p-5 bg-[#F5F3F6] rounded-lg transition duration-300 cursor-pointer
       hover:bg-[#96929231]
-      dark:bg-[#0f0f11] dark:hover:bg-[#212125]"
+      dark:bg-[#101012] dark:hover:bg-[#17171a]"
       key={subcategory.subcategory_id}
       onClick={moreInfoOnClick}
     >
       {/* Datos de la Subcategoría */}
       <article>
-        <address className="flex gap-3 not-italic font-medium dark:text-white">
+        <address className="flex items-center gap-3 not-italic font-medium dark:text-white">
           <p className="text-xl">{subcategory.subcategory_name}</p>
           <div className="flex items-center gap-2">
             <asideIcons.categoriesIcon className="w-5 h-5 stroke-[90] stroke-black dark:stroke-white" />
             <p>{subcategory.category_name}</p>
           </div>
           <div
-            className={`flex items-center px-2 py-0.5 gap-1 rounded-full text-xs border ${categoryStatusConfig[subcategory.subcategory_status]?.styles}`}
+            className={`flex items-center px-2 py-1 gap-1 rounded-full text-xs border ${categoryStatusConfig[subcategory.subcategory_status]?.styles}`}
           >
             <img
               src={categoryStatusConfig[subcategory.subcategory_status]?.icon}

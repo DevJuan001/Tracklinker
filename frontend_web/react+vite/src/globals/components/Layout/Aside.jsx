@@ -180,9 +180,9 @@ export default function Aside({ avatarOnClick, helpOnClick }) {
                 <NavLink to={item.path}>
                   {({ isActive }) => (
                     <section
-                      className={`w-auto h-14 flex flex-col py-2.5 items-center justify-center subpixel-antialiased rounded-2xl transition duration-300 group
-                        md:w-full md:h-full md:py-3
-                        xl:w-full xl:h-full xl:flex-row xl:py-2.5 xl:pl-7 xl:gap-2.5 xl:justify-start
+                      className={`w-auto h-14 flex flex-col items-center py-3 justify-center subpixel-antialiased rounded-2xl transition duration-300 group
+                        md:w-full md:h-full md:py-4
+                        xl:w-full xl:h-full xl:flex-row xl:pl-7 xl:py-3 xl:gap-2.5 xl:justify-start
                         ${
                           isActive
                             ? `bg-black font-medium shadow-[0px_0px_32px_-9px_#000000] text-white fill-white
