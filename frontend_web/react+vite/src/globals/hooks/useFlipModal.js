@@ -264,8 +264,10 @@ export const useFlipModal = ({
       const buttonChildren = Array.from(element.children);
 
       gsap.set(element, { opacity: 0, visibility: "hidden" });
-      gsap.set(buttonChildren, { clearProps: "filter,y,opacity" });
-      gsap.set(buttonChildren, { filter: "blur(8px)", y: 8, opacity: 0 });
+      if (buttonChildren.length > 0) {
+        gsap.set(buttonChildren, { clearProps: "filter,y,opacity" });
+        gsap.set(buttonChildren, { filter: "blur(8px)", y: 8, opacity: 0 });
+      }
       gsap.set(modal, { overflow: "hidden" });
 
       const contentRect = content.getBoundingClientRect();
@@ -329,7 +331,9 @@ export const useFlipModal = ({
           visibility: "visible",
           clearProps: "opacity,visibility",
         });
-        gsap.set(buttonChildren, { clearProps: "filter,y,opacity" });
+        if (buttonChildren.length > 0) {
+          gsap.set(buttonChildren, { clearProps: "filter,y,opacity" });
+        }
         onClose();
       }
 
@@ -370,18 +374,20 @@ export const useFlipModal = ({
 
       tl.set(element, { opacity: 1, visibility: "visible" }, 0.2);
 
-      tl.to(
-        buttonChildren,
-        {
-          filter: "blur(0px)",
-          y: 0,
-          opacity: 1,
-          duration: 0.15,
-          ease: "power2.out",
-          stagger: 0.02,
-        },
-        0.17,
-      );
+      if (buttonChildren.length > 0) {
+        tl.to(
+          buttonChildren,
+          {
+            filter: "blur(0px)",
+            y: 0,
+            opacity: 1,
+            duration: 0.15,
+            ease: "power2.out",
+            stagger: 0.02,
+          },
+          0.17,
+        );
+      }
     },
     [onClose, triggerRef, modalRef, contentRef, overlayRef, id],
   );
