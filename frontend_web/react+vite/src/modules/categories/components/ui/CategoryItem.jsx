@@ -5,7 +5,6 @@ import ActionButtons from "../../../../globals/components/ui/ActionButtons";
 export default function CategoryItem({
   category,
   openModal,
-  refetch,
   editButtonOnClick,
   moreInfoOnClick,
 }) {
@@ -19,17 +18,17 @@ export default function CategoryItem({
       {/* Datos de la Categoría */}
       <article className="flex gap-3">
         <div className="flex font-medium dark:text-white">
-          <p className="text-xl">{category.category_name}</p>
+          <p className="text-xl">{category.name}</p>
         </div>
         <div
-          className={`flex items-center px-2 py-0.5 gap-1 rounded-full text-xs border ${categoryStatusConfig[category.category_status]?.styles}`}
+          className={`flex items-center px-2 py-0.5 gap-1 rounded-full text-xs border ${categoryStatusConfig[category.status]?.styles}`}
         >
           <img
-            src={categoryStatusConfig[category.category_status]?.icon}
+            src={categoryStatusConfig[category.status]?.icon}
             alt=""
             className="w-4 h-4"
           />
-          <span>{categoryStatusConfig[category.category_status]?.text}</span>
+          <span>{categoryStatusConfig[category.status]?.text}</span>
         </div>
       </article>
 
@@ -39,12 +38,13 @@ export default function CategoryItem({
           e.stopPropagation();
           openModal(
             category,
-            categoryStatusConfig[category.category_status]?.modalType,
-            refetch,
+            categoryStatusConfig[category.status]?.modalType,
+            null,
+            e.currentTarget,
           );
         }}
         visibilityIcon={
-          categoryStatusConfig[category.category_status]?.visibilityIcon
+          categoryStatusConfig[category.status]?.visibilityIcon
         }
         moreInfoOnClick={moreInfoOnClick}
       >
