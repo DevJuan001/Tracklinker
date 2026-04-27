@@ -26,8 +26,8 @@ export default function ProductsTable({ products, openModal }) {
         dark:text-white dark:bg-black"
         >
           <tr
-            className="border-b bg-white border-gray-200 text-sm
-            dark:border-[#303033] dark:bg-[#1a1a1a60]"
+            className="border-b bg-white border-gray-200 text-sm text-nowrap
+            dark:border-[#303033] dark:bg-[#101012]"
           >
             <th className="font-medium text-start pl-4 pt-1">Estado</th>
             <th className="font-medium text-start pl-4 pt-1">
@@ -36,14 +36,14 @@ export default function ProductsTable({ products, openModal }) {
             <th className="font-medium text-start pl-4 pt-1">
               Orden De Entrada
             </th>
-            <th className="font-medium text-start pt-1">Categoria</th>
+            <th className="font-medium text-start pl-4 pt-1">Categoria</th>
             <th className="font-medium text-start pl-4 pt-1">Subcategoria</th>
             <th className="font-medium text-start pl-4 pt-1">Serial</th>
             <th className="font-medium text-start pl-4 pt-1">Modelo</th>
-            <th className="font-medium text-start pt-1">Descripción</th>
+            <th className="font-medium text-start pl-4 pt-1">Descripción</th>
             <th className="font-medium text-start pl-4 pt-1">Marca</th>
             <th className="font-medium text-start pt-1">Tiempo de Garantia</th>
-            <th className="font-medium text-start pr-4">Acciones</th>
+            <th className="font-medium text-start px-4">Acciones</th>
           </tr>
         </thead>
 
@@ -53,15 +53,15 @@ export default function ProductsTable({ products, openModal }) {
             /* Productos */
             <tr
               key={product.product_serial}
-              className="relative w-full text-base overflow-x-auto overflow-y-auto transition duration-500 text-[#45474d] dark:text-white
-              hover:bg-[#e3e2e4] hover:shadow-md
-              dark:hover:bg-[#2d2d30]"
+              className="relative w-full text-base overflow-x-auto overflow-y-auto transition duration-75 text-[#45474d] dark:text-white
+              hover:bg-[#F5F3F6]
+              dark:hover:bg-[#101012]"
             >
               {/* Estado */}
               <th className="font-normal pl-4 text-sm">
                 <div
-                  className={`w-fit flex items-center pl-1.5 pr-3 py-0.5 gap-1.5 rounded-full border 
-                  dark:border-transparent text-nowrap
+                  className={`w-fit flex items-center pl-1.5 pr-3 py-0.5 gap-1.5 rounded-full border text-nowrap
+                  dark:border-transparent
                   ${productStatusConfig[product.status]?.styles}`}
                 >
                   <img
@@ -82,8 +82,8 @@ export default function ProductsTable({ products, openModal }) {
               <th className="font-normal text-start pl-4 text-sm">
                 {product.input_order}
               </th>
-              {/* Subcategoria */}
-              <th className="font-normal text-start text-sm">
+              {/* Categoria */}
+              <th className="font-normal text-start pl-4 text-sm">
                 {product.category}
               </th>
 
@@ -103,7 +103,7 @@ export default function ProductsTable({ products, openModal }) {
               </th>
 
               {/* Descripción */}
-              <th className="font-normal text-start text-sm">
+              <th className="font-normal text-start pl-4 text-sm">
                 {product.description}
               </th>
 
@@ -139,7 +139,7 @@ export default function ProductsTable({ products, openModal }) {
                   <img
                     src={productsIcons.changeStatusIcon}
                     alt=""
-                    className="w-6 h-6 transition-all duration-500 dark:invert hover:scale-125"
+                    className="w-6 h-6 transition-all duration-500 dark:brightness-200 hover:scale-125"
                   />
                 </button>
 
